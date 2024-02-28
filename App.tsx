@@ -1,163 +1,99 @@
-import React from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
-import CardProfile from './src/components/CardProfile';
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import React, {useEffect, useState} from 'react';
 import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import HomeScreen from './src/screens/HomeScreen';
+import FontistoIcon from 'react-native-vector-icons/Fontisto';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const ROTATION = 60;
-const SWIPE_VELOCITY = 800;
-
-function App(): React.JSX.Element {
-  const {width: screenWidth} = useWindowDimensions();
-  const hiddenTranslateX = 2 * screenWidth;
-  const translateX = useSharedValue(0);
-  const startX = useSharedValue(0);
-  const rotate = useDerivedValue(
-    () =>
-      interpolate(translateX.value, [0, hiddenTranslateX], [0, ROTATION]) +
-      'deg',
-  );
-  const scale = useDerivedValue(() =>
-    interpolate(
-      translateX.value,
-      [-hiddenTranslateX, 0, hiddenTranslateX],
-      [1, 0.8, 1],
-    ),
-  );
-  const opacity = useDerivedValue(() =>
-    interpolate(
-      translateX.value,
-      [-hiddenTranslateX, 0, hiddenTranslateX],
-      [1, 0.5, 1],
-    ),
-  );
-  const cardStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: translateX.value,
-      },
-      {
-        rotate: rotate.value,
-      },
-    ],
-  }));
-
-  const nextCardStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        scale: scale.value,
-      },
-    ],
-    opacity: opacity.value,
-  }));
-  // const gestureHandler = useAnimatedGestureHandler({
-  //   onStart: (_, context) => {
-  //     context.startX = translateX.value;
-  //   },
-  //   onActive: (event, context) => {
-  //     translateX.value = context.startX + event.translationX;
-  //   },
-  //   onEnd: event => {
-  //   }})
-  const pan = Gesture.Pan()
-    .onStart(() => {
-      startX.value = translateX.value;
-    })
-    .onUpdate(event => {
-      translateX.value = startX.value + event.translationX;
-    })
-    .onFinalize(event => {
-      if (Math.abs(event.velocityX) < SWIPE_VELOCITY) {
-        translateX.value = withSpring(0);
-      }
-    });
+const App = () => {
+  const [activeButton, setActiveButton] = useState('HOME');
   return (
-    <View style={styles.pageContainer}>
-      <GestureHandlerRootView>
-        <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
-          <CardProfile />
-        </Animated.View>
-        <GestureDetector gesture={pan}>
-          <Animated.View style={[cardStyle, styles.animatedWrap]}>
-            <CardProfile />
-          </Animated.View>
-        </GestureDetector>
-      </GestureHandlerRootView>
-    </View>
+    <SafeAreaView style={styles.root}>
+      <View style={styles.topNavigation}>
+        <Pressable
+          onPress={() => {
+            setActiveButton('HOME');
+          }}>
+          <FontistoIcon
+            name="tinder"
+            style={{
+              fontWeight: 'bold',
+              fontSize: 30,
+              color: activeButton === 'HOME' ? '#F63A6E' : '#b5b5b5',
+            }}
+          />
+        </Pressable>
+        {/* <AntDesign
+          name="qrcode"
+          style={{fontWeight: 'bold', fontSize: 24, color: '#F63A6E'}}
+        /> */}
+        <Pressable
+          onPress={() => {
+            setActiveButton('INFO');
+          }}>
+          <MaterialCommunityIcons
+            name="star-four-points"
+            style={{
+              fontWeight: 'bold',
+              fontSize: 30,
+              color: activeButton === 'INFO' ? '#F63A6E' : '#b5b5b5',
+            }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            setActiveButton('CHAT');
+          }}>
+          <AntDesign
+            name="wechat"
+            style={{
+              fontWeight: 'bold',
+              fontSize: 30,
+              color: activeButton === 'CHAT' ? '#F63A6E' : '#b5b5b5',
+            }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            setActiveButton('USER');
+            console.log('abc');
+          }}>
+          <FontAwesome
+            name="user"
+            style={{
+              fontWeight: 'bold',
+              fontSize: 30,
+              color: activeButton === 'USER' ? '#F63A6E' : '#b5b5b5',
+            }}
+          />
+        </Pressable>
+      </View>
+      <HomeScreen />
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  pageContainer: {
+  root: {
+    width: '100%',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 10,
   },
-  animatedWrap: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  nextCardContainer: {
-    // ...StyleSheet.absoluteFillObject,
-    flex: 1,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
+  topNavigation: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    padding: 10,
   },
 });
+
 export default App;
-
-// import React, {useEffect, useState} from 'react';
-// import Geolocation from '@react-native-community/geolocation';
-// import {View, Text} from 'react-native';
-
-// const App = () => {
-//   const [location, setLocation] = useState<any>(null);
-
-//   useEffect(() => {
-//     // Lấy vị trí hiện tại của người dùng
-//     Geolocation.getCurrentPosition(
-//       position => {
-//         const {latitude, longitude} = position.coords;
-//         setLocation({latitude, longitude});
-//         console.log({latitude, longitude});
-//       },
-//       error => console.log(error),
-//       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-//     );
-
-//     // Lắng nghe sự thay đổi vị trí (nếu cần)
-//     const watchId = Geolocation.watchPosition(
-//       position => {
-//         const {latitude, longitude} = position.coords;
-//         setLocation({latitude, longitude});
-//       },
-//       error => console.log(error),
-//       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-//     );
-
-//     // Hủy bỏ lắng nghe khi component bị unmounted
-//     return () => Geolocation.clearWatch(watchId);
-//   }, []);
-
-//   return (
-//     <View>
-//       <Text>Latitude: {location?.latitude}</Text>
-//       <Text>Longitude: {location?.longitude}</Text>
-//     </View>
-//   );
-// };
-
-// export default App;
