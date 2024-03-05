@@ -122,7 +122,7 @@ function HomeScreen(): React.JSX.Element {
   // }, [currentIndex]);
   return (
     <View style={styles.pageContainer}>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={{height: '90%'}}>
         <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
           <CardProfile />
         </Animated.View>
@@ -183,7 +183,6 @@ function HomeScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ededed',
   },
