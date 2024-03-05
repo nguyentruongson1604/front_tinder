@@ -23,7 +23,7 @@ const CardProfile = () => {
 const styles = StyleSheet.create({
   card: {
     width: '90%',
-    height: '70%',
+    height: '80%',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {

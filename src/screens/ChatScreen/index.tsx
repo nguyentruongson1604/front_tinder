@@ -71,4 +71,5 @@ const styles = StyleSheet.create({
   },
 });
 
+// https://www.youtube.com/watch?v=sB5Wa7-RD3A
 export default ChatScreen;
