@@ -1,10 +1,10 @@
-import React from 'react';
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-
+import React, {useCallback, useState} from 'react';
+import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import ImgSelect from '../atoms/ImgSlider';
 const CardProfile = () => {
   return (
-    <View style={styles.card}>
-      <ImageBackground
+    <View style={[styles.card, {zIndex: 3}]}>
+      {/* <ImageBackground
         source={{
           uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',
         }}
@@ -15,14 +15,15 @@ const CardProfile = () => {
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </Text>
         </View>
-      </ImageBackground>
+      </ImageBackground> */}
+      <ImgSelect />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    width: '90%',
+    width: '80%',
     height: '80%',
     borderRadius: 10,
     shadowColor: '#000',
@@ -34,6 +35,9 @@ const styles = StyleSheet.create({
     shadowRadius: 9.11,
 
     elevation: 14,
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: '100%',

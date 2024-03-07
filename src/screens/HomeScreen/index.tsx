@@ -1,5 +1,12 @@
 import React, {useEffect} from 'react';
-import {Image, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Animated, {
   interpolate,
   runOnJS,
@@ -83,6 +90,16 @@ function HomeScreen(): React.JSX.Element {
     opacity: interpolate(translateX.value, [0, -hiddenTranslateX / 5], [0, 1]),
   }));
 
+  const otherButton = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateX.value,
+      [-hiddenTranslateX / 5, 0, hiddenTranslateX / 5],
+      [0, 1, 0],
+    ),
+  }));
+  const likeButton = useAnimatedStyle(() => ({
+    opacity: interpolate(translateX.value, [0, -hiddenTranslateX / 5], [0, 1]),
+  }));
   const swipeLeft = () => {
     console.log('quet trai');
   };
@@ -128,35 +145,44 @@ function HomeScreen(): React.JSX.Element {
         </Animated.View>
         <GestureDetector gesture={pan}>
           <Animated.View style={[cardStyle, styles.animatedWrap]}>
-            <View style={styles.wrapLike}>
-              <Animated.Image
-                source={require('../../assets/images/LIKE.png')}
-                style={[styles.likePic, likeStyle]}
-                resizeMode="contain"
-              />
-              <Animated.Image
-                source={require('../../assets/images/nope.png')}
-                style={[styles.nopePic, nopeStyle]}
-                resizeMode="contain"
-              />
-            </View>
+            {/* <View style={styles.wrapLike}> */}
+            <Animated.Image
+              source={require('../../assets/images/LIKE.png')}
+              style={[styles.likePic, likeStyle]}
+              resizeMode="contain"
+            />
+            <Animated.Image
+              source={require('../../assets/images/nope.png')}
+              style={[styles.nopePic, nopeStyle]}
+              resizeMode="contain"
+            />
+            {/* </View> */}
             <CardProfile />
           </Animated.View>
         </GestureDetector>
       </GestureHandlerRootView>
       <View style={styles.bottomNavigation}>
-        <View style={styles.button}>
+        <Animated.View style={[styles.button]}>
           <FontAwesome
             name="undo"
             style={{fontWeight: 'bold', fontSize: 30, color: '#FBD88D'}}
           />
-        </View>
-        <View style={styles.button}>
-          <FontAwesome
-            name="close"
-            style={{fontWeight: 'bold', fontSize: 30, color: '#F76C6B'}}
-          />
-        </View>
+        </Animated.View>
+        <Pressable
+          onPress={() => {
+            translateX.value = withSpring(-hiddenTranslateX, {
+              damping: 900, // Tăng giá trị này để giảm tốc độ
+              stiffness: 900, // Giảm giá trị này để làm chậm animation
+              mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
+            });
+          }}>
+          <View style={styles.button}>
+            <FontAwesome
+              name="close"
+              style={{fontWeight: 'bold', fontSize: 30, color: '#F76C6B'}}
+            />
+          </View>
+        </Pressable>
         <View style={styles.button}>
           <FontAwesome
             name="star"
@@ -200,20 +226,27 @@ const styles = StyleSheet.create({
   },
   wrapLike: {
     position: 'absolute',
-    zIndex: 1,
-    height: '60%',
+    zIndex: 4,
     width: '90%',
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
   nopePic: {
-    justifyContent: 'flex-start',
+    // justifyContent: 'flex-start',
     width: 170,
     height: 170,
+    position: 'absolute',
+    zIndex: 4,
+    top: 130,
+    right: 40,
   },
   likePic: {
     width: 150,
     height: 150,
+    position: 'absolute',
+    zIndex: 4,
+    top: 130,
+    left: 40,
   },
   bottomNavigation: {
     flexDirection: 'row',

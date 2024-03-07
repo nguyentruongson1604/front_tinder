@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Touchable, TouchableOpacity} from 'react-native';
-import Background from '../../components/atoms/Backgorund';
+import Background from '../../components/atoms/Background';
 import Field from '../../components/atoms/Field';
 import Btn from '../../components/atoms/Button';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';

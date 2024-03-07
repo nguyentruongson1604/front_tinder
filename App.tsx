@@ -15,17 +15,19 @@ import ActionsheetCustom from './src/components/atoms/ActionSheet';
 import MatchScreen from './src/screens/MatchScreen';
 import {InputChoose} from './src/components/atoms/InputChoose';
 import SliderSelect from './src/components/atoms/SliderSelect';
+import ImgSelect from './src/components/atoms/ImgSlider';
 
 const App = () => {
   return (
     <NativeBaseProvider>
       <SafeAreaView style={styles.root}>
-        {/* <HomeScreen /> */}
+        <HomeScreen />
         {/* <Welcome /> */}
         {/* <Signup /> */}
         {/* <ActionsheetCustom /> */}
         {/* <InputChoose /> */}
-        <SliderSelect />
+        {/* <SliderSelect /> */}
+        {/* <ImgSelect /> */}
       </SafeAreaView>
     </NativeBaseProvider>
   );
