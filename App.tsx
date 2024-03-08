@@ -16,18 +16,20 @@ import MatchScreen from './src/screens/MatchScreen';
 import {InputChoose} from './src/components/atoms/InputChoose';
 import SliderSelect from './src/components/atoms/SliderSelect';
 import ImgSelect from './src/components/atoms/ImgSlider';
+import InfoScreen from './src/screens/InfoScreen';
 
 const App = () => {
   return (
     <NativeBaseProvider>
       <SafeAreaView style={styles.root}>
-        <HomeScreen />
+        {/* <HomeScreen /> */}
         {/* <Welcome /> */}
         {/* <Signup /> */}
         {/* <ActionsheetCustom /> */}
         {/* <InputChoose /> */}
         {/* <SliderSelect /> */}
         {/* <ImgSelect /> */}
+        <InfoScreen />
       </SafeAreaView>
     </NativeBaseProvider>
   );

@@ -36,9 +36,12 @@ const ImgSelect = () => {
       setCurrentIndex(newIndex);
     }
   };
-
+  const onLayout = event => {
+    const {height} = event.nativeEvent.layout;
+    console.log(height);
+  };
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={onLayout}>
       <View style={styles.indicatorContainer}>
         {images.map((image, index) => (
           <View
@@ -65,7 +68,6 @@ const ImgSelect = () => {
           <Image key={index} source={{uri: image}} style={styles.image} />
         ))}
       </ScrollView>
-
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={goToPreviousSlide}
@@ -80,11 +82,13 @@ const ImgSelect = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width,
+    // width,
+    width: '100%',
     height: '100%', // Điều chỉnh chiều cao nếu cần
   },
   image: {
-    width,
+    // width,
+    width: Dimensions.get('window').width,
     height: '100%', // Phải giống với chiều cao container
     resizeMode: 'cover',
   },
