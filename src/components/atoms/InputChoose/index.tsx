@@ -5,21 +5,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 export interface IInput {
-  icon?: any;
-  leftTitle?: any;
-  rightTitle?: any;
+  leftChildren?: any;
+  rightChildren?: any;
   onPress?: () => void;
-  borderTop?: boolean;
-  borderBottom?: boolean;
 }
 
 export const InputChoose: React.FC<IInput> = ({
-  icon,
-  leftTitle,
-  rightTitle,
+  leftChildren,
+  rightChildren,
   onPress,
-  borderTop,
-  borderBottom,
 }) => {
   return (
     <Pressable onPress={onPress}>
@@ -36,15 +30,17 @@ export const InputChoose: React.FC<IInput> = ({
           borderBottomWidth: 1,
         }}>
         <View style={{flexDirection: 'row'}}>
-          <MaterialIcons name="pets" style={{fontSize: 22, color: '#948d8d'}} />
-          <Text style={{fontSize: 16, marginLeft: 8}}>Thú cưng</Text>
+          {/* <MaterialIcons name="pets" style={{fontSize: 22, color: '#948d8d'}} />
+          <Text style={{fontSize: 16, marginLeft: 8}}>Thú cưng</Text> */}
+          {leftChildren}
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Text style={{fontSize: 16, marginRight: 3}}>Chọn</Text>
+          {/* <Text style={{fontSize: 16, marginRight: 3}}>Chọn</Text>
           <Entypo
             name="chevron-small-right"
             style={{fontSize: 22, color: '#948d8d'}}
-          />
+          /> */}
+          {rightChildren}
         </View>
       </View>
     </Pressable>
