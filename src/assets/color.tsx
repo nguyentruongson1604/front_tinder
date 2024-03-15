@@ -3,5 +3,7 @@ const color = {
     grey: #948d8d,
     grey: #e0dbdb,
     grey: #d1cdcd,
-    pink: #F63A6E
+    pink: #F63A6E,
+
+    blue: #d8d8e3
 }

@@ -1,5 +1,13 @@
 import React from 'react';
-import {View, Text, Touchable, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Touchable,
+  TouchableOpacity,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import Background from '../../components/atoms/Background';
 import Field from '../../components/atoms/Field';
 import Btn from '../../components/atoms/Button';
@@ -99,7 +107,11 @@ const Signup = props => {
             <TouchableOpacity
               onPress={() => props.navigation.navigate('Login')}>
               <Text
-                style={{color: '#F63A6E', fontWeight: 'bold', fontSize: 16}}>
+                style={{
+                  color: '#F63A6E',
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                }}>
                 Login
               </Text>
             </TouchableOpacity>

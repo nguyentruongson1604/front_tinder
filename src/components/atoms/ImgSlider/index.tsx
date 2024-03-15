@@ -8,8 +8,8 @@ import {
   Dimensions,
 } from 'react-native';
 
-const width =
-  Dimensions.get('window').width - (Dimensions.get('window').width * 20) / 100;
+// const width =
+//   Dimensions.get('window').width - (Dimensions.get('window').width * 20) / 100;
 
 const images = [
   'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',
@@ -17,7 +17,10 @@ const images = [
   'https://media.istockphoto.com/id/1227618770/th/%E0%B9%80%E0%B8%A7%E0%B8%84%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C/%E0%B9%84%E0%B8%AD%E0%B8%84%E0%B8%AD%E0%B8%99-avatar-%E0%B9%83%E0%B8%9A%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%A1%E0%B8%99%E0%B8%B8%E0%B8%A9%E0%B8%A2%E0%B9%8C-%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%84%E0%B8%9F%E0%B8%A5%E0%B9%8C%E0%B8%AA%E0%B9%8D%E0%B8%B2%E0%B8%AB%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B8%AD%E0%B8%82%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1-%E0%B8%8A%E0%B8%B2%E0%B8%A2-%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%81%E0%B8%AD%E0%B8%9A%E0%B9%80%E0%B8%A7%E0%B8%81%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C.jpg?s=612x612&w=0&k=20&c=-9MtAurgUyGbb8n4XuuGgz1MKAXqtbTzK1t42dzjxWQ=',
 ];
 
-const ImgSelect = () => {
+const ImgSelect = ({
+  width = Dimensions.get('window').width -
+    (Dimensions.get('window').width * 20) / 100,
+}) => {
   const scrollViewRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -41,7 +44,7 @@ const ImgSelect = () => {
     console.log(height);
   };
   return (
-    <View style={styles.container} onLayout={onLayout}>
+    <View style={[styles.container, {width}]} onLayout={onLayout}>
       <View style={styles.indicatorContainer}>
         {images.map((image, index) => (
           <View
@@ -65,7 +68,11 @@ const ImgSelect = () => {
           setCurrentIndex(Math.round(xOffset / width));
         }}>
         {images.map((image, index) => (
-          <Image key={index} source={{uri: image}} style={styles.image} />
+          <Image
+            key={index}
+            source={{uri: image}}
+            style={[styles.image, {width}]}
+          />
         ))}
       </ScrollView>
       <View style={styles.buttonContainer}>
@@ -82,13 +89,11 @@ const ImgSelect = () => {
 
 const styles = StyleSheet.create({
   container: {
-    // width,
-    width: '100%',
+    // width: '100%',
     height: '100%', // Điều chỉnh chiều cao nếu cần
   },
   image: {
-    // width,
-    width: Dimensions.get('window').width,
+    // width: Dimensions.get('window').width,
     height: '100%', // Phải giống với chiều cao container
     resizeMode: 'cover',
   },

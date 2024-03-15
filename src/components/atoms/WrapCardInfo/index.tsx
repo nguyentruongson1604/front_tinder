@@ -1,7 +1,7 @@
-import React, {useCallback, useState} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
-import ImgSelect from '../atoms/ImgSlider';
-const WrapcardInfo = ({children}) => {
+import React from 'react';
+import {Text, View} from 'react-native';
+
+const WrapcardInfo = ({icon, title, children}) => {
   return (
     <View
       style={[
@@ -14,6 +14,19 @@ const WrapcardInfo = ({children}) => {
           marginBottom: 10,
         },
       ]}>
+      <View style={{flexDirection: 'row', marginBottom: 20}}>
+        {icon}
+        <Text
+          style={{
+            fontSize: 16,
+            marginLeft: 8,
+            fontWeight: 'bold',
+            color: '#4b4848',
+            paddingTop: 2,
+          }}>
+          {title}
+        </Text>
+      </View>
       {children}
     </View>
   );

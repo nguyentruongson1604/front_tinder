@@ -4,14 +4,18 @@ import {
   ScrollView,
   Text,
   StyleSheet,
-  FlatList,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import ImgSelect from '../../components/atoms/ImgSlider';
 import WrapcardInfo from '../../components/atoms/WrapCardInfo';
 import {InputChoose} from '../../components/atoms/InputChoose';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {TextInfo} from '../../components/atoms/TextInfo';
+
 const Left = () => {
   return (
     <>
@@ -23,40 +27,90 @@ const Left = () => {
 
 const InfoScreen = () => {
   return (
-    <View style={styles.container}>
-      {/* Phần tử bạn muốn fix cứng */}
-      <View style={styles.fixedHeader}>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={{fontSize: 30, fontWeight: 'bold', marginRight: 8}}>
-            Son
-          </Text>
-          <Text style={{fontSize: 30}}>21</Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.fixedHeader}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{fontSize: 30, fontWeight: 'bold', marginRight: 8}}>
+              Son
+            </Text>
+            <Text style={{fontSize: 30}}>21</Text>
+          </View>
+          <FontAwesome6
+            name="circle-down"
+            style={{fontSize: 30, color: '#F63A6E'}}
+          />
         </View>
-        <FontAwesome6
-          name="circle-down"
-          style={{fontSize: 30, color: '#F63A6E'}}
-        />
-      </View>
 
-      {/* Phần có thể scroll */}
-      <ScrollView
-        style={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            height:
-              Dimensions.get('window').height -
-              (Dimensions.get('window').height * 40) / 100,
-            alignItems: 'center',
-            marginBottom: 10,
-          }}>
-          <ImgSelect />
-        </View>
-        <WrapcardInfo>
-          <InputChoose leftChildren={<Left />} />
-        </WrapcardInfo>
-      </ScrollView>
-    </View>
+        <ScrollView
+          style={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}>
+          <View
+            style={{
+              height:
+                Dimensions.get('window').height -
+                (Dimensions.get('window').height * 40) / 100,
+              alignItems: 'center',
+              marginBottom: 10,
+            }}>
+            <ImgSelect width={Dimensions.get('window').width} />
+          </View>
+          <WrapcardInfo
+            icon={
+              <MaterialCommunityIcons
+                name="account-box"
+                style={{fontSize: 22, color: '#948d8d'}}
+              />
+            }
+            title={'Thông tin chính'}>
+            <TextInfo
+              icon={
+                <FontAwesome
+                  name="moon-o"
+                  style={{fontSize: 18, color: '#948d8d'}}
+                />
+              }
+              title={'Cung hoàng đạo'}
+              content={'Xử nữ'}
+              borderBottom
+            />
+            <TextInfo
+              icon={
+                <FontAwesome
+                  name="moon-o"
+                  style={{fontSize: 18, color: '#948d8d'}}
+                />
+              }
+              title={'Cung hoàng đạo'}
+              content={'Xử nữ'}
+              borderBottom
+            />
+          </WrapcardInfo>
+
+          <WrapcardInfo
+            icon={
+              <MaterialCommunityIcons
+                name="account-box"
+                style={{fontSize: 22, color: '#948d8d'}}
+              />
+            }
+            title={'Thông tin cơ bản'}>
+            <InputChoose leftChildren={<Left />} />
+          </WrapcardInfo>
+
+          <WrapcardInfo
+            icon={
+              <MaterialCommunityIcons
+                name="account-box"
+                style={{fontSize: 22, color: '#948d8d'}}
+              />
+            }
+            title={'Phong cách sống'}>
+            <InputChoose leftChildren={<Left />} />
+          </WrapcardInfo>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaView>
   );
 };
 

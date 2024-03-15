@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
-import ImgSelect from '../atoms/ImgSlider';
+import ImgSelect from '../../atoms/ImgSlider';
 const CardProfile = () => {
   return (
     <View style={[styles.card, {zIndex: 3}]}>
@@ -24,7 +24,7 @@ const CardProfile = () => {
 const styles = StyleSheet.create({
   card: {
     width: '80%',
-    height: '80%',
+    height: '85%',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     shadowRadius: 9.11,
 
     elevation: 14,
-    backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
