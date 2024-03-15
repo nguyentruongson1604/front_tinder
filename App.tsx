@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
 import {
   Pressable,
   SafeAreaView,
@@ -17,20 +18,31 @@ import {InputChoose} from './src/components/atoms/InputChoose';
 import SliderSelect from './src/components/atoms/SliderSelect';
 import ImgSelect from './src/components/atoms/ImgSlider';
 import InfoScreen from './src/screens/InfoScreen';
+import SelectImage from './src/components/atoms/SelectImage';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import TopNavigator from './src/components/templates/TopNavigator';
+import HomeControl from './src/screens/HomeControl';
+import {HomeNavigator} from './src/navigator';
 
 const App = () => {
+  const Stack = createNativeStackNavigator();
+
   return (
     <NativeBaseProvider>
-      <SafeAreaView style={styles.root}>
-        {/* <HomeScreen /> */}
-        {/* <Welcome /> */}
-        {/* <Signup /> */}
-        {/* <ActionsheetCustom /> */}
-        {/* <InputChoose /> */}
-        {/* <SliderSelect /> */}
-        {/* <ImgSelect /> */}
-        <InfoScreen />
-      </SafeAreaView>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Home"
+            component={HomeNavigator}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Info"
+            component={InfoScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </NativeBaseProvider>
   );
 };
@@ -54,3 +66,17 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
+{
+  /* <SafeAreaView style={styles.root}>
+ <HomeScreen /> 
+ <Welcome /> 
+ <Signup /> 
+ <ActionsheetCustom /> 
+ <InputChoose /> 
+ <SliderSelect /> 
+ <ImgSelect /> 
+ <InfoScreen /> 
+ <SelectImage /> 
+</SafeAreaView> */
+}

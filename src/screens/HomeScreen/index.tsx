@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {
   Image,
   Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -20,13 +21,14 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-import CardProfile from '../../components/CardProfile';
+import CardProfile from '../../components/templates/CardProfile';
 
 import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import TopNavigator from '../../components/templates/TopNavigator';
 
 const ROTATION = 60;
 const SWIPE_VELOCITY = 800;
@@ -138,29 +140,31 @@ function HomeScreen(): React.JSX.Element {
   //   setNextIndex(currentIndex + 1);
   // }, [currentIndex]);
   return (
-    <View style={styles.pageContainer}>
-      <GestureHandlerRootView style={{height: '90%'}}>
-        <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
-          <CardProfile />
-        </Animated.View>
-        <GestureDetector gesture={pan}>
-          <Animated.View style={[cardStyle, styles.animatedWrap]}>
-            {/* <View style={styles.wrapLike}> */}
-            <Animated.Image
-              source={require('../../assets/images/LIKE.png')}
-              style={[styles.likePic, likeStyle]}
-              resizeMode="contain"
-            />
-            <Animated.Image
-              source={require('../../assets/images/nope.png')}
-              style={[styles.nopePic, nopeStyle]}
-              resizeMode="contain"
-            />
-            {/* </View> */}
+    <View style={{flex: 1}}>
+      <View style={styles.pageContainer}>
+        <GestureHandlerRootView style={{height: '100%'}}>
+          <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
             <CardProfile />
           </Animated.View>
-        </GestureDetector>
-      </GestureHandlerRootView>
+          <GestureDetector gesture={pan}>
+            <Animated.View style={[cardStyle, styles.animatedWrap]}>
+              {/* <View style={styles.wrapLike}> */}
+              <Animated.Image
+                source={require('../../assets/images/LIKE.png')}
+                style={[styles.likePic, likeStyle]}
+                resizeMode="contain"
+              />
+              <Animated.Image
+                source={require('../../assets/images/nope.png')}
+                style={[styles.nopePic, nopeStyle]}
+                resizeMode="contain"
+              />
+              {/* </View> */}
+              <CardProfile />
+            </Animated.View>
+          </GestureDetector>
+        </GestureHandlerRootView>
+      </View>
       <View style={styles.bottomNavigation}>
         <Animated.View style={[styles.button]}>
           <FontAwesome
@@ -253,7 +257,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: '100%',
     padding: 10,
-    paddingBottom: 40,
+    // backgroundColor: 'yellow',
   },
   button: {
     width: 50,
@@ -262,7 +266,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     // padding: 10,
-    marginBottom: 40,
     borderRadius: 50,
   },
 });

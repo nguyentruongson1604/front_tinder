@@ -4,9 +4,11 @@ import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import SelectImage from '../../atoms/SelectImage';
+import {useNavigation} from '@react-navigation/native';
 const TopNavigator = () => {
   const [activeButton, setActiveButton] = useState('INFO');
-
+  const navigation = useNavigation();
   return (
     <View style={styles.topNavigation}>
       <Pressable
@@ -59,6 +61,7 @@ const TopNavigator = () => {
         style={styles.iconWrap}
         onPress={() => {
           setActiveButton('USER');
+          navigation.navigate('Info');
         }}>
         <FontAwesome
           name="user"

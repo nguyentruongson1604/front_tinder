@@ -8,12 +8,20 @@ export interface IInput {
   leftChildren?: any;
   rightChildren?: any;
   onPress?: () => void;
+  borderTop?: boolean;
+  borderBottom?: boolean;
+  height?: any;
+  marginLeft?: any;
 }
 
 export const InputChoose: React.FC<IInput> = ({
   leftChildren,
   rightChildren,
   onPress,
+  borderTop = true,
+  borderBottom = true,
+  height = 55,
+  marginLeft = 15,
 }) => {
   return (
     <Pressable onPress={onPress}>
@@ -21,13 +29,13 @@ export const InputChoose: React.FC<IInput> = ({
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          height: 55,
+          height: height,
           alignItems: 'center',
-          marginLeft: 15,
-          borderTopColor: '#e0dbdb',
-          borderTopWidth: 1,
-          borderBottomColor: '#e0dbdb',
-          borderBottomWidth: 1,
+          marginLeft: marginLeft,
+          borderTopColor: borderBottom ? '#e0dbdb' : '',
+          borderTopWidth: borderBottom ? 1 : 0,
+          borderBottomColor: borderTop ? '#e0dbdb' : '',
+          borderBottomWidth: borderTop ? 1 : 0,
         }}>
         <View style={{flexDirection: 'row'}}>
           {/* <MaterialIcons name="pets" style={{fontSize: 22, color: '#948d8d'}} />
