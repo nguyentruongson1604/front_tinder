@@ -30,7 +30,7 @@ export class UserStore {
       const res = await registerAPI(account);
       return res;
     } catch (error: any) {
-      return error.response.data.message;
+      return error.response.data;
     }
   };
 }

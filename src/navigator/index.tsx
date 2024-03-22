@@ -4,7 +4,8 @@ import HomeScreen from '../screens/HomeScreen';
 import SelectImage from '../components/atoms/SelectImage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InfoScreen from '../screens/InfoScreen';
-import Signup from '../screens/SignUpScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import LoginScreen from '../screens/LoginScreen';
 
 export const HomeNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -53,7 +54,12 @@ export const AppNavigator = () => {
           <Stack.Screen
             options={{headerShown: false}}
             name="Login"
-            component={Signup}
+            component={LoginScreen}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Register"
+            component={RegisterScreen}
           />
         </>
       )}

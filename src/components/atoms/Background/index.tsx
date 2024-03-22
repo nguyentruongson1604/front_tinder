@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, ImageBackground, Dimensions} from 'react-native';
+import {View, ImageBackground, Dimensions, SafeAreaView} from 'react-native';
 
 const Background = ({children}) => {
   return (
@@ -10,7 +10,9 @@ const Background = ({children}) => {
         }}
         style={{height: '100%'}}
       />
-      <View style={{position: 'absolute', width: '100%'}}>{children}</View>
+      <SafeAreaView style={{position: 'absolute', width: '100%'}}>
+        {children}
+      </SafeAreaView>
     </View>
   );
 };
