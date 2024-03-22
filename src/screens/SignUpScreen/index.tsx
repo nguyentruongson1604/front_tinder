@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
 import Background from '../../components/atoms/Background';
 import Field from '../../components/atoms/Field';
 import Btn from '../../components/atoms/Button';
@@ -54,7 +46,7 @@ const Signup = props => {
             placeholder="Email / Username"
             keyboardType={'email-address'}
           />
-          <Field placeholder="Contact Number" keyboardType={'number'} />
+          {/* <Field placeholder="Contact Number" keyboardType={'number'} /> */}
           <Field placeholder="Password" secureTextEntry={true} />
           <Field placeholder="Confirm Password" secureTextEntry={true} />
           <View

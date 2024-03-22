@@ -3,6 +3,8 @@ import TopNavigator from '../components/templates/TopNavigator';
 import HomeScreen from '../screens/HomeScreen';
 import SelectImage from '../components/atoms/SelectImage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import InfoScreen from '../screens/InfoScreen';
+import Signup from '../screens/SignUpScreen';
 
 export const HomeNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -27,3 +29,48 @@ export const HomeNavigator = () => {
     </SafeAreaView>
   );
 };
+
+export const AppNavigator = () => {
+  const Stack = createNativeStackNavigator();
+  const isAuthenticated = false;
+  return (
+    <Stack.Navigator>
+      {isAuthenticated ? (
+        <>
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Home"
+            component={HomeNavigator}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Info"
+            component={InfoScreen}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Login"
+            component={Signup}
+          />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+};
+
+{
+  /* <SafeAreaView style={styles.root}>
+ <HomeScreen /> 
+ <Welcome /> 
+ <Signup /> 
+ <ActionsheetCustom /> 
+ <InputChoose /> 
+ <SliderSelect /> 
+ <ImgSelect /> 
+ <InfoScreen /> 
+ <SelectImage /> 
+</SafeAreaView> */
+}
