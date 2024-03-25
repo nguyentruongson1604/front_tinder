@@ -12,33 +12,30 @@ import Btn from '../../components/atoms/Button';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Controller, useForm} from 'react-hook-form';
 import {useUserStore} from '../../store';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen = () => {
   const userStore = useUserStore();
+  const navigation = useNavigation();
   const {
     control,
     handleSubmit,
     setError,
     setValue,
     formState: {errors},
-    watch,
   } = useForm({
     defaultValues: {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
-      confirmPassword: '',
     },
   });
 
   const onSubmit = async (data: any) => {
-    const res = await userStore.userRegister({...data});
+    const res = await userStore.userLogin({...data});
     if (res.status == 'success') {
     } else {
       setValue('email', '');
       setValue('password', '');
-      setValue('confirmPassword', '');
       setError('email', {
         type: 'manual',
         message: 'Email đã tồn tại',
@@ -46,11 +43,6 @@ const LoginScreen = () => {
     }
   };
 
-  // Hàm kiểm tra mật khẩu và xác nhận mật khẩu có giống nhau không
-  const validatePasswordMatch = (confirmPassword: any) => {
-    const password = watch('password');
-    return password === confirmPassword || 'Mật khẩu không khớp';
-  };
 
   return (
     <Background>
@@ -153,7 +145,8 @@ const LoginScreen = () => {
               width: '100%',
               justifyContent: 'center',
               marginTop: 35,
-            }}></View>
+            }}
+          />
           <Btn
             textColor="white"
             bgColor={'#F63A6E'}
@@ -169,7 +162,10 @@ const LoginScreen = () => {
             <Text style={{fontSize: 16, fontWeight: 'bold', color: 'grey'}}>
               Bạn chưa có tài khoản?{' '}
             </Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Register');
+              }}>
               <Text
                 style={{
                   color: '#F63A6E',

@@ -6,15 +6,18 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import Background from '../../components/atoms/Background';
 import Btn from '../../components/atoms/Button';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Controller, useForm} from 'react-hook-form';
 import {useUserStore} from '../../store';
+import {useNavigation} from '@react-navigation/native';
 
 const RegisterScreen = () => {
   const userStore = useUserStore();
+  const navigation = useNavigation();
   const {
     control,
     handleSubmit,
@@ -51,7 +54,8 @@ const RegisterScreen = () => {
     const password = watch('password');
     return password === confirmPassword || 'Mật khẩu không khớp';
   };
-
+  console.log('resgister',userStore.userAccess);
+  
   return (
     <Background>
       <View style={{alignItems: 'center', width: '100%'}}>
@@ -86,118 +90,129 @@ const RegisterScreen = () => {
             paddingTop: 50,
             alignItems: 'center',
           }}>
-          <Controller
-            control={control}
-            rules={{
-              required: {value: true, message: 'Họ là bắt buộc'},
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <TextInput
-                style={styles.input}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Họ"
-              />
+          <View style={{marginVertical: 10, width: '73%'}}>
+            <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Họ là bắt buộc'},
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Họ"
+                />
+              )}
+              name="firstName"
+            />
+            {errors.firstName && (
+              <Text style={styles.errorText}>{errors.firstName.message}</Text>
             )}
-            name="firstName"
-          />
-          {errors.firstName && (
-            <Text style={styles.errorText}>{errors.firstName.message}</Text>
-          )}
-          <Controller
-            control={control}
-            rules={{
-              required: {value: true, message: 'Tên là bắt buộc'},
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <TextInput
-                style={styles.input}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Tên"
-              />
-            )}
-            name="lastName"
-          />
-          {errors.lastName && (
-            <Text style={styles.errorText}>{errors.lastName.message}</Text>
-          )}
-          <Controller
-            control={control}
-            rules={{
-              required: {value: true, message: 'Email là bắt buộc'},
-              pattern: {
-                value: /^\S+@\S+$/,
-                message: 'Email không hợp lệ',
-              },
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <TextInput
-                style={styles.input}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Email"
-                keyboardType="email-address"
-              />
-            )}
-            name="email"
-          />
-          {errors.email && (
-            <Text style={styles.errorText}>{errors.email.message}</Text>
-          )}
+          </View>
 
-          <Controller
-            control={control}
-            rules={{
-              required: {value: true, message: 'Mật khẩu là bắt buộc'},
-              minLength: {
-                value: 6,
-                message: 'Mật khẩu phải dài ít nhất 6 ký tự',
-              },
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <TextInput
-                style={styles.input}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Mật khẩu"
-                secureTextEntry
-              />
+          <View style={{marginVertical: 10, width: '73%'}}>
+            <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Tên là bắt buộc'},
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Tên"
+                />
+              )}
+              name="lastName"
+            />
+            {errors.lastName && (
+              <Text style={styles.errorText}>{errors.lastName.message}</Text>
             )}
-            name="password"
-          />
-          {errors.password && (
-            <Text style={styles.errorText}>{errors.password.message}</Text>
-          )}
+          </View>
 
-          <Controller
-            control={control}
-            rules={{
-              validate: validatePasswordMatch,
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <TextInput
-                style={styles.input}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Xác nhận mật khẩu"
-                secureTextEntry
-              />
+          <View style={{marginVertical: 10, width: '73%'}}>
+            <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Email là bắt buộc'},
+                pattern: {
+                  value: /^\S+@\S+$/,
+                  message: 'Email không hợp lệ',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                />
+              )}
+              name="email"
+            />
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email.message}</Text>
             )}
-            name="confirmPassword"
-          />
-          {errors.confirmPassword && (
-            <Text style={styles.errorText}>
-              {errors.confirmPassword.message}
-            </Text>
-          )}
+          </View>
 
-          <View
+          <View style={{marginVertical: 10, width: '73%'}}>
+            <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Mật khẩu là bắt buộc'},
+                minLength: {
+                  value: 6,
+                  message: 'Mật khẩu phải dài ít nhất 6 ký tự',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Mật khẩu"
+                  secureTextEntry
+                />
+              )}
+              name="password"
+            />
+            {errors.password && (
+              <Text style={styles.errorText}>{errors.password.message}</Text>
+            )}
+          </View>
+
+          <View style={{marginVertical: 10, width: '73%'}}>
+            <Controller
+              control={control}
+              rules={{
+                validate: validatePasswordMatch,
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Xác nhận mật khẩu"
+                  secureTextEntry
+                />
+              )}
+              name="confirmPassword"
+            />
+            {errors.confirmPassword && (
+              <Text style={styles.errorText}>
+                {errors.confirmPassword.message}
+              </Text>
+            )}
+          </View>
+          {/* <View
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -211,9 +226,9 @@ const RegisterScreen = () => {
             <Text style={{color: '#F63A6E', fontWeight: 'bold', fontSize: 16}}>
               Terms & Conditions
             </Text>
-          </View>
+          </View> */}
 
-          <View
+          {/* <View
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -226,7 +241,7 @@ const RegisterScreen = () => {
             <Text style={{color: '#F63A6E', fontWeight: 'bold', fontSize: 16}}>
               Privacy Policy
             </Text>
-          </View>
+          </View> */}
           <Btn
             textColor="white"
             bgColor={'#F63A6E'}
@@ -242,7 +257,10 @@ const RegisterScreen = () => {
             <Text style={{fontSize: 16, fontWeight: 'bold', color: 'grey'}}>
               Already have an account ?{' '}
             </Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
               <Text
                 style={{
                   color: '#F63A6E',
@@ -266,16 +284,19 @@ const styles = StyleSheet.create({
   },
   input: {
     borderRadius: 100,
-    color: '#F63A6E',
-    paddingHorizontal: 10,
-    width: '73%',
-    backgroundColor: 'rgb(220,220, 220)',
-    marginVertical: 10,
-    height: 40,
+    color: 'black',
+    paddingHorizontal: 15,
+    fontSize: 20,
+    backgroundColor: '#3836372f',
+    borderColor: 'black',
+    borderWidth: 1,
+    height: 50,
   },
   errorText: {
     color: 'red',
-    marginBottom: 20,
+    marginLeft: 15,
+    marginBottom: 5,
+    marginTop: 3,
   },
 });
 export default RegisterScreen;

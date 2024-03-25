@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import SelectImage from '../../atoms/SelectImage';
 import {useNavigation} from '@react-navigation/native';
 const TopNavigator = () => {
-  const [activeButton, setActiveButton] = useState('INFO');
+  const [activeButton, setActiveButton] = useState('HOME');
   const navigation = useNavigation();
   return (
     <View style={styles.topNavigation}>
@@ -15,6 +15,7 @@ const TopNavigator = () => {
         style={styles.iconWrap}
         onPress={() => {
           setActiveButton('HOME');
+          navigation.push('Switch');
         }}>
         <FontistoIcon
           name="tinder"
@@ -47,6 +48,7 @@ const TopNavigator = () => {
         style={styles.iconWrap}
         onPress={() => {
           setActiveButton('CHAT');
+          navigation.push('Detail');
         }}>
         <AntDesign
           name="wechat"

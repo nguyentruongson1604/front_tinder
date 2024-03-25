@@ -6,8 +6,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InfoScreen from '../screens/InfoScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
+import {useUserStore} from '../store';
+import {observer} from 'mobx-react-lite';
 
-export const HomeNavigator = () => {
+export const HomeNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
 
   return (
@@ -18,7 +20,7 @@ export const HomeNavigator = () => {
       <Stack.Navigator>
         <Stack.Screen
           options={{headerShown: false}}
-          name="Home"
+          name="Switch"
           component={HomeScreen}
         />
         <Stack.Screen
@@ -29,14 +31,17 @@ export const HomeNavigator = () => {
       </Stack.Navigator>
     </SafeAreaView>
   );
-};
+});
 
-export const AppNavigator = () => {
+export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
-  const isAuthenticated = false;
+  const userStore = useUserStore();
+  
+  console.log('here', userStore.userAccess);
+
   return (
     <Stack.Navigator>
-      {isAuthenticated ? (
+      {userStore.userAccess ? (
         <>
           <Stack.Screen
             options={{headerShown: false}}
@@ -65,18 +70,18 @@ export const AppNavigator = () => {
       )}
     </Stack.Navigator>
   );
-};
+});
 
 {
   /* <SafeAreaView style={styles.root}>
- <HomeScreen /> 
- <Welcome /> 
- <Signup /> 
- <ActionsheetCustom /> 
- <InputChoose /> 
- <SliderSelect /> 
- <ImgSelect /> 
- <InfoScreen /> 
- <SelectImage /> 
+ <HomeScreen />
+ <Welcome />
+ <Signup />
+ <ActionsheetCustom />
+ <InputChoose />
+ <SliderSelect />
+ <ImgSelect />
+ <InfoScreen />
+ <SelectImage />
 </SafeAreaView> */
 }
