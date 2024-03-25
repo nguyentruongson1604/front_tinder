@@ -9,8 +9,8 @@ export default function Btn({bgColor, btnLabel, textColor, Press}) {
         backgroundColor: bgColor,
         borderRadius: 100,
         alignItems: 'center',
-        width: 350,
-        paddingVertical: 5,
+        width: 200,
+        paddingVertical: 10,
         marginVertical: 10,
       }}>
       <Text style={{color: textColor, fontSize: 25, fontWeight: 'bold'}}>
