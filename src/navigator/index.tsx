@@ -1,3 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-lone-blocks */
+/* eslint-disable react/react-in-jsx-scope */
 import {SafeAreaView, View} from 'react-native';
 import TopNavigator from '../components/templates/TopNavigator';
 import HomeScreen from '../screens/HomeScreen';
@@ -36,12 +39,10 @@ export const HomeNavigator = observer(() => {
 export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
-  
-  console.log('here', userStore.userAccess);
 
   return (
     <Stack.Navigator>
-      {userStore.userAccess ? (
+      {!userStore.userAccess ? (
         <>
           <Stack.Screen
             options={{headerShown: false}}

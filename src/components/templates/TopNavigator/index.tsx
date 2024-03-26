@@ -1,11 +1,17 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import SelectImage from '../../atoms/SelectImage';
 import {useNavigation} from '@react-navigation/native';
+export type RootStackParamList = {
+  Home: undefined;
+  Info: undefined;
+  Detail: undefined;
+  // khai báo các screen khác tại đây
+};
 const TopNavigator = () => {
   const [activeButton, setActiveButton] = useState('HOME');
   const navigation = useNavigation();

@@ -32,17 +32,23 @@ const LoginScreen = () => {
 
   const onSubmit = async (data: any) => {
     const res = await userStore.userLogin({...data});
-    if (res.status == 'success') {
+    console.log(res);
+    if (res.data.status == 'success') {
+      // navigation.navigate('Home');
     } else {
       setValue('email', '');
       setValue('password', '');
-      setError('email', {
-        type: 'manual',
-        message: 'Email đã tồn tại',
-      });
+      res.data.message.includes('email')
+        ? setError('email', {
+            type: 'manual',
+            message: res.data.message,
+          })
+        : setError('password', {
+            type: 'manual',
+            message: res.data.message,
+          });
     }
   };
-
 
   return (
     <Background>

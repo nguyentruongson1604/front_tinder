@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
-  ScrollView,
 } from 'react-native';
 import Background from '../../components/atoms/Background';
 import Btn from '../../components/atoms/Button';
@@ -37,14 +36,18 @@ const RegisterScreen = () => {
 
   const onSubmit = async (data: any) => {
     const res = await userStore.userRegister({...data});
-    if (res.status == 'success') {
+    console.log(res);
+
+    if (res.data.status == 'success') {
     } else {
+      setValue('firstName', '');
+      setValue('lastName', '');
       setValue('email', '');
       setValue('password', '');
       setValue('confirmPassword', '');
       setError('email', {
         type: 'manual',
-        message: 'Email đã tồn tại',
+        message: res.data.message,
       });
     }
   };
@@ -54,8 +57,8 @@ const RegisterScreen = () => {
     const password = watch('password');
     return password === confirmPassword || 'Mật khẩu không khớp';
   };
-  console.log('resgister',userStore.userAccess);
-  
+  console.log('resgister', userStore.userAccess);
+
   return (
     <Background>
       <View style={{alignItems: 'center', width: '100%'}}>
