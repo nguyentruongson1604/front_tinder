@@ -50,3 +50,16 @@ export const getRandomProfile = async () => {
   };
   return await axios(option);
 };
+
+export const getMyProfile = async () => {
+  const option: AxiosRequestConfig = {
+    method: 'GET',
+    url: 'http://localhost:3031/api/getMyProfile',
+    // url: 'http://192.168.55.112:3031/api/getMyProfile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  return await axios(option);
+};
