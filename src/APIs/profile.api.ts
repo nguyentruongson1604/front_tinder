@@ -1,6 +1,7 @@
 import axios, {AxiosRequestConfig} from 'axios';
 
 export interface IProfile {
+  _id?: string;
   user?: any;
   hobby?: [any];
   title?: string;
@@ -24,7 +25,7 @@ export const createProfileAPI = async (profile: IProfile) => {
   return await axios(option);
 };
 
-export const updateProfileAPI = async (profile: IProfile) => {
+export const updateMyProfileAPI = async (profile?: IProfile) => {
   const option: AxiosRequestConfig = {
     method: 'POST',
     url: 'http://localhost:3031/api/updateProfile',
@@ -38,7 +39,7 @@ export const updateProfileAPI = async (profile: IProfile) => {
   return await axios(option);
 };
 
-export const getRandomProfile = async () => {
+export const getRandomProfileAPI = async () => {
   const option: AxiosRequestConfig = {
     method: 'GET',
     url: 'http://localhost:3031/api/getRandomProfile',
@@ -51,7 +52,20 @@ export const getRandomProfile = async () => {
   return await axios(option);
 };
 
-export const getMyProfile = async () => {
+export const getRandom10ProfileAPI = async () => {
+  const option: AxiosRequestConfig = {
+    method: 'GET',
+    url: 'http://localhost:3031/api/getRandom10ProfileAPI',
+    // url: 'http://192.168.55.112:3031/api/getRandom10ProfileAPI',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  return await axios(option);
+};
+
+export const getMyProfileAPI = async () => {
   const option: AxiosRequestConfig = {
     method: 'GET',
     url: 'http://localhost:3031/api/getMyProfile',

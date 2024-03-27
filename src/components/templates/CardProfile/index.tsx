@@ -1,9 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
 import ImgSelect from '../../atoms/ImgSlider';
-const CardProfile = () => {
+const CardProfile = ({user}) => {
   return (
     <View style={[styles.card, {zIndex: 3}]}>
+      <Text>{user}</Text>
       {/* <ImageBackground
         source={{
           uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',

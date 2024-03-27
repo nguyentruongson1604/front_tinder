@@ -9,6 +9,12 @@ export const MobxStoreProvider: React.FC<IMobxStoreProviderProps> = ({
   children,
 }) => {
   const store = new RootStore();
+  // useEffect(() => {
+  //   const init = async () => {
+  //     await store.userStore.isAuthenticated();
+  //   };
+  //   init();
+  // }, []);
   return (
     <MobXStoreContext.Provider value={store}>
       {children}

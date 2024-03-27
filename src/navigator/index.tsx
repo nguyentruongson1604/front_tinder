@@ -42,7 +42,7 @@ export const AppNavigator = observer(() => {
 
   return (
     <Stack.Navigator>
-      {!userStore.userAccess ? (
+      {!userStore.accessToken ? (
         <>
           <Stack.Screen
             options={{headerShown: false}}
@@ -66,6 +66,11 @@ export const AppNavigator = observer(() => {
             options={{headerShown: false}}
             name="Register"
             component={RegisterScreen}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Home"
+            component={HomeNavigator}
           />
         </>
       )}

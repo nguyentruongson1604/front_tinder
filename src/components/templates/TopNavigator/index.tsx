@@ -6,6 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export type RootStackParamList = {
   Home: undefined;
   Info: undefined;
@@ -15,6 +16,11 @@ export type RootStackParamList = {
 const TopNavigator = () => {
   const [activeButton, setActiveButton] = useState('HOME');
   const navigation = useNavigation();
+
+  const removeToken = async () => {
+    await AsyncStorage.removeItem('accessToken');
+  };
+
   return (
     <View style={styles.topNavigation}>
       <Pressable
@@ -40,6 +46,7 @@ const TopNavigator = () => {
         style={styles.iconWrap}
         onPress={() => {
           setActiveButton('INFO');
+          removeToken();
         }}>
         <MaterialCommunityIcons
           name="star-four-points"

@@ -1,13 +1,5 @@
-import React, {useEffect} from 'react';
-import {
-  Image,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Animated, {
   interpolate,
   runOnJS,
@@ -23,19 +15,21 @@ import {
 } from 'react-native-gesture-handler';
 import CardProfile from '../../components/templates/CardProfile';
 
-import FontistoIcon from 'react-native-vector-icons/Fontisto';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import TopNavigator from '../../components/templates/TopNavigator';
 
 const ROTATION = 60;
 const SWIPE_VELOCITY = 800;
-
+const data = ['1', '2', '3', '4', '5', '6', '7'];
 function HomeScreen(): React.JSX.Element {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState(currentIndex + 1);
+
+  const currentProfile = data[currentIndex];
+  const nextProfile = data[nextIndex];
+
   const {width: screenWidth} = useWindowDimensions();
-  const hiddenTranslateX = 2 * screenWidth;
+  const hiddenTranslateX = 1.5 * screenWidth;
   const translateX = useSharedValue(0);
   const startX = useSharedValue(0);
   const rotate = useDerivedValue(
@@ -104,18 +98,29 @@ function HomeScreen(): React.JSX.Element {
   }));
   const swipeLeft = () => {
     console.log('quet trai');
+    translateX.value = 0;
+    // setNextIndex(currentIndex + 1);
   };
   const swipeRight = () => {
     console.log('quet phai');
+
+    // setTimeout(() => {
+    //   translateX.value = 0;
+    // }, 0);
+    // setNextIndex(currentIndex + 1);
   };
   const pan = Gesture.Pan()
     .onStart(() => {
       startX.value = translateX.value;
+      console.log('ev2');
     })
     .onUpdate(event => {
       translateX.value = startX.value + event.translationX;
+      console.log('ev3');
     })
     .onFinalize(event => {
+      console.log('ev1');
+
       if (Math.abs(event.velocityX) < SWIPE_VELOCITY) {
         translateX.value = withSpring(0);
         return;
@@ -125,26 +130,40 @@ function HomeScreen(): React.JSX.Element {
         event.velocityX > 0 ? hiddenTranslateX : -hiddenTranslateX,
         {},
         () => {
+          // console.log('incallback');
+
           //để trong callback func vì nếu ko để trong callback nó sẽ chạy runOnJS trước rồi mơis chạy withSpring để thay đổi UI
-          //runOnJS(setCurrentIndex)(currentIndex+1)  //sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới
+          runOnJS(setCurrentIndex)(currentIndex + 1); //sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới
         },
       );
 
       const onSwipe = event.velocityX > 0 ? swipeLeft : swipeRight;
+      // const abc = () => {
+      //   setNextIndex(currentIndex + 1);
+      //   translateX.value = 0;
+      // };
       onSwipe && runOnJS(onSwipe)();
+      // runOnJS(onSwipe)()
     });
 
   //  sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới. Và ph xét cho giá trị của translateX.value tại vị trí ban đầu
+  useEffect(() => {
+    console.log('in effect');
+
+    setNextIndex(currentIndex + 1);
+    // translateX.value = 0;
+  }, [currentIndex, translateX]);
+
   // useEffect(() => {
   //   translateX.value = 0;
-  //   setNextIndex(currentIndex + 1);
-  // }, [currentIndex]);
+  // }, [translateX]);
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.pageContainer}>
         <GestureHandlerRootView style={{height: '100%'}}>
           <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
-            <CardProfile />
+            <CardProfile user={nextProfile} />
           </Animated.View>
           <GestureDetector gesture={pan}>
             <Animated.View style={[cardStyle, styles.animatedWrap]}>
@@ -160,7 +179,7 @@ function HomeScreen(): React.JSX.Element {
                 resizeMode="contain"
               />
               {/* </View> */}
-              <CardProfile />
+              <CardProfile user={currentProfile} />
             </Animated.View>
           </GestureDetector>
         </GestureHandlerRootView>
@@ -179,8 +198,11 @@ function HomeScreen(): React.JSX.Element {
               stiffness: 900, // Giảm giá trị này để làm chậm animation
               mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
             });
+            setTimeout(() => {
+              setCurrentIndex(currentIndex + 1);
+            }, 500);
           }}>
-          <View style={styles.button}>
+          <View style={[styles.button]}>
             <FontAwesome
               name="close"
               style={{fontWeight: 'bold', fontSize: 30, color: '#F76C6B'}}

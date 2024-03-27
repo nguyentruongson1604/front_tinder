@@ -6,7 +6,11 @@ export interface IRootStore {
 
 export class RootStore implements IRootStore {
   userStore: UserStore;
+  init = async () => {
+    await this.userStore.isAuthenticated();
+  };
   constructor() {
     this.userStore = new UserStore(this);
+    this.init();
   }
 }
