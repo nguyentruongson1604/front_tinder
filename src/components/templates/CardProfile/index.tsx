@@ -17,7 +17,7 @@ const CardProfile = ({user}) => {
           </Text>
         </View>
       </ImageBackground> */}
-      <ImgSelect />
+      <ImgSelect user={user} />
     </View>
   );
 };

@@ -20,13 +20,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ROTATION = 60;
 const SWIPE_VELOCITY = 800;
-const data = ['1', '2', '3', '4', '5', '6', '7'];
 function HomeScreen(): React.JSX.Element {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(currentIndex + 1);
-
-  const currentProfile = data[currentIndex];
-  const nextProfile = data[nextIndex];
 
   const {width: screenWidth} = useWindowDimensions();
   const hiddenTranslateX = 1.5 * screenWidth;
@@ -98,11 +94,17 @@ function HomeScreen(): React.JSX.Element {
   }));
   const swipeLeft = () => {
     console.log('quet trai');
-    translateX.value = 0;
+    setNextIndex(currentIndex + 1);
+    setCurrentIndex(currentIndex + 1);
+    // translateX.value = 0;
     // setNextIndex(currentIndex + 1);
   };
   const swipeRight = () => {
     console.log('quet phai');
+    setTimeout(() => {
+      setNextIndex(currentIndex + 1);
+      setCurrentIndex(currentIndex + 1);
+    }, 500);
 
     // setTimeout(() => {
     //   translateX.value = 0;
@@ -112,15 +114,11 @@ function HomeScreen(): React.JSX.Element {
   const pan = Gesture.Pan()
     .onStart(() => {
       startX.value = translateX.value;
-      console.log('ev2');
     })
     .onUpdate(event => {
       translateX.value = startX.value + event.translationX;
-      console.log('ev3');
     })
     .onFinalize(event => {
-      console.log('ev1');
-
       if (Math.abs(event.velocityX) < SWIPE_VELOCITY) {
         translateX.value = withSpring(0);
         return;
@@ -130,10 +128,8 @@ function HomeScreen(): React.JSX.Element {
         event.velocityX > 0 ? hiddenTranslateX : -hiddenTranslateX,
         {},
         () => {
-          // console.log('incallback');
-
           //để trong callback func vì nếu ko để trong callback nó sẽ chạy runOnJS trước rồi mơis chạy withSpring để thay đổi UI
-          runOnJS(setCurrentIndex)(currentIndex + 1); //sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới
+          // runOnJS(setCurrentIndex)(currentIndex + 1); //sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới
         },
       );
 
@@ -148,10 +144,8 @@ function HomeScreen(): React.JSX.Element {
 
   //  sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới. Và ph xét cho giá trị của translateX.value tại vị trí ban đầu
   useEffect(() => {
-    console.log('in effect');
-
     setNextIndex(currentIndex + 1);
-    // translateX.value = 0;
+    translateX.value = 0;
   }, [currentIndex, translateX]);
 
   // useEffect(() => {
@@ -163,7 +157,7 @@ function HomeScreen(): React.JSX.Element {
       <View style={styles.pageContainer}>
         <GestureHandlerRootView style={{height: '100%'}}>
           <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
-            <CardProfile user={nextProfile} />
+            <CardProfile user={nextIndex} />
           </Animated.View>
           <GestureDetector gesture={pan}>
             <Animated.View style={[cardStyle, styles.animatedWrap]}>
@@ -179,7 +173,7 @@ function HomeScreen(): React.JSX.Element {
                 resizeMode="contain"
               />
               {/* </View> */}
-              <CardProfile user={currentProfile} />
+              <CardProfile user={currentIndex} />
             </Animated.View>
           </GestureDetector>
         </GestureHandlerRootView>
@@ -215,12 +209,24 @@ function HomeScreen(): React.JSX.Element {
             style={{fontWeight: 'bold', fontSize: 24, color: '#3AB4CC'}}
           />
         </View>
-        <View style={styles.button}>
-          <FontAwesome
-            name="heart"
-            style={{fontWeight: 'bold', fontSize: 30, color: '#4FCC94'}}
-          />
-        </View>
+        <Pressable
+          onPress={() => {
+            translateX.value = withSpring(hiddenTranslateX, {
+              damping: 900, // Tăng giá trị này để giảm tốc độ
+              stiffness: 900, // Giảm giá trị này để làm chậm animation
+              mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
+            });
+            setTimeout(() => {
+              setCurrentIndex(currentIndex + 1);
+            }, 500);
+          }}>
+          <View style={styles.button}>
+            <FontAwesome
+              name="heart"
+              style={{fontWeight: 'bold', fontSize: 30, color: '#4FCC94'}}
+            />
+          </View>
+        </Pressable>
         <View style={styles.button}>
           <Ionicons
             name="flash"

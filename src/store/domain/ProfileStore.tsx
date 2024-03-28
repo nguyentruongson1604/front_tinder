@@ -10,7 +10,7 @@ export class ProfileStore {
   myProfile: IProfile | null = null;
 
   constructor(rootStore: RootStore) {
-    makeAutoObservable(rootStore);
+    makeAutoObservable(this);
   }
 
   getMyProfile = async () => {

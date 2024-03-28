@@ -1,4 +1,5 @@
 import axios, {AxiosRequestConfig} from 'axios';
+import {createAxiosInstance} from '../instance/instances';
 
 export interface IProfile {
   _id?: string;
@@ -55,14 +56,14 @@ export const getRandomProfileAPI = async () => {
 export const getRandom10ProfileAPI = async () => {
   const option: AxiosRequestConfig = {
     method: 'GET',
-    url: 'http://localhost:3031/api/getRandom10ProfileAPI',
+    baseURL: 'http://192.168.100.57:3031/api/getRandom10ProfileAPI',
     // url: 'http://192.168.55.112:3031/api/getRandom10ProfileAPI',
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
     },
   };
-  return await axios(option);
+  return await createAxiosInstance(option);
 };
 
 export const getMyProfileAPI = async () => {

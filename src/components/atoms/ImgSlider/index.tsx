@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ScrollView,
   Image,
@@ -17,13 +17,17 @@ const images = [
   'https://media.istockphoto.com/id/1227618770/th/%E0%B9%80%E0%B8%A7%E0%B8%84%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C/%E0%B9%84%E0%B8%AD%E0%B8%84%E0%B8%AD%E0%B8%99-avatar-%E0%B9%83%E0%B8%9A%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%A1%E0%B8%99%E0%B8%B8%E0%B8%A9%E0%B8%A2%E0%B9%8C-%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%84%E0%B8%9F%E0%B8%A5%E0%B9%8C%E0%B8%AA%E0%B9%8D%E0%B8%B2%E0%B8%AB%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B8%AD%E0%B8%82%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1-%E0%B8%8A%E0%B8%B2%E0%B8%A2-%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%81%E0%B8%AD%E0%B8%9A%E0%B9%80%E0%B8%A7%E0%B8%81%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C.jpg?s=612x612&w=0&k=20&c=-9MtAurgUyGbb8n4XuuGgz1MKAXqtbTzK1t42dzjxWQ=',
 ];
 
-const ImgSelect = ({
-  width = Dimensions.get('window').width -
-    (Dimensions.get('window').width * 20) / 100,
-}) => {
+const ImgSelect = ({user}) => {
+  const width =
+    Dimensions.get('window').width -
+    (Dimensions.get('window').width * 20) / 100;
   const scrollViewRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  useEffect(() => {
+    setCurrentIndex(0);
+    scrollViewRef.current.scrollTo({x: 0, y: 0, animated: false});
+    // scrollViewRef.current = 0;
+  }, [user]);
   const goToNextSlide = () => {
     const newIndex = currentIndex + 1;
     if (newIndex < images.length) {
@@ -41,7 +45,6 @@ const ImgSelect = ({
   };
   const onLayout = event => {
     const {height} = event.nativeEvent.layout;
-    console.log(height);
   };
   return (
     <View style={[styles.container, {width}]} onLayout={onLayout}>
@@ -76,12 +79,8 @@ const ImgSelect = ({
         ))}
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={goToPreviousSlide}
-          style={styles.button}></TouchableOpacity>
-        <TouchableOpacity
-          onPress={goToNextSlide}
-          style={styles.button}></TouchableOpacity>
+        <TouchableOpacity onPress={goToPreviousSlide} style={styles.button} />
+        <TouchableOpacity onPress={goToNextSlide} style={styles.button} />
       </View>
     </View>
   );

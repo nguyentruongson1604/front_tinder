@@ -34,3 +34,12 @@ export const useUserStore = () => {
   const store = useStore();
   return store.userStore;
 };
+export const useActivityStore = () => {
+  const store = useStore();
+  return store.activityStore;
+};
+
+export const useProfileStore = () => {
+  const store = useStore();
+  return store.profileStore;
+};

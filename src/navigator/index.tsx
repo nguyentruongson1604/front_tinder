@@ -9,8 +9,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InfoScreen from '../screens/InfoScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
-import {useUserStore} from '../store';
+import {useActivityStore, useUserStore} from '../store';
 import {observer} from 'mobx-react-lite';
+import {useEffect} from 'react';
 
 export const HomeNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -39,10 +40,15 @@ export const HomeNavigator = observer(() => {
 export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
+  const activityStore = useActivityStore();
+  useEffect(() => {
+    console.log('abc');
 
+    activityStore.loadInitListProfiles();
+  }, []);
   return (
     <Stack.Navigator>
-      {!userStore.accessToken ? (
+      {userStore.accessToken ? (
         <>
           <Stack.Screen
             options={{headerShown: false}}
