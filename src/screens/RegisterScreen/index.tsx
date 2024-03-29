@@ -36,7 +36,6 @@ const RegisterScreen = () => {
 
   const onSubmit = async (data: any) => {
     const res = await userStore.userRegister({...data});
-    console.log(res);
 
     if (res.data.status == 'success') {
     } else {
@@ -57,7 +56,6 @@ const RegisterScreen = () => {
     const password = watch('password');
     return password === confirmPassword || 'Mật khẩu không khớp';
   };
-  console.log('resgister', userStore.userAccess);
 
   return (
     <Background>

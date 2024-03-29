@@ -1,12 +1,12 @@
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig} from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useEffect} from 'react';
 
 export interface axiosInstanceOptions {
   baseURL: string;
   timeout?: number;
   headers?: Record<string, string>;
 }
-
 const refreshAccessToken = async (refreshToken: string) => {
   const options = {
     method: 'post',
@@ -26,7 +26,6 @@ const refreshAccessToken = async (refreshToken: string) => {
 export const createAxiosInstance = (
   options: axiosInstanceOptions,
 ): AxiosInstance => {
-  // console.log('url', options.baseURL)
   const instance = axios.create({
     baseURL: options.baseURL,
     timeout: options.timeout || 10000,
@@ -37,15 +36,19 @@ export const createAxiosInstance = (
   });
 
   instance.interceptors.request.use(
-    config => {
-      const accessToken = AsyncStorage.getItem('accessToken');
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+    async config => {
+      try {
+        const accessToken = await AsyncStorage.getItem('accessToken');
+
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+      } catch (error) {
+        console.error('Error fetching accessToken', error);
       }
-      // console.log('headers', config.headers)
       return config;
     },
-    (error: AxiosError) => {
+    error => {
       return Promise.reject(error);
     },
   );
@@ -66,10 +69,8 @@ export const createAxiosInstance = (
 
           if (refreshToken) {
             const newAccessToken = await refreshAccessToken(refreshToken);
-            // console.log('new access token in instance: ',newAccessToken)
             if (newAccessToken && originalRequest.headers) {
               originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-              // console.log('re-request:', originalRequest)
             }
             return instance(originalRequest);
           }

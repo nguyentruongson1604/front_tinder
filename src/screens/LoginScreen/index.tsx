@@ -32,7 +32,6 @@ const LoginScreen = () => {
 
   const onSubmit = async (data: any) => {
     const res = await userStore.userLogin({...data});
-    console.log(res);
     if (res.data.status == 'success') {
       // navigation.navigate('Home');
     } else {

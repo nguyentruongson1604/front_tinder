@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/react-in-jsx-scope */
 import {Text, useTheme, View} from 'native-base';
 // import * as React from 'react';
 import {Pressable, StyleSheet} from 'react-native';

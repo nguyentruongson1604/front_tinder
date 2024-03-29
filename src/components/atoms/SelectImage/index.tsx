@@ -18,7 +18,6 @@ const SelectImage = () => {
       maxHeight: 2000,
       maxWidth: 2000,
     };
-    console.log('abc');
 
     launchImageLibrary(options, response => {
       if (response.didCancel) {

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {Actionsheet, Button, useDisclose} from 'native-base';
 import {Pressable, Text} from 'react-native';

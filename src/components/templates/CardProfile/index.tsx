@@ -1,6 +1,6 @@
-import React, {useCallback, useState} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
-import ImgSelect from '../../atoms/ImgSlider';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import ImgSliderHome from '../../atoms/ImgSliderHome';
 const CardProfile = ({user}) => {
   return (
     <View style={[styles.card, {zIndex: 3}]}>
@@ -17,7 +17,7 @@ const CardProfile = ({user}) => {
           </Text>
         </View>
       </ImageBackground> */}
-      <ImgSelect user={user} />
+      <ImgSliderHome user={user} />
     </View>
   );
 };

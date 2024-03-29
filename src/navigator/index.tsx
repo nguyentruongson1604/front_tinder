@@ -41,11 +41,23 @@ export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
   const activityStore = useActivityStore();
-  useEffect(() => {
-    console.log('abc');
+  // const removeToken = async () => {
+  //   try {
+  //     await AsyncStorage.removeItem('accessToken');
+  //     console.log('Token removed successfully');
+  //   } catch (error) {
+  //     console.error('Error removing token: ', error);
+  //   }
+  // };
 
+  // removeToken();
+  useEffect(() => {
     activityStore.loadInitListProfiles();
   }, []);
+  // console.log('listProfile in navi', activityStore.listProfile);
+  // console.log('oneperson in navi', activityStore.getOnePersonFromList());
+  // console.log('oneperson1 in navi', activityStore.curProfile);
+
   return (
     <Stack.Navigator>
       {userStore.accessToken ? (

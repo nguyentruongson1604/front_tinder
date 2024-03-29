@@ -17,17 +17,23 @@ import CardProfile from '../../components/templates/CardProfile';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useActivityStore} from '../../store';
+import {observer} from 'mobx-react-lite';
 
 const ROTATION = 60;
 const SWIPE_VELOCITY = 800;
-function HomeScreen(): React.JSX.Element {
+const HomeScreen = observer(() => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(currentIndex + 1);
-
   const {width: screenWidth} = useWindowDimensions();
   const hiddenTranslateX = 1.5 * screenWidth;
   const translateX = useSharedValue(0);
   const startX = useSharedValue(0);
+
+  const activityStore = useActivityStore();
+
+  console.log('inhome list', activityStore.listProfile.length);
+
   const rotate = useDerivedValue(
     () =>
       interpolate(translateX.value, [0, hiddenTranslateX], [0, ROTATION]) +
@@ -99,13 +105,13 @@ function HomeScreen(): React.JSX.Element {
     // translateX.value = 0;
     // setNextIndex(currentIndex + 1);
   };
-  const swipeRight = () => {
+  const swipeRight = async () => {
     console.log('quet phai');
     setTimeout(() => {
       setNextIndex(currentIndex + 1);
       setCurrentIndex(currentIndex + 1);
     }, 500);
-
+    activityStore.addOnePersonToList();
     // setTimeout(() => {
     //   translateX.value = 0;
     // }, 0);
@@ -236,7 +242,7 @@ function HomeScreen(): React.JSX.Element {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   pageContainer: {

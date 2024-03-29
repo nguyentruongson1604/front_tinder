@@ -1,23 +1,50 @@
 import {makeAutoObservable} from 'mobx';
-import {IProfile, getRandom10ProfileAPI} from '../../APIs/profile.api';
+import {
+  IProfile,
+  getRandom10ProfileAPI,
+  getRandomProfileAPI,
+} from '../../APIs/profile.api';
 import {RootStore} from '../RootStore';
 
 export class ActivityStore {
-  listProfile: [IProfile] | [] = [];
+  listProfile: IProfile[] = [];
+  idArray: string[] = [];
+  nextProfile: IProfile | undefined = undefined;
+  curProfile: IProfile | undefined = undefined;
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
   }
 
   loadInitListProfiles = async () => {
     try {
-      console.log('heree');
-
       const res = await getRandom10ProfileAPI();
-      console.log(res.data);
 
       this.listProfile = res.data;
+      const list5IdArray = this.listProfile.map(item => item?._id as string);
+      this.idArray.push(...list5IdArray);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    }
+  };
+
+  getOnePersonFromList = () => {
+    if (this.listProfile.length > 1 && this.listProfile) {
+      const currProfile = this.listProfile.shift();
+      this.curProfile = currProfile;
+      return currProfile;
+    } else {
+      return null;
+    }
+  };
+
+  addOnePersonToList = async () => {
+    try {
+      const res = await getRandomProfileAPI();
+      if (res.data) {
+        this.listProfile.push(res.data);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 }
