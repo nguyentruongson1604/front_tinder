@@ -26,6 +26,8 @@ const images = [
 ];
 
 const ImgSliderHome = ({user}) => {
+  console.log('here in imgslider', user);
+
   const width =
     Dimensions.get('window').width -
     (Dimensions.get('window').width * 20) / 100;
@@ -112,6 +114,7 @@ const ImgSliderHome = ({user}) => {
                 </View>
                 <Text style={{color: 'white', fontSize: 18, lineHeight: 24}}>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  {user?._id}
                 </Text>
               </View>
             ) : (

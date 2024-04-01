@@ -65,7 +65,7 @@ export const createAxiosInstance = (
       if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
-          const refreshToken = AsyncStorage.getItem('refreshToken');
+          const refreshToken = await AsyncStorage.getItem('refreshToken');
 
           if (refreshToken) {
             const newAccessToken = await refreshAccessToken(refreshToken);

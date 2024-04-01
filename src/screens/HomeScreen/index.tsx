@@ -32,7 +32,11 @@ const HomeScreen = observer(() => {
 
   const activityStore = useActivityStore();
 
-  console.log('inhome list', activityStore.listProfile.length);
+  // console.log('inhome list', activityStore.listProfile.length);
+  // console.log('inhome list', activityStore.listProfile);
+  // console.log('inhome listId', activityStore.idArray);
+
+  console.log('activityStore.listProfile[0]', activityStore.listProfile[0]);
 
   const rotate = useDerivedValue(
     () =>
@@ -163,7 +167,7 @@ const HomeScreen = observer(() => {
       <View style={styles.pageContainer}>
         <GestureHandlerRootView style={{height: '100%'}}>
           <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
-            <CardProfile user={nextIndex} />
+            <CardProfile user={activityStore.listProfile[1]} />
           </Animated.View>
           <GestureDetector gesture={pan}>
             <Animated.View style={[cardStyle, styles.animatedWrap]}>
@@ -179,7 +183,7 @@ const HomeScreen = observer(() => {
                 resizeMode="contain"
               />
               {/* </View> */}
-              <CardProfile user={currentIndex} />
+              <CardProfile user={activityStore.listProfile[0]} />
             </Animated.View>
           </GestureDetector>
         </GestureHandlerRootView>

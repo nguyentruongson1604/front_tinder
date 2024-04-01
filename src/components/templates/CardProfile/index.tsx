@@ -4,7 +4,8 @@ import ImgSliderHome from '../../atoms/ImgSliderHome';
 const CardProfile = ({user}) => {
   return (
     <View style={[styles.card, {zIndex: 3}]}>
-      <Text>{user}</Text>
+      <Text>{user?.age}</Text>
+
       {/* <ImageBackground
         source={{
           uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',

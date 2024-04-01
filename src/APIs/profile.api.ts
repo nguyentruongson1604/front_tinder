@@ -40,7 +40,7 @@ export const updateMyProfileAPI = async (profile?: IProfile) => {
   return await axios(option);
 };
 
-export const getRandomProfileAPI = async () => {
+export const getRandomProfileAPI = async (idArray: string[]) => {
   const option: axiosInstanceOptions = {
     baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
@@ -48,9 +48,10 @@ export const getRandomProfileAPI = async () => {
       accept: 'application/json',
       'content-type': 'application/json',
     },
+    // data: idArray,
   };
   const instance = createAxiosInstance(option);
-  const res = await instance.get('/');
+  const res = await instance.post('', {idArray});
   return res;
 };
 

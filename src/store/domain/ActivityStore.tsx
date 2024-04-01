@@ -39,9 +39,10 @@ export class ActivityStore {
 
   addOnePersonToList = async () => {
     try {
-      const res = await getRandomProfileAPI();
-      if (res.data) {
-        this.listProfile.push(res.data);
+      const res = await getRandomProfileAPI(this.idArray);
+      if (res.data.data) {
+        this.listProfile.push(res.data.data);
+        this.idArray.push(res.data.data._id);
       }
     } catch (error) {
       console.error(error);
