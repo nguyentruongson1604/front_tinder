@@ -27,13 +27,9 @@ export class ActivityStore {
     }
   };
 
-  getOnePersonFromList = () => {
+  deletePersonFromList = () => {
     if (this.listProfile.length > 1 && this.listProfile) {
-      const currProfile = this.listProfile.shift();
-      this.curProfile = currProfile;
-      return currProfile;
-    } else {
-      return null;
+      this.listProfile.shift();
     }
   };
 

@@ -26,8 +26,6 @@ const images = [
 ];
 
 const ImgSliderHome = ({user}) => {
-  console.log('here in imgslider', user);
-
   const width =
     Dimensions.get('window').width -
     (Dimensions.get('window').width * 20) / 100;

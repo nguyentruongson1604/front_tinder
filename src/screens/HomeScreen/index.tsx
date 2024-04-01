@@ -25,18 +25,21 @@ const SWIPE_VELOCITY = 800;
 const HomeScreen = observer(() => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(currentIndex + 1);
+
   const {width: screenWidth} = useWindowDimensions();
   const hiddenTranslateX = 1.5 * screenWidth;
   const translateX = useSharedValue(0);
   const startX = useSharedValue(0);
 
   const activityStore = useActivityStore();
+  // const [currentProfile, setCurrentProfile] = useState(
+  //   activityStore.listProfile[0],
+  // );
+  // const [nextProfile, setNextProfile] = useState(activityStore.listProfile[0]);
 
   // console.log('inhome list', activityStore.listProfile.length);
   // console.log('inhome list', activityStore.listProfile);
   // console.log('inhome listId', activityStore.idArray);
-
-  console.log('activityStore.listProfile[0]', activityStore.listProfile[0]);
 
   const rotate = useDerivedValue(
     () =>
@@ -104,16 +107,20 @@ const HomeScreen = observer(() => {
   }));
   const swipeLeft = () => {
     console.log('quet trai');
-    setNextIndex(currentIndex + 1);
     setCurrentIndex(currentIndex + 1);
     // translateX.value = 0;
     // setNextIndex(currentIndex + 1);
+    activityStore.deletePersonFromList();
+    console.log(activityStore.listProfile.length);
   };
   const swipeRight = async () => {
     console.log('quet phai');
     setTimeout(() => {
       setNextIndex(currentIndex + 1);
       setCurrentIndex(currentIndex + 1);
+
+      // activityStore.deletePersonFromList();
+      console.log(activityStore.listProfile.length);
     }, 500);
     activityStore.addOnePersonToList();
     // setTimeout(() => {
@@ -167,7 +174,7 @@ const HomeScreen = observer(() => {
       <View style={styles.pageContainer}>
         <GestureHandlerRootView style={{height: '100%'}}>
           <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
-            <CardProfile user={activityStore.listProfile[1]} />
+            <CardProfile user={activityStore.listProfile[nextIndex]} />
           </Animated.View>
           <GestureDetector gesture={pan}>
             <Animated.View style={[cardStyle, styles.animatedWrap]}>
@@ -183,7 +190,7 @@ const HomeScreen = observer(() => {
                 resizeMode="contain"
               />
               {/* </View> */}
-              <CardProfile user={activityStore.listProfile[0]} />
+              <CardProfile user={activityStore.listProfile[currentIndex]} />
             </Animated.View>
           </GestureDetector>
         </GestureHandlerRootView>

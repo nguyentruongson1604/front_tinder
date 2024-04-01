@@ -5,6 +5,7 @@ const CardProfile = ({user}) => {
   return (
     <View style={[styles.card, {zIndex: 3}]}>
       <Text>{user?.age}</Text>
+      {/* <Text>{user}</Text> */}
 
       {/* <ImageBackground
         source={{
