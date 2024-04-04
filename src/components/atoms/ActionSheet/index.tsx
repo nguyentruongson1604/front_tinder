@@ -1,18 +1,44 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
-import {Actionsheet, Button, useDisclose} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {Actionsheet} from 'native-base';
 import {Pressable, Text} from 'react-native';
 import {View} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Chip} from '../ChipCustom';
+import {Chip} from '../ChipPress';
 
-const ActionsheetCustom = () => {
+export interface IActionsheetCustom {
+  isOpen: any;
+  onOpen: any;
+  onClose: any;
+  data: any;
+  actionSheetTitle: any;
+}
+const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
+  isOpen,
+  onOpen,
+  onClose,
+  data,
+  actionSheetTitle,
+}) => {
   const [isSelect, setisSelect] = useState<string>('');
-  const {isOpen, onOpen, onClose} = useDisclose();
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  useEffect(() => {
+    setisSelect('');
+    setSelectedItems([]);
+  }, [isOpen]);
+  console.log(selectedItems);
+
+  const handleItemClick = (item: string) => {
+    if (selectedItems.includes(item)) {
+      setSelectedItems(
+        selectedItems.filter(selectedItem => selectedItem !== item),
+      );
+    } else {
+      setSelectedItems([...selectedItems, item]);
+    }
+  };
   return (
     <>
-      <Button onPress={onOpen}></Button>
       <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
           <View style={{paddingHorizontal: 10, width: '100%'}}>
@@ -42,7 +68,7 @@ const ActionsheetCustom = () => {
                 marginBottom: 15,
               }}>
               <Text style={{fontSize: 34, fontWeight: 'bold'}}>
-                Thông tin thêm về tôi
+                {actionSheetTitle.bigTitle}
               </Text>
             </View>
             <View
@@ -53,19 +79,16 @@ const ActionsheetCustom = () => {
                 borderBottomWidth: 0.7,
               }}>
               <Text style={{color: '#3c3939', fontSize: 16}}>
-                Thêm thông tin bản thân để mọi ngừoi hiểu rõ hơn về con ngừoi
+                Thêm thông tin bản thân để mọi người hiểu rõ hơn về con người
                 tuyệt vời của bạn
               </Text>
             </View>
 
             {/* bottom */}
             <View style={{paddingVertical: 25, flexDirection: 'row'}}>
-              <Ionicons
-                name="school-outline"
-                style={{fontSize: 22, marginRight: 10, color: '#F63A6E'}}
-              />
+              {actionSheetTitle.icon}
               <Text style={{fontWeight: 'bold', fontSize: 18, color: 'black'}}>
-                Trình độ học vấn của bạn?
+                {actionSheetTitle?.smallTitle} của bạn?
               </Text>
             </View>
             <View
@@ -75,25 +98,33 @@ const ActionsheetCustom = () => {
                 flexDirection: 'row',
                 paddingBottom: 25,
               }}>
-              <Chip
-                content="dang hoc dai hoc"
-                isHighlight={isSelect === 'dang hoc dai hoc'}
-                onPress={() => {
-                  setisSelect(pre => {
-                    return pre === 'dang hoc dai hoc' ? '' : 'dang hoc dai hoc';
-                  });
-                }}
-              />
-              <Chip
-                content="cu nhan"
-                isHighlight={isSelect === 'cu nhan'}
-                onPress={() => {
-                  setisSelect('cu nhan');
-                }}
-              />
-              <Chip content="tien si" />
-              <Chip content="thac si" />
-              <Chip content="truong day nghe" />
+              {actionSheetTitle.bigTitle == 'Thông tin thêm về tôi'
+                ? data.map(item => {
+                    return (
+                      <Chip
+                        key={item._id}
+                        content={item.name}
+                        isHighlight={isSelect === item._id}
+                        onPress={() => {
+                          setisSelect(pre => {
+                            return pre === item._id ? '' : item._id;
+                          });
+                        }}
+                      />
+                    );
+                  })
+                : data.map(item => {
+                    return (
+                      <Chip
+                        key={item._id}
+                        content={item.name}
+                        isHighlight={
+                          selectedItems.includes(item._id) ? true : false
+                        }
+                        onPress={() => handleItemClick(item._id)}
+                      />
+                    );
+                  })}
             </View>
           </View>
         </Actionsheet.Content>

@@ -1,6 +1,7 @@
+/* eslint-disable no-catch-shadow */
+/* eslint-disable @typescript-eslint/no-shadow */
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig} from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useEffect} from 'react';
 
 export interface axiosInstanceOptions {
   baseURL: string;
@@ -10,7 +11,7 @@ export interface axiosInstanceOptions {
 const refreshAccessToken = async (refreshToken: string) => {
   const options = {
     method: 'post',
-    url: '/api/token',
+    url: 'http://192.168.100.57:3031/api/token',
     data: {
       refreshToken: refreshToken,
     },
@@ -18,7 +19,7 @@ const refreshAccessToken = async (refreshToken: string) => {
 
   const res = await axios(options);
   AsyncStorage.setItem('accessToken', res.data.accessToken);
-  AsyncStorage.setItem('refreshToken', res.data.refreshToken);
+  // AsyncStorage.setItem('refreshToken', res.data.refreshToken);
 
   return res.data.accessToken;
 };
@@ -61,8 +62,7 @@ export const createAxiosInstance = (
       const originalRequest = error.config as AxiosRequestConfig & {
         _retry: boolean;
       };
-
-      if (error.response?.status === 401 && !originalRequest._retry) {
+      if (error.response?.status && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
           const refreshToken = await AsyncStorage.getItem('refreshToken');

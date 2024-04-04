@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-lone-blocks */
 /* eslint-disable react/react-in-jsx-scope */
-import {SafeAreaView, View} from 'react-native';
+import {SafeAreaView, Text, View} from 'react-native';
 import TopNavigator from '../components/templates/TopNavigator';
 import HomeScreen from '../screens/HomeScreen';
 import SelectImage from '../components/atoms/SelectImage';
@@ -9,9 +9,33 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InfoScreen from '../screens/InfoScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
-import {useActivityStore, useUserStore} from '../store';
+import {useActivityStore, useHobbiesStore, useUserStore} from '../store';
 import {observer} from 'mobx-react-lite';
 import {useEffect} from 'react';
+import EditProfileHeader from '../components/templates/EditProfileHeader';
+import EditHobbyScreen from '../screens/EditHobbyScreen';
+
+export const EditProfileNavigator = observer(() => {
+  const Stack = createNativeStackNavigator();
+
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <EditProfileHeader />
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="EditPicture"
+          component={SelectImage}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="EditHobby"
+          component={EditHobbyScreen}
+        />
+      </Stack.Navigator>
+    </SafeAreaView>
+  );
+});
 
 export const HomeNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -30,7 +54,7 @@ export const HomeNavigator = observer(() => {
         <Stack.Screen
           options={{headerShown: false}}
           name="Detail"
-          component={SelectImage}
+          component={EditProfileNavigator}
         />
       </Stack.Navigator>
     </SafeAreaView>
@@ -41,6 +65,7 @@ export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
   const activityStore = useActivityStore();
+  const hobbiesStore = useHobbiesStore();
   // const removeToken = async () => {
   //   try {
   //     await AsyncStorage.removeItem('accessToken');
@@ -53,6 +78,7 @@ export const AppNavigator = observer(() => {
   // removeToken();
   useEffect(() => {
     activityStore.loadInitListProfiles();
+    hobbiesStore.getHobbiesType();
   }, []);
   // console.log('listProfile in navi', activityStore.listProfile);
   // console.log('oneperson in navi', activityStore.getOnePersonFromList());

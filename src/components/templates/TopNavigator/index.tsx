@@ -27,7 +27,7 @@ const TopNavigator = () => {
         style={styles.iconWrap}
         onPress={() => {
           setActiveButton('HOME');
-          navigation.push('Switch');
+          navigation.navigate('Switch');
         }}>
         <FontistoIcon
           name="tinder"
@@ -61,7 +61,7 @@ const TopNavigator = () => {
         style={styles.iconWrap}
         onPress={() => {
           setActiveButton('CHAT');
-          navigation.push('Detail');
+          navigation.navigate('Detail');
         }}>
         <AntDesign
           name="wechat"

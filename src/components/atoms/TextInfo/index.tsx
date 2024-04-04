@@ -1,5 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react-native/no-inline-styles */
 import {Text, View} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export interface ITextInfo {
   title?: string;
@@ -24,17 +25,18 @@ export const TextInfo: React.FC<ITextInfo> = ({
         borderTopColor: borderTop ? '#e0dbdb' : '',
         borderBottomWidth: borderBottom ? 1 : 0,
         borderBottomColor: borderBottom ? '#e0dbdb' : '',
+        marginBottom: 8,
       }}>
       <Text
         style={{
           fontSize: 15,
           fontWeight: '700',
           color: '#4b4848',
-          marginBottom: 5,
+          marginBottom: 8,
         }}>
         {title}
       </Text>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', marginVertical: 0}}>
         {icon}
         <Text
           style={{

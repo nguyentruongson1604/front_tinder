@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Animated, {
@@ -32,6 +33,7 @@ const HomeScreen = observer(() => {
   const startX = useSharedValue(0);
 
   const activityStore = useActivityStore();
+
   // const [currentProfile, setCurrentProfile] = useState(
   //   activityStore.listProfile[0],
   // );
@@ -40,7 +42,7 @@ const HomeScreen = observer(() => {
   // console.log('inhome list', activityStore.listProfile.length);
   // console.log('inhome list', activityStore.listProfile);
   // console.log('inhome listId', activityStore.idArray);
-
+  // console.log(activityStore.listProfile.length);
   const rotate = useDerivedValue(
     () =>
       interpolate(translateX.value, [0, hiddenTranslateX], [0, ROTATION]) +
@@ -107,22 +109,27 @@ const HomeScreen = observer(() => {
   }));
   const swipeLeft = () => {
     console.log('quet trai');
+    // setTimeout(() => {
+    setNextIndex(currentIndex + 1);
     setCurrentIndex(currentIndex + 1);
-    // translateX.value = 0;
-    // setNextIndex(currentIndex + 1);
     activityStore.deletePersonFromList();
-    console.log(activityStore.listProfile.length);
+    // }, 500);
+    activityStore.addOnePersonToList();
+
+    // setTimeout(() => {
+    //   translateX.value = 0;
+    // }, 0);
+    // setNextIndex(currentIndex + 1);
   };
   const swipeRight = async () => {
     console.log('quet phai');
-    setTimeout(() => {
-      setNextIndex(currentIndex + 1);
-      setCurrentIndex(currentIndex + 1);
-
-      // activityStore.deletePersonFromList();
-      console.log(activityStore.listProfile.length);
-    }, 500);
+    // setTimeout(() => {
+    setNextIndex(currentIndex + 1);
+    setCurrentIndex(currentIndex + 1);
+    activityStore.deletePersonFromList();
+    // }, 500);
     activityStore.addOnePersonToList();
+
     // setTimeout(() => {
     //   translateX.value = 0;
     // }, 0);
@@ -161,9 +168,10 @@ const HomeScreen = observer(() => {
 
   //  sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới. Và ph xét cho giá trị của translateX.value tại vị trí ban đầu
   useEffect(() => {
-    setNextIndex(currentIndex + 1);
+    setNextIndex(1);
+    setCurrentIndex(0);
     translateX.value = 0;
-  }, [currentIndex, translateX]);
+  }, [currentIndex, nextIndex, translateX]);
 
   // useEffect(() => {
   //   translateX.value = 0;
@@ -210,8 +218,11 @@ const HomeScreen = observer(() => {
               mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
             });
             setTimeout(() => {
+              setNextIndex(currentIndex + 1);
               setCurrentIndex(currentIndex + 1);
-            }, 500);
+              activityStore.deletePersonFromList();
+              activityStore.addOnePersonToList();
+            }, 300);
           }}>
           <View style={[styles.button]}>
             <FontAwesome
@@ -234,8 +245,11 @@ const HomeScreen = observer(() => {
               mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
             });
             setTimeout(() => {
+              setNextIndex(currentIndex + 1);
               setCurrentIndex(currentIndex + 1);
-            }, 500);
+              activityStore.deletePersonFromList();
+              activityStore.addOnePersonToList();
+            }, 300);
           }}>
           <View style={styles.button}>
             <FontAwesome

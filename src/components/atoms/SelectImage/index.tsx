@@ -1,16 +1,21 @@
-import {View} from 'native-base';
+/* eslint-disable react/self-closing-comp */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react-native/no-inline-styles */
+import {View, useDisclose} from 'native-base';
 import {useState} from 'react';
-import {Image, Pressable, ScrollView, StyleSheet, Text} from 'react-native';
+import {Image, Pressable, ScrollView, StyleSheet} from 'react-native';
 import {
   MediaType,
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import TopNavigator from '../../templates/TopNavigator';
+import ActionsheetPicker from '../ActionSheetPicker';
 
 const SelectImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const {isOpen, onOpen, onClose} = useDisclose();
+
   const openImagePicker = () => {
     const options = {
       mediaType: 'photo' as MediaType,
@@ -60,37 +65,6 @@ const SelectImage = () => {
 
   return (
     <View style={{flex: 1}}>
-      <View style={styles.fixedHeader}>
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            justifyContent: 'space-between',
-          }}>
-          <View
-            style={{
-              width: '20%',
-            }}></View>
-          <View style={{width: '60%', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontSize: 22,
-                fontWeight: 'bold',
-              }}>
-              Sửa thông tin
-            </Text>
-          </View>
-
-          <View
-            style={{
-              width: '20%',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontWeight: '600'}}>Xong</Text>
-          </View>
-        </View>
-      </View>
       <ScrollView style={{flex: 1, backgroundColor: '#aaaae13b'}}>
         <View
           style={{
@@ -119,8 +93,10 @@ const SelectImage = () => {
                 bottom: -10,
                 right: -10,
                 zIndex: 1,
+                backgroundColor: 'white',
+                borderRadius: 30,
               }}
-              onPress={openImagePicker}>
+              onPress={onOpen}>
               <FontAwesome6
                 name="circle-plus"
                 style={{
@@ -131,6 +107,13 @@ const SelectImage = () => {
             </Pressable>
           </View>
         </View>
+        <ActionsheetPicker
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+          handleClickFirstItem={handleCameraLaunch}
+          handleClickSecondItem={openImagePicker}
+        />
       </ScrollView>
     </View>
   );

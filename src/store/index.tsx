@@ -43,3 +43,8 @@ export const useProfileStore = () => {
   const store = useStore();
   return store.profileStore;
 };
+
+export const useHobbiesStore = () => {
+  const store = useStore();
+  return store.hobbiesStore;
+};

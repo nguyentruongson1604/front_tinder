@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import {Chip} from '../ChipCustom';
+import {Chip} from '../ChipPress';
+import {useNavigation} from '@react-navigation/native';
 
 // const width =
 //   Dimensions.get('window').width - (Dimensions.get('window').width * 20) / 100;
@@ -26,6 +27,7 @@ const images = [
 ];
 
 const ImgSliderHome = ({user}) => {
+  const navigation = useNavigation();
   const width =
     Dimensions.get('window').width -
     (Dimensions.get('window').width * 20) / 100;
@@ -36,6 +38,8 @@ const ImgSliderHome = ({user}) => {
     scrollViewRef.current.scrollTo({x: 0, y: 0, animated: false});
     // scrollViewRef.current = 0;
   }, [user]);
+  console.log('user', user);
+
   const goToNextSlide = () => {
     const newIndex = currentIndex + 1;
     if (newIndex < images.length) {
@@ -80,11 +84,7 @@ const ImgSliderHome = ({user}) => {
         }}>
         {images.map((image, index) => (
           <>
-            <Image
-              key={index}
-              source={{uri: image}}
-              style={[styles.image, {width}]}
-            />
+            <Image source={{uri: image}} style={[styles.image, {width}]} />
 
             {index == 0 ? (
               <View
@@ -106,7 +106,7 @@ const ImgSliderHome = ({user}) => {
                       fontSize: 30,
                       marginRight: 8,
                     }}>
-                    Nguyen Son
+                    {user?.user?.lastName} {user?.user?.firstName}
                   </Text>
                   <Text style={{color: 'white', fontSize: 30}}>21</Text>
                 </View>
@@ -134,14 +134,26 @@ const ImgSliderHome = ({user}) => {
                 <View style={{flexDirection: 'row'}}>
                   <Ionicons
                     name="location-sharp"
-                    style={{color: 'white', fontSize: 20}}
+                    style={{color: 'white', fontSize: 22}}
                   />
-                  <Text style={{color: 'white', fontSize: 20, marginLeft: 7}}>
-                    Cau Giay, Ha Noi
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 22,
+                      marginLeft: 5,
+                      marginBottom: 8,
+                    }}>
+                    {user?.adress}
                   </Text>
                 </View>
-                <Text style={{color: 'white', fontSize: 18, lineHeight: 24}}>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 22,
+                    lineHeight: 24,
+                    marginLeft: 7,
+                  }}>
+                  cách xa {Math.ceil(user?.distance / 1000)} km
                 </Text>
               </View>
             ) : (
@@ -179,7 +191,7 @@ const ImgSliderHome = ({user}) => {
       </View>
       <Pressable
         onPress={() => {
-          console.log('abc');
+          navigation.navigate('Info', {user});
         }}
         style={{
           position: 'absolute',

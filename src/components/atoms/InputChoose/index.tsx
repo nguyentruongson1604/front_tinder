@@ -1,8 +1,8 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react-native/no-inline-styles */
 import {Text, useTheme, View} from 'native-base';
 // import * as React from 'react';
 import {Pressable, StyleSheet} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 export interface IInput {
   leftChildren?: any;
@@ -12,6 +12,7 @@ export interface IInput {
   borderBottom?: boolean;
   height?: any;
   marginLeft?: any;
+  backgroundColor?: string;
 }
 
 export const InputChoose: React.FC<IInput> = ({
@@ -22,6 +23,7 @@ export const InputChoose: React.FC<IInput> = ({
   borderBottom = true,
   height = 55,
   marginLeft = 15,
+  backgroundColor,
 }) => {
   return (
     <Pressable onPress={onPress}>
@@ -32,10 +34,11 @@ export const InputChoose: React.FC<IInput> = ({
           height: height,
           alignItems: 'center',
           marginLeft: marginLeft,
-          borderTopColor: borderBottom ? '#e0dbdb' : '',
-          borderTopWidth: borderBottom ? 1 : 0,
-          borderBottomColor: borderTop ? '#e0dbdb' : '',
-          borderBottomWidth: borderTop ? 1 : 0,
+          borderTopColor: borderTop ? '#e0dbdb' : '',
+          borderTopWidth: borderTop ? 1 : 0,
+          borderBottomColor: borderBottom ? '#e0dbdb' : '',
+          borderBottomWidth: borderBottom ? 1 : 0,
+          backgroundColor: backgroundColor ? backgroundColor : 'white',
         }}>
         <View style={{flexDirection: 'row'}}>
           {/* <MaterialIcons name="pets" style={{fontSize: 22, color: '#948d8d'}} />

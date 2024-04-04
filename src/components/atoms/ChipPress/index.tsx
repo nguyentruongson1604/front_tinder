@@ -70,6 +70,6 @@ const makeStyles = (theme: any) =>
     text: {
       // fontFamily: theme.fontConfig.primary[400],
       fontSize: 12,
-      lineHeight: 15,
+      lineHeight: 17,
     },
   });
