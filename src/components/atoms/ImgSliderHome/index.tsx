@@ -38,7 +38,6 @@ const ImgSliderHome = ({user}) => {
     scrollViewRef.current.scrollTo({x: 0, y: 0, animated: false});
     // scrollViewRef.current = 0;
   }, [user]);
-  console.log('user', user);
 
   const goToNextSlide = () => {
     const newIndex = currentIndex + 1;

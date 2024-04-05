@@ -5,7 +5,14 @@ import {
   getRandomProfileAPI,
 } from '../../APIs/profile.api';
 import {RootStore} from '../RootStore';
+import {updateActivityAPI} from '../../APIs/activity.api';
 
+export interface IUpdateActivity {
+  senderUser: string;
+  senderType: string;
+  receiverUser: string;
+  receiverType: string;
+}
 export class ActivityStore {
   listProfile: IProfile[] = [];
   idArray: string[] = [];
@@ -40,6 +47,22 @@ export class ActivityStore {
         this.listProfile.push(res.data.data);
         this.idArray.push(res.data.data._id);
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  updateActivity = async (profile: IProfile, type: string) => {
+    try {
+      console.log('profile.user._id', profile.user._id);
+
+      const res = await updateActivityAPI({
+        senderUser: profile.user._id,
+        senderType: type,
+        receiverUser: profile.user._id,
+        receiverType: type,
+      });
+      console.log(res);
     } catch (error) {
       console.error(error);
     }

@@ -54,7 +54,7 @@ export const getRandomProfileAPI = async (idArray: string[]) => {
     // data: idArray,
   };
   const instance = createAxiosInstance(option);
-  const res = await instance.post('', {idArray});
+  const res = await instance.post('', {idArray}); //phải dùng {} vì idArray là 1 mảng nhưng gửi req cần 1 Object
   return res;
 };
 

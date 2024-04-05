@@ -107,25 +107,30 @@ const HomeScreen = observer(() => {
   const likeButton = useAnimatedStyle(() => ({
     opacity: interpolate(translateX.value, [0, -hiddenTranslateX / 5], [0, 1]),
   }));
-  const swipeLeft = () => {
-    console.log('quet trai');
+  const swipeLeft = async () => {
+    console.log('quet phai');
     // setTimeout(() => {
     setNextIndex(currentIndex + 1);
     setCurrentIndex(currentIndex + 1);
-    activityStore.deletePersonFromList();
+    await activityStore.updateActivity(
+      activityStore.listProfile[currentIndex],
+      'Like',
+    );
+    await activityStore.deletePersonFromList();
     // }, 500);
-    activityStore.addOnePersonToList();
+    await activityStore.addOnePersonToList();
 
     // setTimeout(() => {
     //   translateX.value = 0;
     // }, 0);
     // setNextIndex(currentIndex + 1);
   };
-  const swipeRight = async () => {
-    console.log('quet phai');
+  const swipeRight = () => {
+    console.log('quet trai');
     // setTimeout(() => {
     setNextIndex(currentIndex + 1);
     setCurrentIndex(currentIndex + 1);
+    activityStore.updateActivity(activityStore.listProfile[0], 'Unlike');
     activityStore.deletePersonFromList();
     // }, 500);
     activityStore.addOnePersonToList();
