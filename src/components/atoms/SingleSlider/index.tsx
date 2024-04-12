@@ -14,6 +14,7 @@ export interface ISlider {
   start: number;
   end: number;
   init: number;
+  value: number[];
   setValue: any;
 }
 
@@ -24,14 +25,14 @@ const SingleSlider: React.FC<ISlider> = ({
   start,
   end,
   init,
+  value,
   setValue,
 }) => {
   const {width} = Dimensions.get('window');
   const [sliderValue, setSliderValue] = useState([init]);
   const onValueSingleChange = values => {
-    setSliderValue(values);
+    // setSliderValue(values);
     setValue(values[0]);
-    // console.log('values', values);
   };
   return (
     <View
@@ -54,7 +55,7 @@ const SingleSlider: React.FC<ISlider> = ({
         <Text style={{fontSize: 18}}>{title}</Text>
         <View>
           <Text style={{fontSize: 18}}>
-            {sliderValue} {unit}
+            {value} {unit}
           </Text>
         </View>
       </View>
@@ -81,7 +82,7 @@ const SingleSlider: React.FC<ISlider> = ({
         /> */}
 
         <MultiSlider
-          values={sliderValue}
+          values={value}
           sliderLength={width - 40}
           onValuesChange={onValueSingleChange}
           min={start}

@@ -1,22 +1,22 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {ScrollView, useDisclose} from 'native-base';
-import {Modal, Pressable, Text, TextInput, View} from 'react-native';
+import {Pressable, Text, TextInput, View} from 'react-native';
 import {InputChoose} from '../../components/atoms/InputChoose';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Entypo from 'react-native-vector-icons/Entypo';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Chip} from '../../components/atoms/ChipShow';
 import {useHobbiesStore, useProfileStore} from '../../store';
 import {IHobbyType} from '../../store/domain/HobbiesStore';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import ActionsheetCustom from '../../components/atoms/ActionSheet';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
+import {ModalCustom} from '../../components/atoms/Modal';
 
 export interface IHobbyChoose {
   title?: string;
@@ -229,15 +229,14 @@ const EditHobbyScreen = observer(() => {
     smallTitle: '',
   });
   const [modalVisible, setModalVisible] = useState(false);
-  const [text, setText] = useState(1);
-  useEffect(() => {
-    console.log('MOUNT');
-  }, []);
+  const [age, setAge] = useState<number[]>([profileStore.age]);
+  const [gender, setGender] = useState<string>(profileStore.gender);
 
-  // console.log('profileStore.age', profileStore.age);
-  const change = (a: number) => {
-    profileStore.setAge(a);
+  const handlePressPopup = (gender: string) => {
+    setGender(gender);
+    setModalVisible(false);
   };
+
   return (
     <ScrollView style={{backgroundColor: '#aaaae13b', flexGrow: 1}}>
       <View style={{marginBottom: 20, marginTop: 10}}>
@@ -276,10 +275,16 @@ const EditHobbyScreen = observer(() => {
       </View>
       <View style={{marginBottom: 20}}>
         <HobbyTitle title="THÔNG TIN THÊM VỀ TÔI" important />
-        <HobbyChoose title="Giới tính" textChoose="Thêm" />
+        <HobbyChoose
+          title="Giới tính"
+          textChoose={gender}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
         <SingleSlider
-          // value={age}
-          setValue={change}
+          value={age}
+          setValue={setAge}
           title="Tuổi của bạn"
           unit="tuổi"
           start={18}
@@ -348,9 +353,7 @@ const EditHobbyScreen = observer(() => {
           }
         })}
       </View>
-      <Pressable onPress={() => setText(12)}>
-        <Text>Show Modal</Text>
-      </Pressable>
+
       <ActionsheetCustom
         isOpen={isOpen}
         onClose={onClose}
@@ -358,22 +361,7 @@ const EditHobbyScreen = observer(() => {
         data={hobbiesStore.hobbiesByType}
         actionSheetTitle={actionSheetTitle}
       />
-      <Modal animationType="fade" transparent={true} visible={modalVisible}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-          }}>
-          <View style={{backgroundColor: 'white'}}>
-            <Text>Hello World!</Text>
-            <Pressable onPress={() => setModalVisible(!modalVisible)}>
-              <Text>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
+      <ModalCustom open={modalVisible} handlePress={handlePressPopup} />
     </ScrollView>
   );
 });

@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-lone-blocks */
 /* eslint-disable react/react-in-jsx-scope */
-import {SafeAreaView, Text, View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import TopNavigator from '../components/templates/TopNavigator';
 import HomeScreen from '../screens/HomeScreen';
 import SelectImage from '../components/atoms/SelectImage';
@@ -59,13 +59,13 @@ export const HomeNavigator = observer(() => {
         />
         <Stack.Screen
           options={{headerShown: false}}
-          name="Detail"
-          component={EditProfileNavigator}
+          name="Setting"
+          component={SettingScreen}
         />
         <Stack.Screen
           options={{headerShown: false}}
-          name="Setting"
-          component={SettingScreen}
+          name="Detail"
+          component={EditProfileNavigator}
         />
       </Stack.Navigator>
     </SafeAreaView>

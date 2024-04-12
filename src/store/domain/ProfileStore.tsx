@@ -16,6 +16,7 @@ export class ProfileStore {
   description: string = '';
   title: string = '';
   age: number = 18;
+  gender: string = '';
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
@@ -30,6 +31,7 @@ export class ProfileStore {
         this.description = res.data.data.description;
         this.title = res.data.data.title;
         this.age = res.data.data.age;
+        this.gender = res.data.data.gender;
       });
     } catch (error) {
       console.error(error);
@@ -48,7 +50,6 @@ export class ProfileStore {
   };
   setAge = (age: number) => {
     this.age = age;
-    console.log('this.age', this.age);
   };
   updateMyProfile = async (profile?: IProfile) => {
     try {
