@@ -5,6 +5,7 @@ import {Pressable, Text} from 'react-native';
 import {View} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Chip} from '../ChipPress';
+import {useProfileStore} from '../../../store';
 
 export interface IActionsheetCustom {
   isOpen: any;
@@ -20,13 +21,23 @@ const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
   data,
   actionSheetTitle,
 }) => {
+  const profileStore = useProfileStore();
+  // console.log('actionSheetTitle.type', actionSheetTitle.type);
+
   const [isSelect, setisSelect] = useState<string>('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   useEffect(() => {
-    setisSelect('');
-    setSelectedItems([]);
+    if (profileStore.listHobby[actionSheetTitle.type]) {
+      setisSelect(profileStore.listHobby[actionSheetTitle.type][0].id || '');
+      setSelectedItems(
+        profileStore.listHobby[actionSheetTitle.type].map(item => item.id) ||
+          [],
+      );
+    } else {
+      setisSelect('');
+      setSelectedItems([]);
+    }
   }, [isOpen]);
-  console.log(selectedItems);
 
   const handleItemClick = (item: string) => {
     if (selectedItems.includes(item)) {

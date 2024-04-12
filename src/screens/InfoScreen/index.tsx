@@ -49,15 +49,7 @@ const hobbyInfos = {
     ),
     title: 'Trình độ học vấn',
   },
-  communication: {
-    icon: (
-      <Ionicons
-        name="chatbox-ellipses-outline"
-        style={{fontSize: 18, color: '#948d8d'}}
-      />
-    ),
-    title: 'Phong cách giao tiếp',
-  },
+
   things: {
     icon: (
       <MaterialCommunityIcons

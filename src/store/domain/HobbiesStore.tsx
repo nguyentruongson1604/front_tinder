@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 import {RootStore} from '../RootStore';
 import {
   getHobbiesTypeAPI,
@@ -32,7 +32,9 @@ export class HobbiesStore {
   getHobbyNameFromType = async (hobbyType: string) => {
     try {
       const res = await getHobbyNameFromTypeAPI(hobbyType);
-      this.hobbiesByType = res.data.data;
+      runInAction(() => {
+        this.hobbiesByType = res.data.data;
+      });
     } catch (error) {
       console.error(error);
     }

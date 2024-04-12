@@ -75,10 +75,26 @@ export const getRandom10ProfileAPI = async () => {
   return res;
 };
 
+export const getMyProfileAPI = async () => {
+  const option: axiosInstanceOptions = {
+    // method: 'GET',
+    baseURL: 'http://192.168.100.57:3031/api/getMyProfile',
+    // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  // return await createAxiosInstance(option);
+  const instance = createAxiosInstance(option);
+  const res = await instance.get('/');
+  // console.log('upload result: ', res)
+  return res;
+};
 // export const getRandom10ProfileAPI = async () => {
 //   const option: AxiosRequestConfig = {
 //     method: 'GET',
-//     url: 'http://localhost:3031/api/getRandom10Profile',
+//     url: 'http://192.168.100.57:3031/api/getRandom10Profile',
 //     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
 //     headers: {
 //       accept: 'application/json',
@@ -106,16 +122,3 @@ export const getRandom10ProfileAPI = async () => {
 //     console.log(error);
 //   }
 // }
-
-export const getMyProfileAPI = async () => {
-  const option: AxiosRequestConfig = {
-    method: 'GET',
-    url: 'http://192.168.100.57:3031/api/getMyProfile',
-    // url: 'http://192.168.55.112:3031/api/getMyProfile',
-    headers: {
-      accept: 'application/json',
-      'content-type': 'application/json',
-    },
-  };
-  return await axios(option);
-};

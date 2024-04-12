@@ -1,3 +1,5 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react-native/no-inline-styles */
 import {Text, useTheme, View} from 'native-base';
 // import * as React from 'react';
 import {Dimensions, Pressable, StyleSheet} from 'react-native';
@@ -15,7 +17,7 @@ export interface IInput {
   borderBottom?: boolean;
 }
 
-const SliderSelect = () => {
+const MultiSliderSelect = ({isBorderTop = false}) => {
   const [values, setValues] = useState([18, 100]);
   const {width} = Dimensions.get('window');
   const onValuesChange = newValues => {
@@ -25,10 +27,11 @@ const SliderSelect = () => {
     <View
       style={{
         borderTopColor: '#e0dbdb',
-        borderTopWidth: 1,
+        borderTopWidth: isBorderTop ? 0.5 : 0,
         borderBottomColor: '#e0dbdb',
         borderBottomWidth: 1,
         paddingRight: 10,
+        backgroundColor: 'white',
       }}>
       <View
         style={{
@@ -38,7 +41,7 @@ const SliderSelect = () => {
           paddingTop: 20,
           marginLeft: 15,
         }}>
-        <Text style={{fontSize: 18}}>Độ Tuổi</Text>
+        <Text style={{fontSize: 18}}>Độ tuổi Ưu tiên</Text>
         <View>
           <Text style={{fontSize: 18}}>
             {values[0]} - {values[1]}
@@ -60,10 +63,15 @@ const SliderSelect = () => {
           snapped
           selectedStyle={{backgroundColor: '#F63A6E'}}
           markerStyle={{width: 28, height: 28}}
+          // enabledTwo={false}
+          // isMarkersSeparated={false}
+          // customMarkerRight={e => {
+          //   return <></>;
+          // }}
         />
       </View>
     </View>
   );
 };
 
-export default SliderSelect;
+export default MultiSliderSelect;
