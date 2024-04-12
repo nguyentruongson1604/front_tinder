@@ -9,19 +9,25 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InfoScreen from '../screens/InfoScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
-import {useActivityStore, useHobbiesStore, useUserStore} from '../store';
+import {
+  useActivityStore,
+  useHobbiesStore,
+  useProfileStore,
+  useUserStore,
+} from '../store';
 import {observer} from 'mobx-react-lite';
 import {useEffect} from 'react';
 import EditProfileHeader from '../components/templates/EditProfileHeader';
 import EditHobbyScreen from '../screens/EditHobbyScreen';
+import {SettingScreen} from '../screens/SettingScreen';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
-
+  console.log('run hereee');
   return (
     <SafeAreaView style={{flex: 1}}>
       <EditProfileHeader />
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="EditPicture">
         <Stack.Screen
           options={{headerShown: false}}
           name="EditPicture"
@@ -56,6 +62,11 @@ export const HomeNavigator = observer(() => {
           name="Detail"
           component={EditProfileNavigator}
         />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Setting"
+          component={SettingScreen}
+        />
       </Stack.Navigator>
     </SafeAreaView>
   );
@@ -66,6 +77,7 @@ export const AppNavigator = observer(() => {
   const userStore = useUserStore();
   const activityStore = useActivityStore();
   const hobbiesStore = useHobbiesStore();
+  const profileStore = useProfileStore();
   // const removeToken = async () => {
   //   try {
   //     await AsyncStorage.removeItem('accessToken');
@@ -78,6 +90,7 @@ export const AppNavigator = observer(() => {
   // removeToken();
   useEffect(() => {
     activityStore.loadInitListProfiles();
+    profileStore.getMyProfile();
     hobbiesStore.getHobbiesType();
   }, []);
   // console.log('listProfile in navi', activityStore.listProfile);

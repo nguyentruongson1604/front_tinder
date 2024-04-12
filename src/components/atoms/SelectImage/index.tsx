@@ -2,7 +2,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {View, useDisclose} from 'native-base';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Image, Pressable, ScrollView, StyleSheet} from 'react-native';
 import {
   MediaType,
@@ -11,8 +11,9 @@ import {
 } from 'react-native-image-picker';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import ActionsheetPicker from '../ActionSheetPicker';
+import {observer} from 'mobx-react-lite';
 
-const SelectImage = () => {
+const SelectImage = observer(() => {
   const [selectedImage, setSelectedImage] = useState(null);
   const {isOpen, onOpen, onClose} = useDisclose();
 
@@ -55,7 +56,9 @@ const SelectImage = () => {
       }
     });
   };
-
+  useEffect(() => {
+    console.log('MOUNT1');
+  }, []);
   //   {selectedImage && (
   //     <Image
   //       source={{uri: selectedImage}}
@@ -117,7 +120,7 @@ const SelectImage = () => {
       </ScrollView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

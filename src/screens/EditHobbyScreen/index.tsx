@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {ScrollView, useDisclose} from 'native-base';
-import {Pressable, Text, TextInput, View} from 'react-native';
+import {Modal, Pressable, Text, TextInput, View} from 'react-native';
 import {InputChoose} from '../../components/atoms/InputChoose';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -11,10 +11,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Chip} from '../../components/atoms/ChipShow';
-import {useHobbiesStore} from '../../store';
+import {useHobbiesStore, useProfileStore} from '../../store';
 import {IHobbyType} from '../../store/domain/HobbiesStore';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import ActionsheetCustom from '../../components/atoms/ActionSheet';
+import SingleSlider from '../../components/atoms/SingleSlider';
+import {observer} from 'mobx-react-lite';
 
 export interface IHobbyChoose {
   title?: string;
@@ -57,21 +59,7 @@ const mainHobby = {
     ),
     title: 'Trình độ học vấn',
   },
-  communication: {
-    icon: (
-      <Ionicons
-        name="chatbox-ellipses"
-        style={{fontSize: 22, color: '#948d8d'}}
-      />
-    ),
-    actionSheetIcon: (
-      <Ionicons
-        name="chatbox-ellipses"
-        style={{fontSize: 22, marginRight: 10, color: '#F63A6E'}}
-      />
-    ),
-    title: 'Phong cách giao tiếp',
-  },
+
   things: {
     icon: (
       <MaterialCommunityIcons
@@ -126,6 +114,21 @@ const supportHobby = {
       />
     ),
     title: 'Đồ uống',
+  },
+  communication: {
+    icon: (
+      <Ionicons
+        name="chatbox-ellipses"
+        style={{fontSize: 22, color: '#948d8d'}}
+      />
+    ),
+    actionSheetIcon: (
+      <Ionicons
+        name="chatbox-ellipses"
+        style={{fontSize: 22, marginRight: 10, color: '#F63A6E'}}
+      />
+    ),
+    title: 'Phong cách giao tiếp',
   },
 };
 
@@ -211,9 +214,13 @@ const HobbyTitle: React.FC<IHobbyTitle> = ({title, important}) => {
     </View>
   );
 };
-const EditHobbyScreen = () => {
+const EditHobbyScreen = observer(() => {
   const hobbiesStore = useHobbiesStore();
-  const [value, onChangeText] = useState('Useless Multiline Placeholder');
+  const profileStore = useProfileStore();
+  const [description, setDescription] = useState<string>(
+    profileStore.description || '',
+  );
+  const [title, setTitle] = useState<string>(profileStore.title || '');
   const {isOpen, onOpen, onClose} = useDisclose();
   const [actionSheetTitle, setActionSheetTitle] = useState<IActionSheetTitle>({
     bigTitle: '',
@@ -221,18 +228,27 @@ const EditHobbyScreen = () => {
     icon: null,
     smallTitle: '',
   });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [text, setText] = useState(1);
+  useEffect(() => {
+    console.log('MOUNT');
+  }, []);
 
+  // console.log('profileStore.age', profileStore.age);
+  const change = (a: number) => {
+    profileStore.setAge(a);
+  };
   return (
     <ScrollView style={{backgroundColor: '#aaaae13b', flexGrow: 1}}>
       <View style={{marginBottom: 20, marginTop: 10}}>
-        <HobbyTitle title="GIỚI THIỆU BẢN THÂN" important />
+        <HobbyTitle title="GIỚI THIỆU BẢN THÂN" />
         <TextInput
           editable
           multiline
           numberOfLines={4}
           maxLength={500}
-          onChangeText={text => onChangeText(text)}
-          value={value}
+          onChangeText={text => setDescription(text)}
+          value={description}
           style={{
             padding: 10,
             backgroundColor: 'white',
@@ -248,8 +264,8 @@ const EditHobbyScreen = () => {
           multiline
           numberOfLines={4}
           maxLength={500}
-          onChangeText={text => onChangeText(text)}
-          value={value}
+          onChangeText={text => setTitle(text)}
+          value={title}
           style={{
             padding: 10,
             backgroundColor: 'white',
@@ -259,7 +275,18 @@ const EditHobbyScreen = () => {
         />
       </View>
       <View style={{marginBottom: 20}}>
-        <HobbyTitle title="THÔNG TIN THÊM VỀ TÔI" />
+        <HobbyTitle title="THÔNG TIN THÊM VỀ TÔI" important />
+        <HobbyChoose title="Giới tính" textChoose="Thêm" />
+        <SingleSlider
+          // value={age}
+          setValue={change}
+          title="Tuổi của bạn"
+          unit="tuổi"
+          start={18}
+          end={100}
+          init={profileStore.age}
+        />
+
         {hobbiesStore?.arrType?.map((hobbyType: IHobbyType, index: number) => {
           const hobbyinfo = mainHobby[hobbyType.type];
           if (hobbyinfo) {
@@ -267,7 +294,9 @@ const EditHobbyScreen = () => {
               <HobbyChoose
                 icon={hobbyinfo.icon}
                 title={hobbyinfo.title}
-                textChoose="Thêm"
+                textChoose={
+                  profileStore.listHobby[hobbyType?.type] ? 'Sửa' : 'Thêm'
+                }
                 key={index}
                 type={hobbyType?.type}
                 actionSheetTitle={hobbyinfo}
@@ -297,7 +326,9 @@ const EditHobbyScreen = () => {
               <HobbyChoose
                 icon={hobbyinfo.icon}
                 title={hobbyinfo.title}
-                textChoose="Thêm"
+                textChoose={
+                  profileStore.listHobby[hobbyType?.type] ? 'Sửa' : 'Thêm'
+                }
                 key={index}
                 type={hobbyType?.type}
                 actionSheetTitle={hobbyinfo}
@@ -317,6 +348,9 @@ const EditHobbyScreen = () => {
           }
         })}
       </View>
+      <Pressable onPress={() => setText(12)}>
+        <Text>Show Modal</Text>
+      </Pressable>
       <ActionsheetCustom
         isOpen={isOpen}
         onClose={onClose}
@@ -324,7 +358,23 @@ const EditHobbyScreen = () => {
         data={hobbiesStore.hobbiesByType}
         actionSheetTitle={actionSheetTitle}
       />
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }}>
+          <View style={{backgroundColor: 'white'}}>
+            <Text>Hello World!</Text>
+            <Pressable onPress={() => setModalVisible(!modalVisible)}>
+              <Text>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
-};
+});
 export default EditHobbyScreen;
