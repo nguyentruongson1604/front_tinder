@@ -92,6 +92,7 @@ export const AppNavigator = observer(() => {
     activityStore.loadInitListProfiles();
     profileStore.getMyProfile();
     hobbiesStore.getHobbiesType();
+    userStore.getCurrentUser();
   }, []);
   // console.log('listProfile in navi', activityStore.listProfile);
   // console.log('oneperson in navi', activityStore.getOnePersonFromList());

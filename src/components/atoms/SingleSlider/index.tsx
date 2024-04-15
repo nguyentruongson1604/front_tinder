@@ -5,7 +5,6 @@ import {Text, View} from 'native-base';
 import {Dimensions} from 'react-native';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import {useState} from 'react';
 
 export interface ISlider {
   isBorderTop?: boolean;
@@ -13,7 +12,7 @@ export interface ISlider {
   unit: string;
   start: number;
   end: number;
-  init: number;
+  init?: number;
   value: number[];
   setValue: any;
 }
@@ -29,7 +28,7 @@ const SingleSlider: React.FC<ISlider> = ({
   setValue,
 }) => {
   const {width} = Dimensions.get('window');
-  const [sliderValue, setSliderValue] = useState([init]);
+  // const [sliderValue, setSliderValue] = useState([init]);
   const onValueSingleChange = values => {
     // setSliderValue(values);
     setValue(values[0]);

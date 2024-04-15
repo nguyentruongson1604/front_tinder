@@ -1,27 +1,16 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
-import {Text, useTheme, View} from 'native-base';
+import {Text, View} from 'native-base';
 // import * as React from 'react';
-import {Dimensions, Pressable, StyleSheet} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Entypo from 'react-native-vector-icons/Entypo';
+import {Dimensions} from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import {useState} from 'react';
 
-export interface IInput {
-  icon?: any;
-  leftTitle?: any;
-  rightTitle?: any;
-  onPress?: () => void;
-  borderTop?: boolean;
-  borderBottom?: boolean;
-}
-
-const MultiSliderSelect = ({isBorderTop = false}) => {
-  const [values, setValues] = useState([18, 100]);
+const MultiSliderSelect = ({isBorderTop = false, value, setValue}) => {
+  // const [values, setValues] = useState([18, 100]);
   const {width} = Dimensions.get('window');
   const onValuesChange = newValues => {
-    setValues(newValues);
+    setValue(newValues);
   };
   return (
     <View
@@ -44,7 +33,7 @@ const MultiSliderSelect = ({isBorderTop = false}) => {
         <Text style={{fontSize: 18}}>Độ tuổi Ưu tiên</Text>
         <View>
           <Text style={{fontSize: 18}}>
-            {values[0]} - {values[1]}
+            {value[0]} - {value[1]}
           </Text>
         </View>
       </View>
@@ -53,7 +42,7 @@ const MultiSliderSelect = ({isBorderTop = false}) => {
           alignItems: 'center',
         }}>
         <MultiSlider
-          values={values}
+          values={value}
           sliderLength={width - 40}
           onValuesChange={onValuesChange}
           min={18}

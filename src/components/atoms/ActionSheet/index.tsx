@@ -13,6 +13,7 @@ export interface IActionsheetCustom {
   onClose: any;
   data: any;
   actionSheetTitle: any;
+  donePress: any;
 }
 const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
   isOpen,
@@ -20,6 +21,7 @@ const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
   onClose,
   data,
   actionSheetTitle,
+  donePress,
 }) => {
   const profileStore = useProfileStore();
   // console.log('actionSheetTitle.type', actionSheetTitle.type);
@@ -66,7 +68,15 @@ const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
                   style={{fontWeight: 'bold', fontSize: 25, color: 'grey'}}
                 />
               </Pressable>
-              <Pressable onPress={onClose}>
+              <Pressable
+                onPress={() => {
+                  onClose();
+                  donePress(actionSheetTitle.type, [
+                    {
+                      id: isSelect || selectedItems,
+                    },
+                  ]);
+                }}>
                 <Text style={{color: 'grey', fontSize: 16, fontWeight: 'bold'}}>
                   Xong
                 </Text>

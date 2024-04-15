@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {ScrollView, useDisclose} from 'native-base';
-import {Pressable, Text, TextInput, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import {InputChoose} from '../../components/atoms/InputChoose';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -17,6 +17,7 @@ import ActionsheetCustom from '../../components/atoms/ActionSheet';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
 import {ModalCustom} from '../../components/atoms/Modal';
+import {IListHobby} from '../../store/domain/ProfileStore';
 
 export interface IHobbyChoose {
   title?: string;
@@ -230,12 +231,24 @@ const EditHobbyScreen = observer(() => {
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [age, setAge] = useState<number[]>([profileStore.age]);
-  const [gender, setGender] = useState<string>(profileStore.gender);
+  const [gender, setGender] = useState<string>(profileStore.gender || '');
+  const [listHobby, setListHobby] = useState<IListHobby>(
+    profileStore.listHobby || {},
+  );
 
   const handlePressPopup = (gender: string) => {
     setGender(gender);
     setModalVisible(false);
   };
+  const handleChangeHobbies = (
+    key: string,
+    value: {id: string; name: string}[],
+  ) => {
+    setListHobby(pre => {
+      return {...pre, [key]: value};
+    });
+  };
+  console.log(listHobby);
 
   return (
     <ScrollView style={{backgroundColor: '#aaaae13b', flexGrow: 1}}>
@@ -289,7 +302,7 @@ const EditHobbyScreen = observer(() => {
           unit="tuổi"
           start={18}
           end={100}
-          init={profileStore.age}
+          // init={profileStore.age}
         />
 
         {hobbiesStore?.arrType?.map((hobbyType: IHobbyType, index: number) => {
@@ -360,8 +373,13 @@ const EditHobbyScreen = observer(() => {
         onOpen={onOpen}
         data={hobbiesStore.hobbiesByType}
         actionSheetTitle={actionSheetTitle}
+        donePress={handleChangeHobbies}
       />
-      <ModalCustom open={modalVisible} handlePress={handlePressPopup} />
+      <ModalCustom
+        open={modalVisible}
+        handlePress={handlePressPopup}
+        title="Hãy chọn giới tính của bạn"
+      />
     </ScrollView>
   );
 });
