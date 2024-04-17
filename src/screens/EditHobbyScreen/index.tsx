@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {ScrollView, useDisclose} from 'native-base';
-import {Pressable, Text, TextInput, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import {InputChoose} from '../../components/atoms/InputChoose';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -12,11 +12,12 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Chip} from '../../components/atoms/ChipShow';
 import {useHobbiesStore, useProfileStore} from '../../store';
 import {IHobbyType} from '../../store/domain/HobbiesStore';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import ActionsheetCustom from '../../components/atoms/ActionSheet';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
 import {ModalCustom} from '../../components/atoms/Modal';
+import {IListHobby} from '../../store/domain/ProfileStore';
 
 export interface IHobbyChoose {
   title?: string;
@@ -230,13 +231,33 @@ const EditHobbyScreen = observer(() => {
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [age, setAge] = useState<number[]>([profileStore.age]);
-  const [gender, setGender] = useState<string>(profileStore.gender);
+  const [gender, setGender] = useState<string>(profileStore.gender || '');
+  const [listHobby, setListHobby] = useState<IListHobby>(
+    profileStore.listHobby || {},
+  );
 
   const handlePressPopup = (gender: string) => {
     setGender(gender);
+    profileStore.setDataUpdate('gender', gender);
     setModalVisible(false);
   };
-
+  const convertToArr = (hobbies: IListHobby) => {
+    return Object.values(hobbies).flat();
+  };
+  const handleChangeHobbies = (key: string, value: [string]) => {
+    setListHobby(pre => {
+      return {...pre, [key]: value};
+    });
+    profileStore.setDataUpdate(
+      'hobby',
+      convertToArr({...listHobby, [key]: value}),
+    );
+  };
+  const handleChangeAge = (age: any) => {
+    setAge(age);
+    profileStore.setDataUpdate('age', age[0]);
+  };
+  // profileStore.setDataUpdate({description});
   return (
     <ScrollView style={{backgroundColor: '#aaaae13b', flexGrow: 1}}>
       <View style={{marginBottom: 20, marginTop: 10}}>
@@ -246,7 +267,10 @@ const EditHobbyScreen = observer(() => {
           multiline
           numberOfLines={4}
           maxLength={500}
-          onChangeText={text => setDescription(text)}
+          onChangeText={text => {
+            setDescription(text);
+            profileStore.setDataUpdate('description', text);
+          }}
           value={description}
           style={{
             padding: 10,
@@ -263,7 +287,10 @@ const EditHobbyScreen = observer(() => {
           multiline
           numberOfLines={4}
           maxLength={500}
-          onChangeText={text => setTitle(text)}
+          onChangeText={text => {
+            setTitle(text);
+            profileStore.setDataUpdate('title', text);
+          }}
           value={title}
           style={{
             padding: 10,
@@ -284,12 +311,12 @@ const EditHobbyScreen = observer(() => {
         />
         <SingleSlider
           value={age}
-          setValue={setAge}
+          setValue={handleChangeAge}
           title="Tuổi của bạn"
           unit="tuổi"
           start={18}
           end={100}
-          init={profileStore.age}
+          // init={profileStore.age}
         />
 
         {hobbiesStore?.arrType?.map((hobbyType: IHobbyType, index: number) => {
@@ -300,7 +327,11 @@ const EditHobbyScreen = observer(() => {
                 icon={hobbyinfo.icon}
                 title={hobbyinfo.title}
                 textChoose={
-                  profileStore.listHobby[hobbyType?.type] ? 'Sửa' : 'Thêm'
+                  listHobby[hobbyType?.type]
+                    ? listHobby[hobbyType?.type].length
+                      ? 'Sửa'
+                      : 'Thêm'
+                    : 'Thêm'
                 }
                 key={index}
                 type={hobbyType?.type}
@@ -331,9 +362,7 @@ const EditHobbyScreen = observer(() => {
               <HobbyChoose
                 icon={hobbyinfo.icon}
                 title={hobbyinfo.title}
-                textChoose={
-                  profileStore.listHobby[hobbyType?.type] ? 'Sửa' : 'Thêm'
-                }
+                textChoose={listHobby[hobbyType?.type]?.length ? 'Sửa' : 'Thêm'}
                 key={index}
                 type={hobbyType?.type}
                 actionSheetTitle={hobbyinfo}
@@ -360,8 +389,14 @@ const EditHobbyScreen = observer(() => {
         onOpen={onOpen}
         data={hobbiesStore.hobbiesByType}
         actionSheetTitle={actionSheetTitle}
+        donePress={handleChangeHobbies}
+        listHobby={listHobby}
       />
-      <ModalCustom open={modalVisible} handlePress={handlePressPopup} />
+      <ModalCustom
+        open={modalVisible}
+        handlePress={handlePressPopup}
+        title="Hãy chọn giới tính của bạn"
+      />
     </ScrollView>
   );
 });

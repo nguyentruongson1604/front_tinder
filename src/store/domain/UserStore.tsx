@@ -1,5 +1,5 @@
-import {makeAutoObservable} from 'mobx';
-import {loginAPI, registerAPI} from '../../APIs/user.api';
+import {makeAutoObservable, runInAction} from 'mobx';
+import {getCurrentUserAPI, loginAPI, registerAPI} from '../../APIs/user.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {RootStore} from '../RootStore';
 
@@ -22,11 +22,17 @@ export class UserStore {
   userLogin = async (account: {email: string; password: string}) => {
     try {
       const res = await loginAPI(account);
-      this.userAccess = res.data;
-      if (res.data.accessToken && res.data.refreshToken) {
-        AsyncStorage.setItem('accessToken', res.data.accessToken);
-        AsyncStorage.setItem('refreshToken', res.data.refreshToken);
-      }
+      console.log(res.data.data);
+
+      runInAction(() => {
+        this.userAccess = res.data.data;
+        if (res.data.accessToken && res.data.refreshToken) {
+          AsyncStorage.setItem('accessToken', res.data.accessToken);
+          AsyncStorage.setItem('refreshToken', res.data.refreshToken);
+        }
+      });
+      console.log('this.userAccess', this.userAccess);
+
       return res;
     } catch (error: any) {
       return error.response;
@@ -48,4 +54,17 @@ export class UserStore {
       console.log(error);
     }
   };
+  getCurrentUser = async () => {
+    try {
+      const res = await getCurrentUserAPI();
+      runInAction(() => {
+        this.userAccess = res.data.data;
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  get infoUser() {
+    return this.userAccess;
+  }
 }

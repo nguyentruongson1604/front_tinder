@@ -7,6 +7,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MultiSliderSelect from '../../components/atoms/MultiSliderSelect';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
+import {useState} from 'react';
+import {usePreferencesStore, useProfileStore, useUserStore} from '../../store';
+import {ModalCustom} from '../../components/atoms/Modal';
+import {IUpdatePreferences} from '../../store/domain/PreferencesStore';
 
 export interface ISettingChoose {
   title: string;
@@ -105,6 +109,30 @@ const HobbyChoose: React.FC<ISettingChoose> = ({
 };
 
 export const SettingScreen = observer(() => {
+  const profileStore = useProfileStore();
+  const userStore = useUserStore();
+  const preferencesStore = usePreferencesStore();
+  const [distance, setDistance] = useState<number[]>(
+    [profileStore.preferences.distance] || [100],
+  );
+  const [modalVisible, setModalVisible] = useState(false);
+  const [gender, setGender] = useState<string>(
+    profileStore.preferences.gender || '',
+  );
+  const [minmaxAge, setMinMaxAge] = useState<number[]>(
+    [
+      profileStore.preferences.age.minAge,
+      profileStore.preferences.age.maxAge,
+    ] || [18, 100],
+  );
+  const handlePressPopup = (gender: string) => {
+    setGender(gender);
+    setModalVisible(false);
+  };
+  const handlePressDone = async (data: IUpdatePreferences) => {
+    await preferencesStore.updatePreferences(data);
+  };
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.fixedHeader}>
@@ -129,22 +157,29 @@ export const SettingScreen = observer(() => {
             </Text>
           </View>
 
-          <View
+          <Pressable
+            onPress={() => {
+              handlePressDone({
+                gender,
+                age: {minAge: minmaxAge[0], maxAge: minmaxAge[1]},
+                distance: distance[0],
+              });
+            }}
             style={{
               width: '20%',
               alignItems: 'flex-end',
               justifyContent: 'center',
             }}>
             <Text style={{fontWeight: '600'}}>Xong</Text>
-          </View>
+          </Pressable>
         </View>
       </View>
       <ScrollView style={{backgroundColor: '#aaaae13b', flexGrow: 1}}>
         <View>
           <SettingTitle title="Cài đặt tài khoản" />
-          <HobbyChoose title="Họ" content="Nguyễn" />
-          <HobbyChoose title="Tên" content="Sơn" />
-          <HobbyChoose title="Email" content="Son@mgail.com" />
+          <HobbyChoose title="Họ" content={userStore.infoUser?.lastName} />
+          <HobbyChoose title="Tên" content={userStore.infoUser?.firstName} />
+          <HobbyChoose title="Email" content={userStore.infoUser?.email} />
           <HobbyChoose title="Mật khẩu" content="123456" isPress isPassWord />
         </View>
         <View>
@@ -156,9 +191,24 @@ export const SettingScreen = observer(() => {
               isAdress
               isPress
             />
-            <MultiSliderSelect />
-            <HobbyChoose title="Hiển thị cho tôi" content="Nữ" isPress />
-            <SingleSlider />
+            <MultiSliderSelect value={minmaxAge} setValue={setMinMaxAge} />
+            <HobbyChoose
+              title="Hiển thị cho tôi"
+              content={gender}
+              isPress
+              onPress={() => {
+                setModalVisible(true);
+              }}
+            />
+            <SingleSlider
+              value={distance}
+              setValue={setDistance}
+              title="Khoảng cách ưu tiên"
+              unit="km"
+              start={0}
+              end={100}
+              // init={profileStore.age}
+            />
           </View>
         </View>
         <View style={{marginTop: 20}}>
@@ -195,6 +245,11 @@ export const SettingScreen = observer(() => {
             </Text>
           </Pressable>
         </View>
+        <ModalCustom
+          open={modalVisible}
+          handlePress={handlePressPopup}
+          title="Hiển thị cho tôi"
+        />
       </ScrollView>
     </View>
   );

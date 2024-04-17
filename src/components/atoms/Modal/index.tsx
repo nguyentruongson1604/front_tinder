@@ -3,7 +3,7 @@
 import {Text} from 'react-native';
 import {Modal, Pressable, View} from 'react-native';
 
-export const ModalCustom = ({open, handlePress}) => {
+export const ModalCustom = ({open, handlePress, title}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={open}>
       <View
@@ -23,7 +23,7 @@ export const ModalCustom = ({open, handlePress}) => {
           }}>
           <View style={{paddingVertical: 15}}>
             <Text style={{color: '#5f5f5f', fontSize: 14, fontWeight: 'bold'}}>
-              Hãy chọn giới tính của bạn
+              {title}
             </Text>
           </View>
           <View

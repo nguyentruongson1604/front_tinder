@@ -17,13 +17,13 @@ import {
 } from '../store';
 import {observer} from 'mobx-react-lite';
 import {useEffect} from 'react';
-import EditProfileHeader from '../components/templates/EditProfileHeader';
 import EditHobbyScreen from '../screens/EditHobbyScreen';
 import {SettingScreen} from '../screens/SettingScreen';
+import {EditProfileHeader} from '../components/templates/EditProfileHeader';
+import {EditImageScreen} from '../screens/EditImageScreen';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
-  console.log('run hereee');
   return (
     <SafeAreaView style={{flex: 1}}>
       <EditProfileHeader />
@@ -31,7 +31,7 @@ export const EditProfileNavigator = observer(() => {
         <Stack.Screen
           options={{headerShown: false}}
           name="EditPicture"
-          component={SelectImage}
+          component={EditImageScreen}
         />
         <Stack.Screen
           options={{headerShown: false}}
@@ -92,6 +92,7 @@ export const AppNavigator = observer(() => {
     activityStore.loadInitListProfiles();
     profileStore.getMyProfile();
     hobbiesStore.getHobbiesType();
+    userStore.getCurrentUser();
   }, []);
   // console.log('listProfile in navi', activityStore.listProfile);
   // console.log('oneperson in navi', activityStore.getOnePersonFromList());
