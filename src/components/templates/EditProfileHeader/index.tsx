@@ -5,10 +5,13 @@ import {useNavigation} from '@react-navigation/native';
 import {View} from 'native-base';
 import {useState} from 'react';
 import {Pressable, StyleSheet, Text} from 'react-native';
+import {useProfileStore} from '../../../store';
+import {observer} from 'mobx-react-lite';
 
-const EditProfileHeader = () => {
+export const EditProfileHeader = observer(() => {
   const naviagation = useNavigation();
   const [editPhoto, setEditPhoto] = useState<boolean>(true);
+  const profileStore = useProfileStore();
   return (
     <View>
       <View style={styles.fixedHeader}>
@@ -33,14 +36,17 @@ const EditProfileHeader = () => {
             </Text>
           </View>
 
-          <View
+          <Pressable
             style={{
               width: '20%',
               alignItems: 'flex-end',
               justifyContent: 'center',
+            }}
+            onPress={() => {
+              profileStore.updateMyProfile(profileStore.dataUpdate);
             }}>
             <Text style={{fontWeight: '600'}}>Xong</Text>
-          </View>
+          </Pressable>
         </View>
       </View>
       <View style={{flexDirection: 'row', paddingVertical: 8}}>
@@ -90,7 +96,7 @@ const EditProfileHeader = () => {
       </View>
     </View>
   );
-};
+});
 const styles = StyleSheet.create({
   fixedHeader: {
     height: 60,
@@ -104,4 +110,3 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-export default EditProfileHeader;

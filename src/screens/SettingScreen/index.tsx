@@ -8,8 +8,9 @@ import MultiSliderSelect from '../../components/atoms/MultiSliderSelect';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
 import {useState} from 'react';
-import {useProfileStore, useUserStore} from '../../store';
+import {usePreferencesStore, useProfileStore, useUserStore} from '../../store';
 import {ModalCustom} from '../../components/atoms/Modal';
+import {IUpdatePreferences} from '../../store/domain/PreferencesStore';
 
 export interface ISettingChoose {
   title: string;
@@ -110,6 +111,7 @@ const HobbyChoose: React.FC<ISettingChoose> = ({
 export const SettingScreen = observer(() => {
   const profileStore = useProfileStore();
   const userStore = useUserStore();
+  const preferencesStore = usePreferencesStore();
   const [distance, setDistance] = useState<number[]>(
     [profileStore.preferences.distance] || [100],
   );
@@ -123,11 +125,14 @@ export const SettingScreen = observer(() => {
       profileStore.preferences.age.maxAge,
     ] || [18, 100],
   );
-
   const handlePressPopup = (gender: string) => {
     setGender(gender);
     setModalVisible(false);
   };
+  const handlePressDone = async (data: IUpdatePreferences) => {
+    await preferencesStore.updatePreferences(data);
+  };
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.fixedHeader}>
@@ -152,14 +157,21 @@ export const SettingScreen = observer(() => {
             </Text>
           </View>
 
-          <View
+          <Pressable
+            onPress={() => {
+              handlePressDone({
+                gender,
+                age: {minAge: minmaxAge[0], maxAge: minmaxAge[1]},
+                distance: distance[0],
+              });
+            }}
             style={{
               width: '20%',
               alignItems: 'flex-end',
               justifyContent: 'center',
             }}>
             <Text style={{fontWeight: '600'}}>Xong</Text>
-          </View>
+          </Pressable>
         </View>
       </View>
       <ScrollView style={{backgroundColor: '#aaaae13b', flexGrow: 1}}>

@@ -48,3 +48,8 @@ export const useHobbiesStore = () => {
   const store = useStore();
   return store.hobbiesStore;
 };
+
+export const usePreferencesStore = () => {
+  const store = useStore();
+  return store.preferencesStore;
+};

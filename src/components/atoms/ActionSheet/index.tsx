@@ -14,6 +14,7 @@ export interface IActionsheetCustom {
   data: any;
   actionSheetTitle: any;
   donePress: any;
+  listHobby: any;
 }
 const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
   isOpen,
@@ -22,25 +23,26 @@ const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
   data,
   actionSheetTitle,
   donePress,
+  listHobby,
 }) => {
   const profileStore = useProfileStore();
   // console.log('actionSheetTitle.type', actionSheetTitle.type);
 
-  const [isSelect, setisSelect] = useState<string>('');
+  const [isSelect, setisSelect] = useState<string[]>([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   useEffect(() => {
-    if (profileStore.listHobby[actionSheetTitle.type]) {
-      setisSelect(profileStore.listHobby[actionSheetTitle.type][0].id || '');
-      setSelectedItems(
-        profileStore.listHobby[actionSheetTitle.type].map(item => item.id) ||
-          [],
-      );
+    if (listHobby[actionSheetTitle.type]) {
+      actionSheetTitle.bigTitle === 'Thông tin thêm về tôi'
+        ? setisSelect(listHobby[actionSheetTitle.type] || [])
+        : setSelectedItems(
+            listHobby[actionSheetTitle.type]?.map(item => item) || [],
+          );
     } else {
-      setisSelect('');
-      setSelectedItems([]);
+      actionSheetTitle.bigTitle === 'Thông tin thêm về tôi'
+        ? setisSelect([])
+        : setSelectedItems([]);
     }
   }, [isOpen]);
-
   const handleItemClick = (item: string) => {
     if (selectedItems.includes(item)) {
       setSelectedItems(
@@ -70,12 +72,13 @@ const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
               </Pressable>
               <Pressable
                 onPress={() => {
+                  donePress(
+                    actionSheetTitle.type,
+                    actionSheetTitle.bigTitle == 'Thông tin thêm về tôi'
+                      ? isSelect
+                      : selectedItems,
+                  );
                   onClose();
-                  donePress(actionSheetTitle.type, [
-                    {
-                      id: isSelect || selectedItems,
-                    },
-                  ]);
                 }}>
                 <Text style={{color: 'grey', fontSize: 16, fontWeight: 'bold'}}>
                   Xong
@@ -125,11 +128,14 @@ const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
                       <Chip
                         key={item._id}
                         content={item.name}
-                        isHighlight={isSelect === item._id}
+                        isHighlight={isSelect.includes(item._id) ? true : false}
                         onPress={() => {
-                          setisSelect(pre => {
-                            return pre === item._id ? '' : item._id;
-                          });
+                          isSelect.length === 1 && isSelect[0] === item._id
+                            ? setisSelect([])
+                            : setisSelect([item._id]);
+                          // setisSelect(pre => {
+                          //   return pre[0] === item._id ? [] : [item._id];
+                          // });
                         }}
                       />
                     );

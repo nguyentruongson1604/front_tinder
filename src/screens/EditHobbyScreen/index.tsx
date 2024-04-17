@@ -12,7 +12,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Chip} from '../../components/atoms/ChipShow';
 import {useHobbiesStore, useProfileStore} from '../../store';
 import {IHobbyType} from '../../store/domain/HobbiesStore';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import ActionsheetCustom from '../../components/atoms/ActionSheet';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
@@ -238,18 +238,26 @@ const EditHobbyScreen = observer(() => {
 
   const handlePressPopup = (gender: string) => {
     setGender(gender);
+    profileStore.setDataUpdate('gender', gender);
     setModalVisible(false);
   };
-  const handleChangeHobbies = (
-    key: string,
-    value: {id: string; name: string}[],
-  ) => {
+  const convertToArr = (hobbies: IListHobby) => {
+    return Object.values(hobbies).flat();
+  };
+  const handleChangeHobbies = (key: string, value: [string]) => {
     setListHobby(pre => {
       return {...pre, [key]: value};
     });
+    profileStore.setDataUpdate(
+      'hobby',
+      convertToArr({...listHobby, [key]: value}),
+    );
   };
-  console.log(listHobby);
-
+  const handleChangeAge = (age: any) => {
+    setAge(age);
+    profileStore.setDataUpdate('age', age[0]);
+  };
+  // profileStore.setDataUpdate({description});
   return (
     <ScrollView style={{backgroundColor: '#aaaae13b', flexGrow: 1}}>
       <View style={{marginBottom: 20, marginTop: 10}}>
@@ -259,7 +267,10 @@ const EditHobbyScreen = observer(() => {
           multiline
           numberOfLines={4}
           maxLength={500}
-          onChangeText={text => setDescription(text)}
+          onChangeText={text => {
+            setDescription(text);
+            profileStore.setDataUpdate('description', text);
+          }}
           value={description}
           style={{
             padding: 10,
@@ -276,7 +287,10 @@ const EditHobbyScreen = observer(() => {
           multiline
           numberOfLines={4}
           maxLength={500}
-          onChangeText={text => setTitle(text)}
+          onChangeText={text => {
+            setTitle(text);
+            profileStore.setDataUpdate('title', text);
+          }}
           value={title}
           style={{
             padding: 10,
@@ -297,7 +311,7 @@ const EditHobbyScreen = observer(() => {
         />
         <SingleSlider
           value={age}
-          setValue={setAge}
+          setValue={handleChangeAge}
           title="Tuổi của bạn"
           unit="tuổi"
           start={18}
@@ -313,7 +327,11 @@ const EditHobbyScreen = observer(() => {
                 icon={hobbyinfo.icon}
                 title={hobbyinfo.title}
                 textChoose={
-                  profileStore.listHobby[hobbyType?.type] ? 'Sửa' : 'Thêm'
+                  listHobby[hobbyType?.type]
+                    ? listHobby[hobbyType?.type].length
+                      ? 'Sửa'
+                      : 'Thêm'
+                    : 'Thêm'
                 }
                 key={index}
                 type={hobbyType?.type}
@@ -344,9 +362,7 @@ const EditHobbyScreen = observer(() => {
               <HobbyChoose
                 icon={hobbyinfo.icon}
                 title={hobbyinfo.title}
-                textChoose={
-                  profileStore.listHobby[hobbyType?.type] ? 'Sửa' : 'Thêm'
-                }
+                textChoose={listHobby[hobbyType?.type]?.length ? 'Sửa' : 'Thêm'}
                 key={index}
                 type={hobbyType?.type}
                 actionSheetTitle={hobbyinfo}
@@ -374,6 +390,7 @@ const EditHobbyScreen = observer(() => {
         data={hobbiesStore.hobbiesByType}
         actionSheetTitle={actionSheetTitle}
         donePress={handleChangeHobbies}
+        listHobby={listHobby}
       />
       <ModalCustom
         open={modalVisible}

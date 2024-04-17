@@ -31,7 +31,7 @@ const SingleSlider: React.FC<ISlider> = ({
   // const [sliderValue, setSliderValue] = useState([init]);
   const onValueSingleChange = values => {
     // setSliderValue(values);
-    setValue(values[0]);
+    setValue(values);
   };
   return (
     <View

@@ -2,125 +2,92 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {View, useDisclose} from 'native-base';
-import {useEffect, useState} from 'react';
-import {Image, Pressable, ScrollView, StyleSheet} from 'react-native';
-import {
-  MediaType,
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
+import React, {useEffect, useState} from 'react';
+import {Image, Pressable, StyleSheet} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import ActionsheetPicker from '../ActionSheetPicker';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {observer} from 'mobx-react-lite';
-
-const SelectImage = observer(() => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const {isOpen, onOpen, onClose} = useDisclose();
-
-  const openImagePicker = () => {
-    const options = {
-      mediaType: 'photo' as MediaType,
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-        console.log('Image picker error: ', response.errorCode);
-      } else {
-        let imageUri = response.assets?.[0]?.uri;
-        setSelectedImage(imageUri);
-      }
-    });
-  };
-
-  const handleCameraLaunch = () => {
-    const options = {
-      mediaType: 'photo' as MediaType,
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    launchCamera(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled camera');
-      } else if (response.errorCode) {
-        console.log('Camera Error: ', response.errorCode);
-      } else {
-        let imageUri = response.assets?.[0]?.uri;
-        setSelectedImage(imageUri);
-      }
-    });
-  };
-  useEffect(() => {
-    console.log('MOUNT1');
-  }, []);
-  //   {selectedImage && (
-  //     <Image
-  //       source={{uri: selectedImage}}
-  //       style={{width: 200, height: 200}}
-  //     />
-  //   )}
-
-  return (
-    <View style={{flex: 1}}>
-      <ScrollView style={{flex: 1, backgroundColor: '#aaaae13b'}}>
+interface ISelectImage {
+  openActionSheet: any;
+  indexKey: number;
+  imageSelect: string | undefined;
+  deleteSelectPicture: any;
+}
+const SelectImage: React.FC<ISelectImage> = observer(
+  ({openActionSheet, indexKey, imageSelect, deleteSelectPicture}) => {
+    //   {selectedImage && (
+    //     <Image
+    //       source={{uri: selectedImage}}
+    //       style={{width: 200, height: 200}}
+    //     />
+    //   )}
+    return (
+      <>
         <View
           style={{
-            flex: 1,
             padding: 15,
           }}>
           <View
             style={{
               height: 150,
-              width: 110,
+              width: 100,
               backgroundColor: '#d8d8e3',
               borderRadius: 10,
               borderStyle: 'dashed',
               borderWidth: 1,
               borderColor: '#F63A6E',
             }}>
-            {selectedImage && (
+            {imageSelect && (
               <Image
-                source={{uri: selectedImage}}
+                source={{uri: imageSelect}}
                 style={{flex: 1, borderRadius: 10}}
               />
             )}
-            <Pressable
-              style={{
-                position: 'absolute',
-                bottom: -10,
-                right: -10,
-                zIndex: 1,
-                backgroundColor: 'white',
-                borderRadius: 30,
-              }}
-              onPress={onOpen}>
-              <FontAwesome6
-                name="circle-plus"
+            {!imageSelect ? (
+              <Pressable
                 style={{
-                  color: '#F63A6E',
-                  fontSize: 30,
+                  position: 'absolute',
+                  bottom: -10,
+                  right: -10,
+                  zIndex: 1,
+                  backgroundColor: 'white',
+                  borderRadius: 30,
                 }}
-              />
-            </Pressable>
+                onPress={() => openActionSheet(indexKey)}>
+                <FontAwesome6
+                  name="circle-plus"
+                  style={{
+                    color: '#F63A6E',
+                    fontSize: 30,
+                  }}
+                />
+              </Pressable>
+            ) : (
+              <Pressable
+                style={{
+                  position: 'absolute',
+                  bottom: -10,
+                  right: -10,
+                  zIndex: 1,
+                  backgroundColor: 'white',
+                  borderRadius: 30,
+                }}
+                onPress={() => deleteSelectPicture(indexKey)}>
+                <AntDesign
+                  name="minuscircle"
+                  style={{
+                    color: '#F63A6E',
+                    fontSize: 30,
+                  }}
+                />
+              </Pressable>
+            )}
           </View>
         </View>
-        <ActionsheetPicker
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={onClose}
-          handleClickFirstItem={handleCameraLaunch}
-          handleClickSecondItem={openImagePicker}
-        />
-      </ScrollView>
-    </View>
-  );
-});
+      </>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {

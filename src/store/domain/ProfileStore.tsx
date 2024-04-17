@@ -3,17 +3,24 @@ import {
   IProfile,
   getMyProfileAPI,
   updateMyProfileAPI,
+  uploadImageAPI,
 } from '../../APIs/profile.api';
 import {RootStore} from '../RootStore';
 
-export interface IListHobby {
-  [key: string]: {id: string; name: string}[];
-}
+// export interface IListHobby {
+//   [key: string]: {id: string; name: string}[];
+// }
 
-interface IPreferences {
+export interface IListHobby {
+  [key: string]: [value: string];
+}
+export interface IPreferences {
   gender: string;
   age: {minAge: number; maxAge: number};
   distance: number;
+}
+interface IPhotos {
+  imageProfileUrl: string[];
 }
 export class ProfileStore {
   myProfile: IProfile | null = null;
@@ -27,7 +34,10 @@ export class ProfileStore {
     age: {minAge: 18, maxAge: 100},
     distance: 100,
   };
-
+  photos: IPhotos = {
+    imageProfileUrl: [],
+  };
+  dataUpdate: IProfile = {};
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
   }
@@ -47,7 +57,9 @@ export class ProfileStore {
         this.preferences.age.minAge = res.data.data.preferences.age.minAge;
         this.preferences.age.maxAge = res.data.data.preferences.age.maxAge;
         this.preferences.distance = res.data.data.preferences.distance;
+        this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
       });
+      console.log(this.photos.imageProfileUrl);
     } catch (error) {
       console.error(error);
     }
@@ -57,7 +69,7 @@ export class ProfileStore {
     if (this.myProfile?.hobby) {
       this.myProfile?.hobby.map(item => {
         listHobby[item.type] = listHobby[item.type] || [];
-        listHobby[item.type].push({id: item._id, name: item.name});
+        listHobby[item.type].push(item._id);
       });
     }
 
@@ -66,12 +78,38 @@ export class ProfileStore {
   setAge = (age: number) => {
     this.age = age;
   };
-  updateMyProfile = async (profile?: IProfile) => {
+  updateMyProfile = async (profile: IProfile) => {
     try {
       const res = await updateMyProfileAPI(profile);
-      this.myProfile = res.data;
+      runInAction(() => {
+        this.myProfile = res.data.data;
+        this.getListHobby();
+        this.description = res.data.data.description;
+        this.title = res.data.data.title;
+        this.age = res.data.data.age;
+        this.gender = res.data.data.gender;
+      });
     } catch (error) {
-      return error;
+      console.error(error);
     }
+  };
+  updateMyPhotos = async (arrImages: any) => {
+    const formData = new FormData();
+    arrImages.forEach((file, index) => {
+      formData.append(`files`, {
+        name: `${Date.now()}.jpg`,
+        file: file,
+        uri: file,
+        type: 'image/jpeg',
+      });
+    });
+    const res = await uploadImageAPI(formData);
+    this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
+  };
+  setDataUpdate = (key: string, data: any) => {
+    this.dataUpdate = {
+      ...this.dataUpdate,
+      [key]: data,
+    };
   };
 }
