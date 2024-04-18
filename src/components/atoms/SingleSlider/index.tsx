@@ -41,6 +41,7 @@ const SingleSlider: React.FC<ISlider> = ({
         borderBottomColor: '#e0dbdb',
         borderBottomWidth: 1,
         paddingRight: 10,
+        paddingLeft: 10,
         backgroundColor: 'white',
       }}>
       <View
@@ -51,9 +52,9 @@ const SingleSlider: React.FC<ISlider> = ({
           paddingTop: 20,
           marginLeft: 15,
         }}>
-        <Text style={{fontSize: 18}}>{title}</Text>
+        <Text style={{fontSize: 16}}>{title}</Text>
         <View>
-          <Text style={{fontSize: 18}}>
+          <Text style={{fontSize: 16, fontWeight: '600'}}>
             {value} {unit}
           </Text>
         </View>

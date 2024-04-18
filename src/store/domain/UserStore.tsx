@@ -54,8 +54,19 @@ export class UserStore {
       console.log(error);
     }
   };
+  abc = async () => {
+    const res = await AsyncStorage.getItem('accessToken');
+    return res;
+  };
+  abcd = async () => {
+    const res = await AsyncStorage.getItem('refreshToken');
+    return res;
+  };
   getCurrentUser = async () => {
     try {
+      console.log('accessToken here', await this.abc());
+      console.log('refreshToken', await this.abcd());
+
       const res = await getCurrentUserAPI();
       runInAction(() => {
         this.userAccess = res.data.data;

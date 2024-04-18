@@ -32,6 +32,7 @@ export const InputChoose: React.FC<IInput> = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
           height: height,
+          minHeight: 50,
           alignItems: 'center',
           marginLeft: marginLeft,
           borderTopColor: borderTop ? '#e0dbdb' : '',

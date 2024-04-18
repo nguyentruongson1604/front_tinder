@@ -18,6 +18,8 @@ import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
 import {ModalCustom} from '../../components/atoms/Modal';
 import {IListHobby} from '../../store/domain/ProfileStore';
+import {ActionSheetInput} from '../../components/atoms/ActionSheetInput';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export interface IHobbyChoose {
   title?: string;
@@ -26,6 +28,7 @@ export interface IHobbyChoose {
   type?: string;
   actionSheetTitle?: any;
   onPress?: any;
+  isAdress?: boolean;
 }
 export interface IHobbyTitle {
   title?: string;
@@ -140,6 +143,7 @@ const HobbyChoose: React.FC<IHobbyChoose> = ({
   textChoose,
   type,
   onPress,
+  isAdress,
 }) => {
   const hobbiesStore = useHobbiesStore();
 
@@ -157,7 +161,7 @@ const HobbyChoose: React.FC<IHobbyChoose> = ({
             <Text
               style={{
                 fontSize: 15,
-                fontWeight: '600',
+                fontWeight: isAdress ? '500' : '600',
                 marginRight: 3,
               }}>
               {textChoose}
@@ -171,7 +175,7 @@ const HobbyChoose: React.FC<IHobbyChoose> = ({
         borderBottom={false}
         borderTop={false}
         marginLeft={0}
-        height={50}
+        height={isAdress ? 'auto' : 50}
         onPress={async () => {
           await hobbiesStore.getHobbyNameFromType(type as string);
           onPress();
@@ -222,7 +226,17 @@ const EditHobbyScreen = observer(() => {
     profileStore.description || '',
   );
   const [title, setTitle] = useState<string>(profileStore.title || '');
-  const {isOpen, onOpen, onClose} = useDisclose();
+  const {
+    isOpen: isOpenHobby,
+    onOpen: onOpenHobby,
+    onClose: onCloseHobby,
+  } = useDisclose();
+
+  const {
+    isOpen: isOpenAdress,
+    onOpen: onOpenAdress,
+    onClose: onCloseAdress,
+  } = useDisclose();
   const [actionSheetTitle, setActionSheetTitle] = useState<IActionSheetTitle>({
     bigTitle: '',
     type: '',
@@ -235,7 +249,7 @@ const EditHobbyScreen = observer(() => {
   const [listHobby, setListHobby] = useState<IListHobby>(
     profileStore.listHobby || {},
   );
-
+  const [adress, setAdress] = useState<string>(profileStore.adress || '');
   const handlePressPopup = (gender: string) => {
     setGender(gender);
     profileStore.setDataUpdate('gender', gender);
@@ -256,6 +270,10 @@ const EditHobbyScreen = observer(() => {
   const handleChangeAge = (age: any) => {
     setAge(age);
     profileStore.setDataUpdate('age', age[0]);
+  };
+  const handleChangeAdress = (adress: string) => {
+    setAdress(adress);
+    profileStore.setDataUpdate('adress', adress);
   };
   // profileStore.setDataUpdate({description});
   return (
@@ -303,6 +321,20 @@ const EditHobbyScreen = observer(() => {
       <View style={{marginBottom: 20}}>
         <HobbyTitle title="THÔNG TIN THÊM VỀ TÔI" important />
         <HobbyChoose
+          title="Địa chỉ"
+          textChoose={adress ? adress : 'Thêm'}
+          isAdress
+          onPress={() => {
+            // setActionSheetTitle({
+            //   bigTitle: 'Thông tin thêm về tôi',
+            //   type: hobbyType.type,
+            //   icon: hobbyinfo.actionSheetIcon,
+            //   smallTitle: hobbyinfo.title,
+            // });
+            onOpenAdress();
+          }}
+        />
+        <HobbyChoose
           title="Giới tính"
           textChoose={gender}
           onPress={() => {
@@ -343,7 +375,7 @@ const EditHobbyScreen = observer(() => {
                     icon: hobbyinfo.actionSheetIcon,
                     smallTitle: hobbyinfo.title,
                   });
-                  onOpen();
+                  onOpenHobby();
                 }}
               />
             );
@@ -373,7 +405,7 @@ const EditHobbyScreen = observer(() => {
                     icon: hobbyinfo.actionSheetIcon,
                     smallTitle: hobbyinfo.title,
                   });
-                  onOpen();
+                  onOpenHobby();
                 }}
               />
             );
@@ -384,9 +416,9 @@ const EditHobbyScreen = observer(() => {
       </View>
 
       <ActionsheetCustom
-        isOpen={isOpen}
-        onClose={onClose}
-        onOpen={onOpen}
+        isOpen={isOpenHobby}
+        onClose={onCloseHobby}
+        onOpen={onOpenHobby}
         data={hobbiesStore.hobbiesByType}
         actionSheetTitle={actionSheetTitle}
         donePress={handleChangeHobbies}
@@ -396,6 +428,14 @@ const EditHobbyScreen = observer(() => {
         open={modalVisible}
         handlePress={handlePressPopup}
         title="Hãy chọn giới tính của bạn"
+      />
+
+      <ActionSheetInput
+        isOpen={isOpenAdress}
+        onClose={onCloseAdress}
+        onOpen={onOpenAdress}
+        data={adress}
+        donePress={handleChangeAdress}
       />
     </ScrollView>
   );

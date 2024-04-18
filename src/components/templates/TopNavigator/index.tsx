@@ -19,6 +19,7 @@ const TopNavigator = () => {
 
   const removeToken = async () => {
     await AsyncStorage.removeItem('accessToken');
+    await AsyncStorage.removeItem('refreshToken');
   };
 
   return (
