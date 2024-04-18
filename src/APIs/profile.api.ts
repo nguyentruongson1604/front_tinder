@@ -15,8 +15,8 @@ export interface IProfile {
 export const createProfileAPI = async (profile: IProfile) => {
   const option: AxiosRequestConfig = {
     method: 'POST',
-    url: 'http://192.168.100.21:3031/api/createProfile',
-    // url: 'http://192.168.100.21:3031/api/createProfile',
+    url: 'http://192.168.100.57:3031/api/createProfile',
+    // url: 'http://192.168.100.57:3031/api/createProfile',
     // url: 'http://192.168.55.112:3031/api/createProfile',
     data: profile,
     headers: {
@@ -31,7 +31,7 @@ export const createProfileAPI = async (profile: IProfile) => {
 //   const option: AxiosRequestConfig = {
 //     method: 'POST',
 //     url: 'http://192.168.100.57:3031/api/updateProfile',
-//     // url: 'http://192.168.100.21:3031/api/updateProfile',
+//     // url: 'http://192.168.100.57:3031/api/updateProfile',
 //     // url: 'http://192.168.55.112:3031/api/updateProfile',
 //     data: profile,
 //     headers: {
@@ -44,8 +44,8 @@ export const createProfileAPI = async (profile: IProfile) => {
 
 export const getRandomProfileAPI = async (idArray: string[]) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.21:3031/api/getRandomProfile',
-    // baseURL: 'http://192.168.100.21:3031/api/getRandomProfile',
+    baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
@@ -61,7 +61,7 @@ export const getRandomProfileAPI = async (idArray: string[]) => {
 export const getRandom10ProfileAPI = async () => {
   const option: axiosInstanceOptions = {
     // method: 'GET',
-    baseURL: 'http://192.168.100.21:3031/api/getRandom10Profile',
+    baseURL: 'http://192.168.100.57:3031/api/getRandom10Profile',
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',
@@ -78,7 +78,7 @@ export const getRandom10ProfileAPI = async () => {
 export const getMyProfileAPI = async () => {
   const option: axiosInstanceOptions = {
     // method: 'GET',
-    baseURL: 'http://192.168.100.21:3031/api/getMyProfile',
+    baseURL: 'http://192.168.100.57:3031/api/getMyProfile',
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',
@@ -94,8 +94,8 @@ export const getMyProfileAPI = async () => {
 
 export const updateMyProfileAPI = async (profile: IProfile) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.21:3031/api/updateProfile',
-    // baseURL: 'http://192.168.100.21:3031/api/getRandomProfile',
+    baseURL: 'http://192.168.100.57:3031/api/updateProfile',
+    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
@@ -110,8 +110,8 @@ export const updateMyProfileAPI = async (profile: IProfile) => {
 
 export const uploadImageAPI = async (formData: any) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.21:3031/api/cloudinary-upload',
-    // baseURL: 'http://192.168.100.21:3031/api/getRandomProfile',
+    baseURL: 'http://192.168.100.57:3031/api/cloudinary-upload',
+    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',

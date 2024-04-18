@@ -185,12 +185,6 @@ export const SettingScreen = observer(() => {
         <View>
           <SettingTitle title="Cài đặt tìm kiếm" />
           <View>
-            <HobbyChoose
-              title="Địa điểm"
-              content="Dia diem hien tai cua toi: Thanh pho Ha Noi Thanh pho Ha Noi Thanh pho Ha Noi"
-              isAdress
-              isPress
-            />
             <MultiSliderSelect value={minmaxAge} setValue={setMinMaxAge} />
             <HobbyChoose
               title="Hiển thị cho tôi"

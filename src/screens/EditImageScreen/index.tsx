@@ -15,6 +15,7 @@ import {
 import {useProfileStore} from '../../store';
 import {Pressable} from 'react-native';
 import {uploadImageAPI} from '../../APIs/profile.api';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const EditImageScreen = observer(() => {
   const profileStore = useProfileStore();
@@ -121,7 +122,19 @@ export const EditImageScreen = observer(() => {
         );
       })}
       <Pressable onPress={handleUpload}>
-        <Text>AANS</Text>
+        <LinearGradient
+          colors={['#F63A6E', '#e67091', '#eda084']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={{
+            height: 30,
+            width: 150,
+            borderRadius: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'white'}}>Press me</Text>
+        </LinearGradient>
       </Pressable>
       <ActionsheetPicker
         isOpen={isOpen}

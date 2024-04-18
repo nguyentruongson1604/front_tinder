@@ -9,8 +9,8 @@ export const registerAPI = async (account: {
 }) => {
   const option: AxiosRequestConfig = {
     method: 'POST',
-    url: 'http://192.168.100.21:3031/api/register',
-    // url: 'http://192.168.100.21:3031/api/register',
+    url: 'http://192.168.100.57:3031/api/register',
+    // url: 'http://192.168.100.57:3031/api/register',
     data: account,
     headers: {
       accept: 'application/json',
@@ -22,8 +22,8 @@ export const registerAPI = async (account: {
 export const loginAPI = async (account: {email: string; password: string}) => {
   const option: AxiosRequestConfig = {
     method: 'POST',
-    url: 'http://192.168.100.21:3031/api/login',
-    // url: 'http://192.168.100.21:3031/api/login',
+    url: 'http://192.168.100.57:3031/api/login',
+    // url: 'http://192.168.100.57:3031/api/login',
     // url: 'http://192.168.55.112:3031/api/login',
     data: account,
     headers: {
@@ -36,7 +36,7 @@ export const loginAPI = async (account: {email: string; password: string}) => {
 
 export const getCurrentUserAPI = async () => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.21:3031/api/getCurrentUser',
+    baseURL: 'http://192.168.100.57:3031/api/getCurrentUser',
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',

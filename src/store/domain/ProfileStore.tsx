@@ -27,6 +27,7 @@ export class ProfileStore {
   listHobby: IListHobby = {};
   description: string = '';
   title: string = '';
+  adress: string = '';
   age: number = 18;
   gender: string = '';
   preferences: IPreferences = {
@@ -51,6 +52,7 @@ export class ProfileStore {
         this.getListHobby();
         this.description = res.data.data.description;
         this.title = res.data.data.title;
+        this.adress = res.data.data.adress;
         this.age = res.data.data.age;
         this.gender = res.data.data.gender;
         this.preferences.gender = res.data.data.preferences.gender;
@@ -86,6 +88,7 @@ export class ProfileStore {
         this.getListHobby();
         this.description = res.data.data.description;
         this.title = res.data.data.title;
+        this.adress = res.data.data.adress;
         this.age = res.data.data.age;
         this.gender = res.data.data.gender;
       });

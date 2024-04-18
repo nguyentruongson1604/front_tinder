@@ -3,8 +3,8 @@ import {IUpdatePreferences} from '../store/domain/PreferencesStore';
 
 export const updatePreferencesAPI = async (preference: IUpdatePreferences) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.21:3031/api/updatePreferences',
-    // baseURL: 'http://192.168.100.21:3031/api/getRandomProfile',
+    baseURL: 'http://192.168.100.57:3031/api/updatePreferences',
+    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',

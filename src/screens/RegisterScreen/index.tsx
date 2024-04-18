@@ -13,6 +13,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Controller, useForm} from 'react-hook-form';
 import {useUserStore} from '../../store';
 import {useNavigation} from '@react-navigation/native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const RegisterScreen = () => {
   const userStore = useUserStore();
@@ -58,162 +59,167 @@ const RegisterScreen = () => {
   };
 
   return (
-    <Background>
-      <View style={{alignItems: 'center', width: '100%'}}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 60,
-            fontWeight: 'bold',
-            marginTop: 20,
-          }}>
-          HiMatch
-        </Text>
-        <FontAwesome
-          name="heart"
-          style={{fontWeight: 'bold', fontSize: 22, color: 'white'}}
-        />
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 19,
-            fontWeight: 'bold',
-            marginBottom: 20,
-          }}>
-          Create a new account
-        </Text>
-        <View
-          style={{
-            backgroundColor: 'white',
-            height: 700,
-            width: '100%',
-            borderTopLeftRadius: 130,
-            paddingTop: 50,
-            alignItems: 'center',
-          }}>
-          <View style={{marginVertical: 10, width: '73%'}}>
-            <Controller
-              control={control}
-              rules={{
-                required: {value: true, message: 'Họ là bắt buộc'},
-              }}
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Họ"
-                />
+    <KeyboardAwareScrollView
+      style={{width: '100%'}}
+      resetScrollToCoords={{x: 0, y: 0}}
+      scrollEnabled={true}
+      keyboardShouldPersistTaps="handled">
+      <Background>
+        <View style={{alignItems: 'center', width: '100%'}}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 60,
+              fontWeight: 'bold',
+              marginTop: 20,
+            }}>
+            HiMatch
+          </Text>
+          <FontAwesome
+            name="heart"
+            style={{fontWeight: 'bold', fontSize: 22, color: 'white'}}
+          />
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 19,
+              fontWeight: 'bold',
+              marginBottom: 20,
+            }}>
+            Create a new account
+          </Text>
+          <View
+            style={{
+              backgroundColor: 'white',
+              height: 700,
+              width: '100%',
+              borderTopLeftRadius: 130,
+              paddingTop: 50,
+              alignItems: 'center',
+            }}>
+            <View style={{marginVertical: 10, width: '73%'}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: {value: true, message: 'Họ là bắt buộc'},
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    style={styles.input}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Họ"
+                  />
+                )}
+                name="firstName"
+              />
+              {errors.firstName && (
+                <Text style={styles.errorText}>{errors.firstName.message}</Text>
               )}
-              name="firstName"
-            />
-            {errors.firstName && (
-              <Text style={styles.errorText}>{errors.firstName.message}</Text>
-            )}
-          </View>
+            </View>
 
-          <View style={{marginVertical: 10, width: '73%'}}>
-            <Controller
-              control={control}
-              rules={{
-                required: {value: true, message: 'Tên là bắt buộc'},
-              }}
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Tên"
-                />
+            <View style={{marginVertical: 10, width: '73%'}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: {value: true, message: 'Tên là bắt buộc'},
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    style={styles.input}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Tên"
+                  />
+                )}
+                name="lastName"
+              />
+              {errors.lastName && (
+                <Text style={styles.errorText}>{errors.lastName.message}</Text>
               )}
-              name="lastName"
-            />
-            {errors.lastName && (
-              <Text style={styles.errorText}>{errors.lastName.message}</Text>
-            )}
-          </View>
+            </View>
 
-          <View style={{marginVertical: 10, width: '73%'}}>
-            <Controller
-              control={control}
-              rules={{
-                required: {value: true, message: 'Email là bắt buộc'},
-                pattern: {
-                  value: /^\S+@\S+$/,
-                  message: 'Email không hợp lệ',
-                },
-              }}
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Email"
-                  keyboardType="email-address"
-                />
+            <View style={{marginVertical: 10, width: '73%'}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: {value: true, message: 'Email là bắt buộc'},
+                  pattern: {
+                    value: /^\S+@\S+$/,
+                    message: 'Email không hợp lệ',
+                  },
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    style={styles.input}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Email"
+                    keyboardType="email-address"
+                  />
+                )}
+                name="email"
+              />
+              {errors.email && (
+                <Text style={styles.errorText}>{errors.email.message}</Text>
               )}
-              name="email"
-            />
-            {errors.email && (
-              <Text style={styles.errorText}>{errors.email.message}</Text>
-            )}
-          </View>
+            </View>
 
-          <View style={{marginVertical: 10, width: '73%'}}>
-            <Controller
-              control={control}
-              rules={{
-                required: {value: true, message: 'Mật khẩu là bắt buộc'},
-                minLength: {
-                  value: 6,
-                  message: 'Mật khẩu phải dài ít nhất 6 ký tự',
-                },
-              }}
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Mật khẩu"
-                  secureTextEntry
-                />
+            <View style={{marginVertical: 10, width: '73%'}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: {value: true, message: 'Mật khẩu là bắt buộc'},
+                  minLength: {
+                    value: 6,
+                    message: 'Mật khẩu phải dài ít nhất 6 ký tự',
+                  },
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    style={styles.input}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Mật khẩu"
+                    secureTextEntry
+                  />
+                )}
+                name="password"
+              />
+              {errors.password && (
+                <Text style={styles.errorText}>{errors.password.message}</Text>
               )}
-              name="password"
-            />
-            {errors.password && (
-              <Text style={styles.errorText}>{errors.password.message}</Text>
-            )}
-          </View>
+            </View>
 
-          <View style={{marginVertical: 10, width: '73%'}}>
-            <Controller
-              control={control}
-              rules={{
-                validate: validatePasswordMatch,
-              }}
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Xác nhận mật khẩu"
-                  secureTextEntry
-                />
+            <View style={{marginVertical: 10, width: '73%'}}>
+              <Controller
+                control={control}
+                rules={{
+                  validate: validatePasswordMatch,
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    style={styles.input}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Xác nhận mật khẩu"
+                    secureTextEntry
+                  />
+                )}
+                name="confirmPassword"
+              />
+              {errors.confirmPassword && (
+                <Text style={styles.errorText}>
+                  {errors.confirmPassword.message}
+                </Text>
               )}
-              name="confirmPassword"
-            />
-            {errors.confirmPassword && (
-              <Text style={styles.errorText}>
-                {errors.confirmPassword.message}
-              </Text>
-            )}
-          </View>
-          {/* <View
+            </View>
+            {/* <View
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -229,7 +235,7 @@ const RegisterScreen = () => {
             </Text>
           </View> */}
 
-          {/* <View
+            {/* <View
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -243,38 +249,39 @@ const RegisterScreen = () => {
               Privacy Policy
             </Text>
           </View> */}
-          <Btn
-            textColor="white"
-            bgColor={'#F63A6E'}
-            btnLabel="Đăng ký"
-            Press={handleSubmit(onSubmit)}
-          />
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 16, fontWeight: 'bold', color: 'grey'}}>
-              Already have an account ?{' '}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Login');
+            <Btn
+              textColor="white"
+              bgColor={'#F63A6E'}
+              btnLabel="Đăng ký"
+              Press={handleSubmit(onSubmit)}
+            />
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
               }}>
-              <Text
-                style={{
-                  color: '#F63A6E',
-                  fontWeight: 'bold',
-                  fontSize: 16,
-                }}>
-                Login
+              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'grey'}}>
+                Already have an account ?{' '}
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Login');
+                }}>
+                <Text
+                  style={{
+                    color: '#F63A6E',
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                  }}>
+                  Login
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </Background>
+      </Background>
+    </KeyboardAwareScrollView>
   );
 };
 const styles = StyleSheet.create({
