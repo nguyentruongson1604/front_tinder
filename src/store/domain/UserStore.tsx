@@ -12,7 +12,7 @@ export interface IUserAccess {
 export class UserStore {
   accessToken: any = null;
   userAccess: IUserAccess | null = null;
-  constructor(rootStore: RootStore) {
+  constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
   }
 
@@ -68,11 +68,16 @@ export class UserStore {
       console.log('refreshToken', await this.abcd());
 
       const res = await getCurrentUserAPI();
+      console.log('res', res);
+
       runInAction(() => {
         this.userAccess = res.data.data;
       });
     } catch (error) {
-      console.error(error);
+      this.rootStore.appStore.setError(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
     }
   };
   get infoUser() {

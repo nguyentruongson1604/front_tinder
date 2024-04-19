@@ -21,6 +21,7 @@ import EditHobbyScreen from '../screens/EditHobbyScreen';
 import {SettingScreen} from '../screens/SettingScreen';
 import {EditProfileHeader} from '../components/templates/EditProfileHeader';
 import {EditImageScreen} from '../screens/EditImageScreen';
+import {NotifySnackBar} from '../screens/NotifySnackBar';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -89,9 +90,9 @@ export const AppNavigator = observer(() => {
 
   // removeToken();
   useEffect(() => {
-    activityStore.loadInitListProfiles();
-    profileStore.getMyProfile();
-    hobbiesStore.getHobbiesType();
+    // activityStore.loadInitListProfiles();
+    // profileStore.getMyProfile();
+    // hobbiesStore.getHobbiesType();
     userStore.getCurrentUser();
   }, []);
   // console.log('listProfile in navi', activityStore.listProfile);
@@ -100,7 +101,8 @@ export const AppNavigator = observer(() => {
 
   return (
     <Stack.Navigator>
-      {userStore.accessToken ? (
+      <NotifySnackBar />
+      {true ? (
         <>
           <Stack.Screen
             options={{headerShown: false}}

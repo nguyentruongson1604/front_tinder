@@ -43,7 +43,8 @@ export const getCurrentUserAPI = async () => {
       'content-type': 'application/json',
     },
   };
-  const instance = createAxiosInstance(option);
-  const res = await instance.get('/');
-  return res;
+  // const instance = createAxiosInstance(option);
+  // const res = await instance.get('/');
+  // return res;
+  return await axios(option);
 };

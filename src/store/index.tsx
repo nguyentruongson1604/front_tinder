@@ -53,3 +53,8 @@ export const usePreferencesStore = () => {
   const store = useStore();
   return store.preferencesStore;
 };
+
+export const useAppStore = () => {
+  const store = useStore();
+  return store.appStore;
+};

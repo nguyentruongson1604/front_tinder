@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig} from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 export interface axiosInstanceOptions {
   baseURL: string;
@@ -62,7 +63,7 @@ export const createAxiosInstance = (
       const originalRequest = error.config as AxiosRequestConfig & {
         _retry: boolean;
       };
-      if (error.response?.status && !originalRequest._retry) {
+      if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
           const refreshToken = await AsyncStorage.getItem('refreshToken');
