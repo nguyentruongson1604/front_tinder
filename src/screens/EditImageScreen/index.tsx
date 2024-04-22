@@ -14,7 +14,7 @@ import {
 } from 'react-native-image-picker';
 import {useProfileStore} from '../../store';
 import {Pressable} from 'react-native';
-import {uploadImageAPI} from '../../APIs/profile.api';
+import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
 import LinearGradient from 'react-native-linear-gradient';
 
 export const EditImageScreen = observer(() => {
@@ -97,6 +97,13 @@ export const EditImageScreen = observer(() => {
   };
 
   const handleUpload = async () => {
+    // Dialog.show({
+    //   type: ALERT_TYPE.INFO,
+    //   title: 'Waiting...',
+    //   textBody: 'Anh dang duoc tai len vui long doi',
+    //   // autoClose: this.isUpload ? false : true,
+    //   closeOnOverlayTap: false,
+    // });
     profileStore.updateMyPhotos(convertArr(arrImage));
   };
 
@@ -107,6 +114,7 @@ export const EditImageScreen = observer(() => {
         backgroundColor: '#aaaae13b',
         flexDirection: 'row',
         flexWrap: 'wrap',
+        justifyContent: 'space-between',
       }}>
       {/* <ScrollView style={{flex: 1, backgroundColor: '#aaaae13b'}}> */}
 
@@ -121,21 +129,30 @@ export const EditImageScreen = observer(() => {
           />
         );
       })}
-      <Pressable onPress={handleUpload}>
-        <LinearGradient
-          colors={['#F63A6E', '#e67091', '#eda084']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={{
-            height: 30,
-            width: 150,
-            borderRadius: 20,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'white'}}>Press me</Text>
-        </LinearGradient>
-      </Pressable>
+      <View
+        style={{
+          width: '100%',
+          alignItems: 'center',
+          marginTop: 25,
+        }}>
+        <Pressable onPress={handleUpload}>
+          <LinearGradient
+            colors={['#F63A6E', '#e67091', '#eda084']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={{
+              height: 50,
+              width: 250,
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>
+              Tải ảnh lên
+            </Text>
+          </LinearGradient>
+        </Pressable>
+      </View>
       <ActionsheetPicker
         isOpen={isOpen}
         onOpen={onOpen}

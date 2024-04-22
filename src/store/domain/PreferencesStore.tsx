@@ -27,7 +27,10 @@ export class PreferencesStore {
           res.data.data.distance;
       });
     } catch (error) {
-      console.error(error);
+      this.rootStore.appStore.setError(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
     }
   };
 }

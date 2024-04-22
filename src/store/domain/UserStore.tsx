@@ -1,7 +1,13 @@
 import {makeAutoObservable, runInAction} from 'mobx';
-import {getCurrentUserAPI, loginAPI, registerAPI} from '../../APIs/user.api';
+import {
+  getCurrentUserAPI,
+  loginAPI,
+  registerAPI,
+  resetPasswordByMailAPI,
+} from '../../APIs/user.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {RootStore} from '../RootStore';
+import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
 
 export interface IUserAccess {
   firstName: string;
@@ -31,7 +37,6 @@ export class UserStore {
           AsyncStorage.setItem('refreshToken', res.data.refreshToken);
         }
       });
-      console.log('this.userAccess', this.userAccess);
 
       return res;
     } catch (error: any) {
@@ -64,23 +69,51 @@ export class UserStore {
   };
   getCurrentUser = async () => {
     try {
-      console.log('accessToken here', await this.abc());
-      console.log('refreshToken', await this.abcd());
+      // console.log('accessToken here', await this.abc());
+      // console.log('refreshToken', await this.abcd());
 
       const res = await getCurrentUserAPI();
-      console.log('res', res);
-
       runInAction(() => {
         this.userAccess = res.data.data;
       });
     } catch (error) {
-      this.rootStore.appStore.setError(
-        error.response.data.statusCode,
-        error.response.data.message,
-      );
+      // this.rootStore.appStore.setError(
+      //   error.response.data.statusCode,
+      //   error.response.data.message,
+      // );
+      console.error(error);
     }
+  };
+  logout = async () => {
+    await AsyncStorage.removeItem('accessToken');
+    await AsyncStorage.removeItem('refreshToken');
+    this.accessToken = null;
   };
   get infoUser() {
     return this.userAccess;
   }
+  resetPasswordByEmail = async (emailReset: any) => {
+    try {
+      const res = await resetPasswordByMailAPI(emailReset);
+      if (res.data.status === 'success') {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Succes',
+          textBody: 'Hãy kiểm tra Email của bạn và quay lại đăng nhập',
+        });
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: 'Fail',
+          textBody: 'Đổi mật khẩu không thành công',
+        });
+      }
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'Fail',
+        textBody: `${error.response.data.message}`,
+      });
+    }
+  };
 }

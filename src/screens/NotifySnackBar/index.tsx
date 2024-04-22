@@ -25,6 +25,7 @@ export const NotifySnackBar = observer(() => {
               appStore.reset();
               navigation.navigate('Login');
             },
+            onHide: appStore.reset,
           })
         : Toast.show({
             type: ALERT_TYPE.DANGER,

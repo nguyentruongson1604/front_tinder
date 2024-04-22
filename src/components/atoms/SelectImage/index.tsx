@@ -25,12 +25,14 @@ const SelectImage: React.FC<ISelectImage> = observer(
       <>
         <View
           style={{
-            padding: 15,
+            width: '33.33%',
+            paddingVertical: 15,
+            paddingHorizontal: 17,
           }}>
           <View
             style={{
               height: 150,
-              width: 100,
+              width: '100%',
               backgroundColor: '#d8d8e3',
               borderRadius: 10,
               borderStyle: 'dashed',
