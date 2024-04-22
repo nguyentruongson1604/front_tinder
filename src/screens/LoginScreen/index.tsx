@@ -143,6 +143,21 @@ const LoginScreen = () => {
               <Text style={styles.errorText}>{errors.password.message}</Text>
             )}
           </View>
+          <View style={{width: '65%', alignItems: 'flex-end'}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Resetpass');
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontWeight: '600',
+                  fontSize: 15,
+                }}>
+                Quên mật khẩu
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View
             style={{
               display: 'flex',

@@ -7,6 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useUserStore} from '../../../store';
 export type RootStackParamList = {
   Home: undefined;
   Info: undefined;
@@ -16,10 +17,10 @@ export type RootStackParamList = {
 const TopNavigator = () => {
   const [activeButton, setActiveButton] = useState('HOME');
   const navigation = useNavigation();
+  const userStore = useUserStore();
 
   const removeToken = async () => {
-    await AsyncStorage.removeItem('accessToken');
-    await AsyncStorage.removeItem('refreshToken');
+    userStore.logout();
   };
 
   return (

@@ -21,6 +21,8 @@ import EditHobbyScreen from '../screens/EditHobbyScreen';
 import {SettingScreen} from '../screens/SettingScreen';
 import {EditProfileHeader} from '../components/templates/EditProfileHeader';
 import {EditImageScreen} from '../screens/EditImageScreen';
+import {NotifySnackBar} from '../screens/NotifySnackBar';
+import {ResetPassScreen} from '../screens/ResetPassScreen';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -49,6 +51,7 @@ export const HomeNavigator = observer(() => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View>
+        <NotifySnackBar />
         <TopNavigator />
       </View>
       <Stack.Navigator>
@@ -100,6 +103,7 @@ export const AppNavigator = observer(() => {
 
   return (
     <Stack.Navigator>
+      {/* <NotifySnackBar /> */}
       {userStore.accessToken ? (
         <>
           <Stack.Screen
@@ -119,6 +123,11 @@ export const AppNavigator = observer(() => {
             options={{headerShown: false}}
             name="Login"
             component={LoginScreen}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Resetpass"
+            component={ResetPassScreen}
           />
           <Stack.Screen
             options={{headerShown: false}}

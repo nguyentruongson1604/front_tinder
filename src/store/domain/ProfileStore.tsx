@@ -6,6 +6,7 @@ import {
   uploadImageAPI,
 } from '../../APIs/profile.api';
 import {RootStore} from '../RootStore';
+import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
 
 // export interface IListHobby {
 //   [key: string]: {id: string; name: string}[];
@@ -39,6 +40,8 @@ export class ProfileStore {
     imageProfileUrl: [],
   };
   dataUpdate: IProfile = {};
+
+  isUpload: boolean = false;
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
   }
@@ -106,8 +109,31 @@ export class ProfileStore {
         type: 'image/jpeg',
       });
     });
-    const res = await uploadImageAPI(formData);
-    this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
+    try {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: 'Waiting...',
+        textBody: 'Ảnh đang tải lên vui lòng đợi',
+        closeOnOverlayTap: false,
+      });
+      const res = await uploadImageAPI(formData);
+      this.isUpload = true;
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Succes',
+        textBody: 'Ảnh tải lên thành công',
+        button: 'OK',
+      });
+      this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
+      console.log(' this.photos.imageProfileUrl', this.photos.imageProfileUrl);
+    } catch (error) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'ERROR',
+        textBody: 'Ảnh tải lên không thành công',
+        button: 'OK',
+      });
+    }
   };
   setDataUpdate = (key: string, data: any) => {
     this.dataUpdate = {
