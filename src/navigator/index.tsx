@@ -23,6 +23,10 @@ import {EditProfileHeader} from '../components/templates/EditProfileHeader';
 import {EditImageScreen} from '../screens/EditImageScreen';
 import {NotifySnackBar} from '../screens/NotifySnackBar';
 import {ResetPassScreen} from '../screens/ResetPassScreen';
+import {CreateProfileScreen} from '../screens/CreateProfileScreen';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Text} from 'react-native';
+import {SettingFindScreen} from '../screens/SettingFindScreen';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -58,7 +62,7 @@ export const HomeNavigator = observer(() => {
         <Stack.Screen
           options={{headerShown: false}}
           name="Switch"
-          component={HomeScreen}
+          component={CreateProfileTabs}
         />
         <Stack.Screen
           options={{headerShown: false}}
@@ -75,6 +79,85 @@ export const HomeNavigator = observer(() => {
   );
 });
 
+export const CreateProfileTabs = observer(() => {
+  const Tab = createMaterialTopTabNavigator();
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarIndicatorStyle: {backgroundColor: '#F63A6E'},
+      }}>
+      <Tab.Screen
+        name="Image"
+        component={EditImageScreen}
+        options={{
+          tabBarLabel: ({focused, color}) => (
+            <View
+              style={{
+                minWidth: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: focused ? '#F63A6E' : '#b5b5b5',
+                  fontSize: focused ? 18 : 16,
+                  fontWeight: focused ? 'bold' : 'normal',
+                }}>
+                Ảnh
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Info"
+        component={EditHobbyScreen}
+        options={{
+          tabBarLabel: ({focused, color}) => (
+            <View
+              style={{
+                minWidth: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: focused ? '#F63A6E' : '#b5b5b5',
+                  fontSize: focused ? 18 : 16,
+                  fontWeight: focused ? 'bold' : 'normal',
+                }}>
+                Thông tin
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Finding"
+        component={SettingFindScreen}
+        options={{
+          tabBarLabel: ({focused, color}) => (
+            <View
+              style={{
+                minWidth: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: focused ? '#F63A6E' : '#b5b5b5',
+                  fontSize: focused ? 18 : 16,
+                  fontWeight: focused ? 'bold' : 'normal',
+                }}>
+                Tìm kiếm
+              </Text>
+            </View>
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+});
 export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();

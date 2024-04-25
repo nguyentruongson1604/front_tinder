@@ -33,7 +33,7 @@ const LeftLocation = ({distance}) => {
   );
 };
 
-const hobbyInfos = {
+export const hobbyInfos = {
   zodiac: {
     icon: (
       <FontAwesome name="moon-o" style={{fontSize: 18, color: '#948d8d'}} />

@@ -9,8 +9,6 @@ export const NotifySnackBar = observer(() => {
   const navigation = useNavigation();
 
   const fn = () => {
-    console.log('appStore.message', appStore.message);
-
     if (!appStore.message) {
       Toast.hide();
       Dialog.hide();

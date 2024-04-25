@@ -14,7 +14,6 @@ import {
 } from 'react-native-image-picker';
 import {useProfileStore} from '../../store';
 import {Pressable} from 'react-native';
-import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
 import LinearGradient from 'react-native-linear-gradient';
 
 export const EditImageScreen = observer(() => {
@@ -75,6 +74,10 @@ export const EditImageScreen = observer(() => {
         console.log('Camera Error: ', response.errorCode);
       } else {
         let imageUri = response.assets?.[0]?.uri;
+        onClose();
+        const newArr = [...arrImage];
+        newArr[num] = imageUri;
+        setArrImage(newArr);
         // setSelectedImage(imageUri);
       }
     });
@@ -106,6 +109,7 @@ export const EditImageScreen = observer(() => {
     // });
     profileStore.updateMyPhotos(convertArr(arrImage));
   };
+  console.log('arrImage', arrImage);
 
   return (
     <View

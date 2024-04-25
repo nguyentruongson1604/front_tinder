@@ -15,7 +15,6 @@ export class PreferencesStore {
   updatePreferences = async (profile: IUpdatePreferences) => {
     try {
       const res = await updatePreferencesAPI(profile);
-      console.log(res.data.data);
 
       runInAction(() => {
         this.rootStore.profileStore.preferences.gender = res.data.data.gender;
