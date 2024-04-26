@@ -18,6 +18,7 @@ export interface IUserAccess {
 }
 export class UserStore {
   accessToken: any = null;
+  refreshToken: any = null;
   userAccess: IUserAccess | null = null;
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this);

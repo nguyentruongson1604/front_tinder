@@ -39,7 +39,9 @@ const RegisterScreen = () => {
     const res = await userStore.userRegister({...data});
 
     if (res.data.status == 'success') {
+      navigation.navigate('CreateProfile');
     } else {
+      navigation.navigate('CreateProfile');
       setValue('firstName', '');
       setValue('lastName', '');
       setValue('email', '');

@@ -32,4 +32,11 @@ export class PreferencesStore {
       );
     }
   };
+
+  setDataUpdate = (key: string, data: any) => {
+    this.dataUpdate = {
+      ...this.dataUpdate,
+      [key]: data,
+    };
+  };
 }

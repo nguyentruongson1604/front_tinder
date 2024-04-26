@@ -140,5 +140,6 @@ export class ProfileStore {
       ...this.dataUpdate,
       [key]: data,
     };
+    console.log('this.dataUpdate.photos', this.dataUpdate.photos);
   };
 }

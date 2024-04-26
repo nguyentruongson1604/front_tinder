@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Text, View} from 'native-base';
 // import * as React from 'react';
-import {Dimensions} from 'react-native';
+import {Dimensions, ScrollView} from 'react-native';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
