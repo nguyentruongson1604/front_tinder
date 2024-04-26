@@ -23,6 +23,14 @@ import {EditProfileHeader} from '../components/templates/EditProfileHeader';
 import {EditImageScreen} from '../screens/EditImageScreen';
 import {NotifySnackBar} from '../screens/NotifySnackBar';
 import {ResetPassScreen} from '../screens/ResetPassScreen';
+import {
+  CreateProfileScreen,
+  TopCreateNavigator,
+} from '../components/templates/TopCreateNavigator';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Text} from 'react-native';
+import {SettingFindScreen} from '../screens/SettingFindScreen';
+import {EditImgCreateScreen} from '../screens/EditImgCreateScreen';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -58,7 +66,7 @@ export const HomeNavigator = observer(() => {
         <Stack.Screen
           options={{headerShown: false}}
           name="Switch"
-          component={HomeScreen}
+          component={CreateProfileTabs}
         />
         <Stack.Screen
           options={{headerShown: false}}
@@ -75,48 +83,135 @@ export const HomeNavigator = observer(() => {
   );
 });
 
-export const AppNavigator = observer(() => {
+export const CreateProfileTabs = observer(() => {
+  const hobbiesStore = useHobbiesStore();
+
+  useEffect(() => {
+    hobbiesStore.getHobbiesType();
+  }, []);
+  const Tab = createMaterialTopTabNavigator();
+  return (
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <TopCreateNavigator />
+      <Tab.Navigator
+        swipeEnabled={false}
+        screenOptions={{
+          tabBarIndicatorStyle: {backgroundColor: '#F63A6E'},
+        }}>
+        <Tab.Screen
+          name="Image"
+          component={EditImgCreateScreen}
+          options={{
+            tabBarLabel: ({focused, color}) => (
+              <View
+                style={{
+                  minWidth: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: focused ? '#F63A6E' : '#b5b5b5',
+                    fontSize: focused ? 18 : 16,
+                    fontWeight: focused ? 'bold' : 'normal',
+                  }}>
+                  Ảnh
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Info"
+          component={EditHobbyScreen}
+          options={{
+            tabBarLabel: ({focused, color}) => (
+              <View
+                style={{
+                  minWidth: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: focused ? '#F63A6E' : '#b5b5b5',
+                    fontSize: focused ? 18 : 16,
+                    fontWeight: focused ? 'bold' : 'normal',
+                  }}>
+                  Thông tin
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Finding"
+          component={SettingFindScreen}
+          options={{
+            tabBarLabel: ({focused}) => (
+              <View
+                style={{
+                  minWidth: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: focused ? '#F63A6E' : '#b5b5b5',
+                    fontSize: focused ? 18 : 16,
+                    fontWeight: focused ? 'bold' : 'normal',
+                  }}>
+                  Tìm kiếm
+                </Text>
+              </View>
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </SafeAreaView>
+  );
+});
+export const MainNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
-  const userStore = useUserStore();
   const activityStore = useActivityStore();
   const hobbiesStore = useHobbiesStore();
   const profileStore = useProfileStore();
-  // const removeToken = async () => {
-  //   try {
-  //     await AsyncStorage.removeItem('accessToken');
-  //     console.log('Token removed successfully');
-  //   } catch (error) {
-  //     console.error('Error removing token: ', error);
-  //   }
-  // };
+  const userStore = useUserStore();
 
-  // removeToken();
   useEffect(() => {
     activityStore.loadInitListProfiles();
     profileStore.getMyProfile();
     hobbiesStore.getHobbiesType();
     userStore.getCurrentUser();
   }, []);
-  // console.log('listProfile in navi', activityStore.listProfile);
-  // console.log('oneperson in navi', activityStore.getOnePersonFromList());
-  // console.log('oneperson1 in navi', activityStore.curProfile);
-
   return (
     <Stack.Navigator>
-      {/* <NotifySnackBar /> */}
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Home"
+        component={HomeNavigator}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Info"
+        component={InfoScreen}
+      />
+    </Stack.Navigator>
+  );
+});
+export const AppNavigator = observer(() => {
+  const Stack = createNativeStackNavigator();
+  const userStore = useUserStore();
+
+  console.log('userStore.accessToken', userStore.accessToken);
+  return (
+    <Stack.Navigator>
       {userStore.accessToken ? (
-        <>
-          <Stack.Screen
-            options={{headerShown: false}}
-            name="Home"
-            component={HomeNavigator}
-          />
-          <Stack.Screen
-            options={{headerShown: false}}
-            name="Info"
-            component={InfoScreen}
-          />
-        </>
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Main"
+          component={MainNavigator}
+        />
       ) : (
         <>
           <Stack.Screen
@@ -136,8 +231,8 @@ export const AppNavigator = observer(() => {
           />
           <Stack.Screen
             options={{headerShown: false}}
-            name="Home"
-            component={HomeNavigator}
+            name="CreateProfile"
+            component={CreateProfileTabs}
           />
         </>
       )}

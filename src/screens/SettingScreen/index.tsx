@@ -11,6 +11,8 @@ import {useState} from 'react';
 import {usePreferencesStore, useProfileStore, useUserStore} from '../../store';
 import {ModalCustom} from '../../components/atoms/Modal';
 import {IUpdatePreferences} from '../../store/domain/PreferencesStore';
+import {ActionSheetPassword} from '../../components/atoms/ActionSheetPassword';
+import {useDisclose} from 'native-base';
 
 export interface ISettingChoose {
   title: string;
@@ -20,7 +22,7 @@ export interface ISettingChoose {
   isPassWord?: boolean;
   isAdress?: boolean;
 }
-const SettingTitle: React.FC<{title: string}> = ({title}) => {
+export const SettingTitle: React.FC<{title: string}> = ({title}) => {
   return (
     <View
       style={{
@@ -41,7 +43,7 @@ const SettingTitle: React.FC<{title: string}> = ({title}) => {
   );
 };
 
-const HobbyChoose: React.FC<ISettingChoose> = ({
+export const HobbyChoose: React.FC<ISettingChoose> = ({
   title,
   isPress = false,
   content,
@@ -109,6 +111,7 @@ const HobbyChoose: React.FC<ISettingChoose> = ({
 };
 
 export const SettingScreen = observer(() => {
+  const {isOpen, onOpen, onClose} = useDisclose();
   const profileStore = useProfileStore();
   const userStore = useUserStore();
   const preferencesStore = usePreferencesStore();
@@ -180,7 +183,13 @@ export const SettingScreen = observer(() => {
           <HobbyChoose title="Họ" content={userStore.infoUser?.lastName} />
           <HobbyChoose title="Tên" content={userStore.infoUser?.firstName} />
           <HobbyChoose title="Email" content={userStore.infoUser?.email} />
-          <HobbyChoose title="Mật khẩu" content="123456" isPress isPassWord />
+          <HobbyChoose
+            title="Mật khẩu"
+            content="123456"
+            isPress
+            isPassWord
+            onPress={onOpen}
+          />
         </View>
         <View>
           <SettingTitle title="Cài đặt tìm kiếm" />
@@ -243,6 +252,11 @@ export const SettingScreen = observer(() => {
           open={modalVisible}
           handlePress={handlePressPopup}
           title="Hiển thị cho tôi"
+        />
+        <ActionSheetPassword
+          isOpen={isOpen}
+          onClose={onClose}
+          onOpen={onOpen}
         />
       </ScrollView>
     </View>

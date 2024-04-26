@@ -14,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Chip} from '../ChipPress';
 import {useNavigation} from '@react-navigation/native';
+import {hobbyInfos} from '../../../screens/InfoScreen';
 
 // const width =
 //   Dimensions.get('window').width - (Dimensions.get('window').width * 20) / 100;
@@ -27,6 +28,8 @@ const images = [
 ];
 
 const ImgSliderHome = ({user}) => {
+  // const images = user?.photos?.imageProfileUrl || [];
+
   const navigation = useNavigation();
   const width =
     Dimensions.get('window').width -
@@ -97,7 +100,7 @@ const ImgSliderHome = ({user}) => {
                   left: index * width,
                   width,
                 }}>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', marginBottom: 10}}>
                   <Text
                     style={{
                       color: 'white',
@@ -110,8 +113,7 @@ const ImgSliderHome = ({user}) => {
                   <Text style={{color: 'white', fontSize: 30}}>21</Text>
                 </View>
                 <Text style={{color: 'white', fontSize: 18, lineHeight: 24}}>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  {user?._id}
+                  {user?.description}
                 </Text>
               </View>
             ) : (
@@ -130,7 +132,11 @@ const ImgSliderHome = ({user}) => {
                   left: index * width,
                   width,
                 }}>
-                <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingRight: 20,
+                  }}>
                   <Ionicons
                     name="location-sharp"
                     style={{color: 'white', fontSize: 22}}
@@ -138,11 +144,11 @@ const ImgSliderHome = ({user}) => {
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 22,
+                      fontSize: 18,
                       marginLeft: 5,
-                      marginBottom: 8,
+                      marginBottom: 10,
                     }}>
-                    {user?.adress}
+                    Sống tại: {user?.adress}
                   </Text>
                 </View>
                 <Text
@@ -152,7 +158,7 @@ const ImgSliderHome = ({user}) => {
                     lineHeight: 24,
                     marginLeft: 7,
                   }}>
-                  cách xa {Math.ceil(user?.distance / 1000)} km
+                  Cách xa {Math.ceil(user?.distance / 1000)} km
                 </Text>
               </View>
             ) : (
@@ -170,11 +176,19 @@ const ImgSliderHome = ({user}) => {
                   left: index * width,
                   width,
                 }}>
-                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                  <Chip content="Bong ro" />
-                  <Chip content="Bong ro" />
-                  <Chip content="Bong ro" />
-                  <Chip content="Bong ro" />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    paddingRight: 10,
+                  }}>
+                  {user?.hobby?.map(hobby => {
+                    if (!hobbyInfos[hobby?.type]) {
+                      return <Chip content={hobby?.name} />;
+                    } else {
+                      return null;
+                    }
+                  })}
                 </View>
               </View>
             ) : (
@@ -194,7 +208,7 @@ const ImgSliderHome = ({user}) => {
         }}
         style={{
           position: 'absolute',
-          bottom: 80,
+          bottom: 130,
           right: 10,
           borderRadius: 20,
           backgroundColor: '#0000008b',

@@ -14,10 +14,12 @@ import {
 } from 'react-native-image-picker';
 import {useProfileStore} from '../../store';
 import {Pressable} from 'react-native';
-import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
 import LinearGradient from 'react-native-linear-gradient';
 
-export const EditImageScreen = observer(() => {
+interface IEditImg {
+  isCreate?: boolean;
+}
+export const EditImageScreen: React.FC<IEditImg> = observer(isCreate => {
   const profileStore = useProfileStore();
   const [arrImage, setArrImage] = useState<(string | undefined)[]>(
     profileStore.photos.imageProfileUrl || [],
@@ -47,6 +49,9 @@ export const EditImageScreen = observer(() => {
         const newArr = [...arrImage];
         newArr[num] = imageUri;
         setArrImage(newArr);
+        isCreate
+          ? profileStore.setDataUpdate('photos', convertArr(newArr))
+          : null;
         // setArrImage(pre => [...pre, (pre[num] = imageUri)]);
         // const formData = new FormData();
         // formData.append('file', {
@@ -75,6 +80,13 @@ export const EditImageScreen = observer(() => {
         console.log('Camera Error: ', response.errorCode);
       } else {
         let imageUri = response.assets?.[0]?.uri;
+        onClose();
+        const newArr = [...arrImage];
+        newArr[num] = imageUri;
+        setArrImage(newArr);
+        isCreate
+          ? profileStore.setDataUpdate('photos', convertArr(newArr))
+          : null;
         // setSelectedImage(imageUri);
       }
     });
@@ -87,6 +99,7 @@ export const EditImageScreen = observer(() => {
     const newArr = [...arrImage];
     newArr[index] = undefined;
     setArrImage(newArr);
+    isCreate ? profileStore.setDataUpdate('photos', convertArr(newArr)) : null;
     // setArrImage(pre => pre.splice(index, 1));
   };
 
@@ -129,30 +142,33 @@ export const EditImageScreen = observer(() => {
           />
         );
       })}
-      <View
-        style={{
-          width: '100%',
-          alignItems: 'center',
-          marginTop: 25,
-        }}>
-        <Pressable onPress={handleUpload}>
-          <LinearGradient
-            colors={['#F63A6E', '#e67091', '#eda084']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={{
-              height: 50,
-              width: 250,
-              borderRadius: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>
-              Tải ảnh lên
-            </Text>
-          </LinearGradient>
-        </Pressable>
-      </View>
+      {!isCreate ? (
+        <View
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            marginTop: 25,
+          }}>
+          <Pressable onPress={handleUpload}>
+            <LinearGradient
+              colors={['#F63A6E', '#e67091', '#eda084']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 50,
+                width: 250,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>
+                Tải ảnh lên
+              </Text>
+            </LinearGradient>
+          </Pressable>
+        </View>
+      ) : null}
+
       <ActionsheetPicker
         isOpen={isOpen}
         onOpen={onOpen}

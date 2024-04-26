@@ -6,7 +6,7 @@ import {
   uploadImageAPI,
 } from '../../APIs/profile.api';
 import {RootStore} from '../RootStore';
-import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
+import {ALERT_TYPE, Dialog} from 'react-native-alert-notification';
 
 // export interface IListHobby {
 //   [key: string]: {id: string; name: string}[];
@@ -64,7 +64,6 @@ export class ProfileStore {
         this.preferences.distance = res.data.data.preferences.distance;
         this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
       });
-      console.log(this.photos.imageProfileUrl);
     } catch (error) {
       console.error(error);
     }
@@ -125,12 +124,13 @@ export class ProfileStore {
         button: 'OK',
       });
       this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
-      console.log(' this.photos.imageProfileUrl', this.photos.imageProfileUrl);
     } catch (error) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: 'ERROR',
-        textBody: 'Ảnh tải lên không thành công',
+        textBody: `${
+          error.response.data.message || 'Ảnh tải lên không thành công'
+        }`,
         button: 'OK',
       });
     }
@@ -140,5 +140,6 @@ export class ProfileStore {
       ...this.dataUpdate,
       [key]: data,
     };
+    console.log('this.dataUpdate.photos', this.dataUpdate.photos);
   };
 }

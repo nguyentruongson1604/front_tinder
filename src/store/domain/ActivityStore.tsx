@@ -54,15 +54,14 @@ export class ActivityStore {
 
   updateActivity = async (profile: IProfile, type: string) => {
     try {
-      console.log('profile.user._id', profile.user._id);
-
       const res = await updateActivityAPI({
         senderUser: profile.user._id,
         senderType: type,
         receiverUser: profile.user._id,
         receiverType: type,
       });
-      console.log(res);
+      if (res.data.status === 'match') return true;
+      else return false;
     } catch (error) {
       console.error(error);
     }

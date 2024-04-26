@@ -222,10 +222,8 @@ const HobbyTitle: React.FC<IHobbyTitle> = ({title, important}) => {
 const EditHobbyScreen = observer(() => {
   const hobbiesStore = useHobbiesStore();
   const profileStore = useProfileStore();
-  const [description, setDescription] = useState<string>(
-    profileStore.description || '',
-  );
-  const [title, setTitle] = useState<string>(profileStore.title || '');
+  const [description, setDescription] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
   const {
     isOpen: isOpenHobby,
     onOpen: onOpenHobby,
@@ -244,12 +242,10 @@ const EditHobbyScreen = observer(() => {
     smallTitle: '',
   });
   const [modalVisible, setModalVisible] = useState(false);
-  const [age, setAge] = useState<number[]>([profileStore.age]);
-  const [gender, setGender] = useState<string>(profileStore.gender || '');
-  const [listHobby, setListHobby] = useState<IListHobby>(
-    profileStore.listHobby || {},
-  );
-  const [adress, setAdress] = useState<string>(profileStore.adress || '');
+  const [age, setAge] = useState<number[]>([18]);
+  const [gender, setGender] = useState<string>('');
+  const [listHobby, setListHobby] = useState<IListHobby>({});
+  const [adress, setAdress] = useState<string>('');
   const handlePressPopup = (gender: string) => {
     setGender(gender);
     profileStore.setDataUpdate('gender', gender);

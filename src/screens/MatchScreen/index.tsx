@@ -1,69 +1,114 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Button} from '../../components/atoms/ButtonCustom';
+import {observer} from 'mobx-react-lite';
+import {useProfileStore} from '../../store';
 
-const MatchScreen = () => {
-  return (
-    <View style={styles.wrap}>
-      <LinearGradient style={{flex: 1}} colors={['#ebcfd7', '#d5b9c1']}>
-        <Image
-          source={require('../../assets/images/matchgif.gif')}
-          style={styles.matchPic}
-        />
+interface IMatchScreen {
+  open: boolean;
+  handlePressMessage: any;
+  handlePressHome: any;
+  data: any;
+}
+const MatchScreen: React.FC<IMatchScreen> = observer(
+  ({open, handlePressMessage, handlePressHome, data}) => {
+    const profileStore = useProfileStore();
+    console.log('data in Matchscreen', data);
 
-        <View
-          style={{
-            width: '100%',
-            // backgroundColor: 'white',
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-          <View style={styles.user}>
+    return (
+      <Modal animationType="fade" transparent={true} visible={open}>
+        <View style={styles.wrap}>
+          <LinearGradient
+            style={{flex: 1, paddingTop: 30}}
+            colors={['#ebcfd7', '#d5b9c1']}>
             <Image
-              source={{
-                uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',
-              }}
-              style={styles.image}
+              source={require('../../assets/images/matchgif.gif')}
+              style={styles.matchPic}
             />
-          </View>
-          <View style={styles.user}>
-            <Image
-              source={{
-                uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',
-              }}
-              style={styles.image}
-            />
-          </View>
+
+            <View
+              style={{
+                width: '100%',
+                // backgroundColor: 'white',
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}>
+              <View style={styles.user}>
+                <Image
+                  source={{
+                    uri: profileStore?.photos?.imageProfileUrl[0] || '',
+                  }}
+                  style={styles.image}
+                />
+              </View>
+              <View style={styles.user}>
+                <Image
+                  source={{
+                    uri: data?.photos?.imageProfileUrl[0] || '',
+                  }}
+                  style={styles.image}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                marginTop: 60,
+              }}>
+              <Pressable style={{marginBottom: 20}} onPress={handlePressHome}>
+                <LinearGradient
+                  colors={['#F63A6E', '#e67091', '#eda084']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 50,
+                    width: 250,
+                    borderRadius: 60,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      height: 46,
+                      width: 246,
+                      backgroundColor: '#d5b9c1',
+                      borderRadius: 60,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: 'white', fontSize: 20}}>
+                      Tiếp tục quẹt
+                    </Text>
+                  </View>
+                </LinearGradient>
+              </Pressable>
+              <Pressable onPress={handlePressMessage}>
+                <LinearGradient
+                  colors={['#F63A6E', '#e67091', '#eda084']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 50,
+                    width: 250,
+                    borderRadius: 60,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: 'white', fontSize: 20}}>
+                    Gửi tin nhắn
+                  </Text>
+                </LinearGradient>
+              </Pressable>
+            </View>
+          </LinearGradient>
         </View>
-        <View style={{width: '100%', alignItems: 'center'}}>
-          <View style={{marginTop: 50, marginBottom: 20}}>
-            <Button
-              backgroundColor="transparent"
-              borderColor="#F63A6E"
-              w={240}
-              h={45}
-              color="white"
-              fontSize={23}
-              title="Tiếp tục quẹt"
-              // lineHeigth={43}
-            />
-          </View>
-          <Button
-            backgroundColor="#F63A6E"
-            borderColor="#F63A6E"
-            w={240}
-            h={45}
-            color="white"
-            fontSize={23}
-            title="Gửi tin nhắn"
-            // lineHeigth={45}
-          />
-        </View>
-      </LinearGradient>
-    </View>
-  );
-};
+      </Modal>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   wrap: {

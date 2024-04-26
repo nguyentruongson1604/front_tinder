@@ -26,7 +26,6 @@ export const ActionSheetInput: React.FC<IActionsheetInput> = ({
 }) => {
   const [awareKeyboard, setAwareKeyBoard] = useState<boolean>(false);
   const [address, setAddress] = useState<string>(data || '');
-  console.log(address);
 
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose}>

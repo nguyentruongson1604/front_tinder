@@ -25,8 +25,8 @@ const CardProfile = ({user}) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: '80%',
-    height: '85%',
+    // width: '80%',
+    height: '75%',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {

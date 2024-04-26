@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {
+  changePasswordAPI,
   getCurrentUserAPI,
   loginAPI,
   registerAPI,
@@ -17,6 +18,7 @@ export interface IUserAccess {
 }
 export class UserStore {
   accessToken: any = null;
+  refreshToken: any = null;
   userAccess: IUserAccess | null = null;
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
@@ -28,7 +30,6 @@ export class UserStore {
   userLogin = async (account: {email: string; password: string}) => {
     try {
       const res = await loginAPI(account);
-      console.log(res.data.data);
 
       runInAction(() => {
         this.userAccess = res.data.data;
@@ -114,6 +115,28 @@ export class UserStore {
         title: 'Fail',
         textBody: `${error.response.data.message}`,
       });
+    }
+  };
+
+  changePassword = async (currentPassword: string, newPassword: string) => {
+    try {
+      const res = await changePasswordAPI({currentPassword, newPassword});
+      if (res.data.status === 'success') {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Succes',
+          textBody: 'Đổi mật khẩu thành công',
+        });
+      }
+    } catch (error: any) {
+      this.rootStore.appStore.setError(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      return {
+        status: false,
+        message: error.response.data.message || 'lỗi không thể đổi mật khẩu',
+      };
     }
   };
 }

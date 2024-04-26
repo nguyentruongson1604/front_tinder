@@ -1,233 +1,234 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
-import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
-import Animated, {
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+import React, {useRef, useState} from 'react';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+
 import CardProfile from '../../components/templates/CardProfile';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useActivityStore} from '../../store';
 import {observer} from 'mobx-react-lite';
+import MatchScreen from '../MatchScreen';
+import {useNavigation} from '@react-navigation/native';
+import Swiper from 'react-native-deck-swiper';
 
-const ROTATION = 60;
-const SWIPE_VELOCITY = 800;
 const HomeScreen = observer(() => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState(currentIndex + 1);
-
-  const {width: screenWidth} = useWindowDimensions();
-  const hiddenTranslateX = 1.5 * screenWidth;
-  const translateX = useSharedValue(0);
-  const startX = useSharedValue(0);
-
+  const [openMatchScreen, setOpenMatchScreen] = useState<boolean>(false);
+  const [dataInMatch, setDataInMatch] = useState({});
+  const navigation = useNavigation();
   const activityStore = useActivityStore();
-
-  // const [currentProfile, setCurrentProfile] = useState(
-  //   activityStore.listProfile[0],
-  // );
-  // const [nextProfile, setNextProfile] = useState(activityStore.listProfile[0]);
-
-  // console.log('inhome list', activityStore.listProfile.length);
-  // console.log('inhome list', activityStore.listProfile);
-  // console.log('inhome listId', activityStore.idArray);
-  // console.log(activityStore.listProfile.length);
-  const rotate = useDerivedValue(
-    () =>
-      interpolate(translateX.value, [0, hiddenTranslateX], [0, ROTATION]) +
-      'deg',
-  );
-  const scale = useDerivedValue(() =>
-    interpolate(
-      translateX.value,
-      [-hiddenTranslateX, 0, hiddenTranslateX],
-      [1, 0.8, 1],
-    ),
-  );
-  const opacity = useDerivedValue(() =>
-    interpolate(
-      translateX.value,
-      [-hiddenTranslateX, 0, hiddenTranslateX],
-      [1, 0.5, 1],
-    ),
-  );
-  const cardStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: translateX.value,
-      },
-      {
-        rotate: rotate.value,
-      },
-    ],
-  }));
-
-  const nextCardStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        scale: scale.value,
-      },
-    ],
-    opacity: opacity.value,
-  }));
-  // const gestureHandler = useAnimatedGestureHandler({
-  //   onStart: (_, context) => {
-  //     context.startX = translateX.value;
-  //   },
-  //   onActive: (event, context) => {
-  //     translateX.value = context.startX + event.translationX;
-  //   },
-  //   onEnd: event => {
-  //   }})
-  const likeStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(translateX.value, [0, hiddenTranslateX / 5], [0, 1]),
-  }));
-  const nopeStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(translateX.value, [0, -hiddenTranslateX / 5], [0, 1]),
-  }));
-
-  const otherButton = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      translateX.value,
-      [-hiddenTranslateX / 5, 0, hiddenTranslateX / 5],
-      [0, 1, 0],
-    ),
-  }));
-  const likeButton = useAnimatedStyle(() => ({
-    opacity: interpolate(translateX.value, [0, -hiddenTranslateX / 5], [0, 1]),
-  }));
-  const swipeLeft = async () => {
-    console.log('quet phai');
-    // setTimeout(() => {
-    setNextIndex(currentIndex + 1);
-    setCurrentIndex(currentIndex + 1);
-    await activityStore.updateActivity(
-      activityStore.listProfile[currentIndex],
-      'Like',
-    );
-    await activityStore.deletePersonFromList();
-    // }, 500);
+  const swiperRef = useRef<Swiper<any>>(null);
+  const [swiping, setSwiping] = React.useState<boolean>(false);
+  const swipeRight = async user => {
+    const res = await activityStore.updateActivity(user, 'Like');
     await activityStore.addOnePersonToList();
-
-    // setTimeout(() => {
-    //   translateX.value = 0;
-    // }, 0);
-    // setNextIndex(currentIndex + 1);
+    if (res) {
+      setOpenMatchScreen(true);
+      setDataInMatch(user);
+    }
   };
-  const swipeRight = () => {
-    console.log('quet trai');
-    // setTimeout(() => {
-    setNextIndex(currentIndex + 1);
-    setCurrentIndex(currentIndex + 1);
-    activityStore.updateActivity(activityStore.listProfile[0], 'Unlike');
-    activityStore.deletePersonFromList();
-    // }, 500);
-    activityStore.addOnePersonToList();
-
-    // setTimeout(() => {
-    //   translateX.value = 0;
-    // }, 0);
-    // setNextIndex(currentIndex + 1);
+  const swipeLeft = async user => {
+    await activityStore.updateActivity(user, 'Unlike');
+    await activityStore.addOnePersonToList();
   };
-  const pan = Gesture.Pan()
-    .onStart(() => {
-      startX.value = translateX.value;
-    })
-    .onUpdate(event => {
-      translateX.value = startX.value + event.translationX;
-    })
-    .onFinalize(event => {
-      if (Math.abs(event.velocityX) < SWIPE_VELOCITY) {
-        translateX.value = withSpring(0);
-        return;
-      }
 
-      translateX.value = withSpring(
-        event.velocityX > 0 ? hiddenTranslateX : -hiddenTranslateX,
-        {},
-        () => {
-          //để trong callback func vì nếu ko để trong callback nó sẽ chạy runOnJS trước rồi mơis chạy withSpring để thay đổi UI
-          // runOnJS(setCurrentIndex)(currentIndex + 1); //sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới
-        },
-      );
-
-      const onSwipe = event.velocityX > 0 ? swipeLeft : swipeRight;
-      // const abc = () => {
-      //   setNextIndex(currentIndex + 1);
-      //   translateX.value = 0;
-      // };
-      onSwipe && runOnJS(onSwipe)();
-      // runOnJS(onSwipe)()
-    });
-
-  //  sau khi lướt thẻ đi thì cập nhật +1 cho thẻ mới. Và ph xét cho giá trị của translateX.value tại vị trí ban đầu
-  useEffect(() => {
-    setNextIndex(1);
-    setCurrentIndex(0);
-    translateX.value = 0;
-  }, [currentIndex, nextIndex, translateX]);
-
-  // useEffect(() => {
-  //   translateX.value = 0;
-  // }, [translateX]);
+  const handlePressMessage = () => {
+    setOpenMatchScreen(false);
+    // navigation.navigate('Switch');
+  };
+  const handlePressHome = () => {
+    setOpenMatchScreen(false);
+    navigation.navigate('Switch');
+  };
+  const cards = [
+    {text: 'Card 1', color: '#24C6DC'},
+    {text: 'Card 2', color: '#514A9D'},
+    {text: 'Card 3', color: '#FFC65D'},
+    // thêm nhiều card tùy ý
+  ];
 
   return (
+    // <View style={{flex: 1}}>
+    //   <View style={styles.pageContainer}>
+    //     <GestureHandlerRootView style={{height: '100%'}}>
+    //       <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
+    //         <CardProfile user={activityStore.listProfile[nextIndex]} />
+    //       </Animated.View>
+    //       <GestureDetector gesture={pan}>
+    //         <Animated.View style={[cardStyle, styles.animatedWrap]}>
+    //           {/* <View style={styles.wrapLike}> */}
+    //           <Animated.Image
+    //             source={require('../../assets/images/LIKE.png')}
+    //             style={[styles.likePic, likeStyle]}
+    //             resizeMode="contain"
+    //           />
+    //           <Animated.Image
+    //             source={require('../../assets/images/nope.png')}
+    //             style={[styles.nopePic, nopeStyle]}
+    //             resizeMode="contain"
+    //           />
+    //           {/* </View> */}
+    //           <CardProfile user={activityStore.listProfile[currentIndex]} />
+    //         </Animated.View>
+    //       </GestureDetector>
+    //     </GestureHandlerRootView>
+    //   </View>
+    //   <View style={styles.bottomNavigation}>
+    //     <Animated.View style={[styles.button]}>
+    //       <FontAwesome
+    //         name="undo"
+    //         style={{fontWeight: 'bold', fontSize: 30, color: '#FBD88D'}}
+    //       />
+    //     </Animated.View>
+    //     <Pressable
+    //       onPress={() => {
+    //         translateX.value = withSpring(-hiddenTranslateX, {
+    //           damping: 900, // Tăng giá trị này để giảm tốc độ
+    //           stiffness: 900, // Giảm giá trị này để làm chậm animation
+    //           mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
+    //         });
+    //         setTimeout(() => {
+    //           setNextIndex(currentIndex + 1);
+    //           setCurrentIndex(currentIndex + 1);
+    //           activityStore.deletePersonFromList();
+    //           activityStore.addOnePersonToList();
+    //         }, 300);
+    //       }}>
+    //       <View style={[styles.button]}>
+    //         <FontAwesome
+    //           name="close"
+    //           style={{fontWeight: 'bold', fontSize: 30, color: '#F76C6B'}}
+    //         />
+    //       </View>
+    //     </Pressable>
+    //     <View style={styles.button}>
+    //       <FontAwesome
+    //         name="star"
+    //         style={{fontWeight: 'bold', fontSize: 24, color: '#3AB4CC'}}
+    //       />
+    //     </View>
+    //     <Pressable
+    //       onPress={() => {
+    //         translateX.value = withSpring(hiddenTranslateX, {
+    //           damping: 900, // Tăng giá trị này để giảm tốc độ
+    //           stiffness: 900, // Giảm giá trị này để làm chậm animation
+    //           mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
+    //         });
+    //         setTimeout(() => {
+    //           setNextIndex(currentIndex + 1);
+    //           setCurrentIndex(currentIndex + 1);
+    //           activityStore.deletePersonFromList();
+    //           activityStore.addOnePersonToList();
+    //         }, 300);
+    //       }}>
+    //       <View style={styles.button}>
+    //         <FontAwesome
+    //           name="heart"
+    //           style={{fontWeight: 'bold', fontSize: 30, color: '#4FCC94'}}
+    //         />
+    //       </View>
+    //     </Pressable>
+    //     <View style={styles.button}>
+    //       <Ionicons
+    //         name="flash"
+    //         style={{fontWeight: 'bold', fontSize: 30, color: '#A65CD2'}}
+    //       />
+    //     </View>
+    //   </View>
+    //   <MatchScreen
+    //     open={openMatchScreen}
+    //     handlePressMessage={handlePressMessage}
+    //     handlePressHome={handlePressHome}
+    //     data={activityStore.listProfile[currentIndex]}
+    //   />
+    // </View>
+
     <View style={{flex: 1}}>
-      <View style={styles.pageContainer}>
-        <GestureHandlerRootView style={{height: '100%'}}>
-          <Animated.View style={[nextCardStyle, styles.nextCardContainer]}>
-            <CardProfile user={activityStore.listProfile[nextIndex]} />
-          </Animated.View>
-          <GestureDetector gesture={pan}>
-            <Animated.View style={[cardStyle, styles.animatedWrap]}>
-              {/* <View style={styles.wrapLike}> */}
-              <Animated.Image
-                source={require('../../assets/images/LIKE.png')}
-                style={[styles.likePic, likeStyle]}
-                resizeMode="contain"
-              />
-              <Animated.Image
-                source={require('../../assets/images/nope.png')}
-                style={[styles.nopePic, nopeStyle]}
-                resizeMode="contain"
-              />
-              {/* </View> */}
-              <CardProfile user={activityStore.listProfile[currentIndex]} />
-            </Animated.View>
-          </GestureDetector>
-        </GestureHandlerRootView>
+      <View
+        style={{
+          flex: 1,
+        }}>
+        <Swiper
+          ref={swiperRef}
+          cards={activityStore.listProfile}
+          renderCard={card => <CardProfile user={card} />}
+          onSwiped={() => setSwiping(false)}
+          onSwipedLeft={cardIndex => {
+            swipeLeft(activityStore.listProfile[cardIndex]);
+          }}
+          onSwipedRight={cardIndex => {
+            swipeRight(activityStore.listProfile[cardIndex]);
+          }}
+          backgroundColor={'#ededed'}
+          cardVerticalMargin={50}
+          stackSize={2} // Số card hiển thị phía sau
+          horizontalThreshold={100}
+          verticalThreshold={3000}
+          stackScale={20}
+          swipeAnimationDuration={700}
+          animateCardOpacity
+          animateOverlayLabelsOpacity={true}
+          overlayLabels={{
+            left: {
+              element: (
+                <Image
+                  source={require('../../assets/images/nope.png')}
+                  style={styles.nopePic}
+                />
+              ) /* Optional */,
+              title: 'NOPE',
+              style: {
+                label: {
+                  backgroundColor: 'black',
+                  borderColor: 'black',
+                  color: 'white',
+                  borderWidth: 1,
+                },
+                wrapper: {
+                  flexDirection: 'column',
+                  alignItems: 'flex-end',
+                  justifyContent: 'flex-start',
+                  marginTop: 30,
+                  marginLeft: -30,
+                  zIndex: 4,
+                },
+              },
+            },
+            right: {
+              element: (
+                <Image
+                  source={require('../../assets/images/LIKE.png')}
+                  style={styles.likePic}
+                />
+              ) /* Optional */,
+              title: 'LIKE',
+              style: {
+                wrapper: {
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                  marginTop: 30,
+                  marginLeft: 40,
+                  zIndex: 4,
+                },
+              },
+            },
+          }}
+        />
       </View>
       <View style={styles.bottomNavigation}>
-        <Animated.View style={[styles.button]}>
+        <View style={[styles.button]}>
           <FontAwesome
             name="undo"
             style={{fontWeight: 'bold', fontSize: 30, color: '#FBD88D'}}
           />
-        </Animated.View>
+        </View>
         <Pressable
           onPress={() => {
-            translateX.value = withSpring(-hiddenTranslateX, {
-              damping: 900, // Tăng giá trị này để giảm tốc độ
-              stiffness: 900, // Giảm giá trị này để làm chậm animation
-              mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
-            });
-            setTimeout(() => {
-              setNextIndex(currentIndex + 1);
-              setCurrentIndex(currentIndex + 1);
-              activityStore.deletePersonFromList();
-              activityStore.addOnePersonToList();
-            }, 300);
+            if (!swiping) {
+              setSwiping(true);
+              swiperRef.current?.swipeLeft();
+            }
           }}>
           <View style={[styles.button]}>
             <FontAwesome
@@ -244,17 +245,10 @@ const HomeScreen = observer(() => {
         </View>
         <Pressable
           onPress={() => {
-            translateX.value = withSpring(hiddenTranslateX, {
-              damping: 900, // Tăng giá trị này để giảm tốc độ
-              stiffness: 900, // Giảm giá trị này để làm chậm animation
-              mass: 13, // Tăng giá trị này để animation có vẻ nặng nề hơn
-            });
-            setTimeout(() => {
-              setNextIndex(currentIndex + 1);
-              setCurrentIndex(currentIndex + 1);
-              activityStore.deletePersonFromList();
-              activityStore.addOnePersonToList();
-            }, 300);
+            if (!swiping) {
+              setSwiping(true);
+              swiperRef.current?.swipeRight();
+            }
           }}>
           <View style={styles.button}>
             <FontAwesome
@@ -270,6 +264,12 @@ const HomeScreen = observer(() => {
           />
         </View>
       </View>
+      <MatchScreen
+        open={openMatchScreen}
+        handlePressMessage={handlePressMessage}
+        handlePressHome={handlePressHome}
+        data={dataInMatch}
+      />
     </View>
   );
 });
@@ -301,20 +301,16 @@ const styles = StyleSheet.create({
   },
   nopePic: {
     // justifyContent: 'flex-start',
-    width: 170,
-    height: 170,
-    position: 'absolute',
-    zIndex: 4,
-    top: 130,
-    right: 40,
+    width: 200,
+    height: 200,
   },
   likePic: {
     width: 150,
     height: 150,
-    position: 'absolute',
-    zIndex: 4,
-    top: 130,
-    left: 40,
+    // position: 'absolute',
+    // zIndex: 4,
+    // top: 130,
+    // left: 40,
   },
   bottomNavigation: {
     flexDirection: 'row',

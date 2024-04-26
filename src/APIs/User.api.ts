@@ -62,3 +62,20 @@ export const resetPasswordByMailAPI = async (email: {emailRest: string}) => {
   };
   return await axios(option);
 };
+
+export const changePasswordAPI = async (data: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  const option: axiosInstanceOptions = {
+    baseURL: 'http://192.168.100.57:3031/api/changePassword',
+    // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  const instance = createAxiosInstance(option);
+  const res = await instance.post('/', data);
+  return res;
+};
