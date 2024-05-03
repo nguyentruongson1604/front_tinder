@@ -15,7 +15,6 @@ interface IMatchScreen {
 const MatchScreen: React.FC<IMatchScreen> = observer(
   ({open, handlePressMessage, handlePressHome, data}) => {
     const profileStore = useProfileStore();
-    console.log('data in Matchscreen', data);
 
     return (
       <Modal animationType="fade" transparent={true} visible={open}>

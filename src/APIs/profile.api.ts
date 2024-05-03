@@ -1,4 +1,3 @@
-import axios, {AxiosRequestConfig} from 'axios';
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
 
 export interface IProfile {
@@ -13,18 +12,19 @@ export interface IProfile {
   location?: any;
 }
 export const createProfileAPI = async (profile: IProfile) => {
-  const option: AxiosRequestConfig = {
-    method: 'POST',
-    url: 'http://192.168.100.57:3031/api/createProfile',
-    // url: 'http://192.168.100.57:3031/api/createProfile',
-    // url: 'http://192.168.55.112:3031/api/createProfile',
-    data: profile,
+  const option: axiosInstanceOptions = {
+    baseURL: 'http://192.168.100.57:3031/api/createProfile',
+    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
     },
+    // data: idArray,
   };
-  return await axios(option);
+  const instance = createAxiosInstance(option);
+  const res = await instance.post('', profile);
+  return res;
 };
 
 // export const updateMyProfileAPI = async (profile?: IProfile) => {
@@ -121,6 +121,20 @@ export const uploadImageAPI = async (formData: any) => {
   };
   const instance = createAxiosInstance(option);
   const res = await instance.post('', formData); //phải dùng {} vì idArray là 1 mảng nhưng gửi req cần 1 Object
+  return res;
+};
+
+export const checkExistProfileAPI = async () => {
+  const option: axiosInstanceOptions = {
+    baseURL: 'http://192.168.100.57:3031/api/checkExistProfile',
+    // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  const instance = createAxiosInstance(option);
+  const res = await instance.get('/');
   return res;
 };
 // export const getRandom10ProfileAPI = async () => {

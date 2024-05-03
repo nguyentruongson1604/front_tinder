@@ -1,6 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {
   IProfile,
+  checkExistProfileAPI,
+  createProfileAPI,
   getMyProfileAPI,
   updateMyProfileAPI,
   uploadImageAPI,
@@ -42,10 +44,14 @@ export class ProfileStore {
   dataUpdate: IProfile = {};
 
   isUpload: boolean = false;
-  constructor(rootStore: RootStore) {
+  existProfile: boolean = false;
+  loading: boolean = false;
+  constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
   }
-
+  setLoading(loading: boolean) {
+    this.loading = loading;
+  }
   getMyProfile = async () => {
     try {
       const res = await getMyProfileAPI();
@@ -99,6 +105,8 @@ export class ProfileStore {
     }
   };
   updateMyPhotos = async (arrImages: any) => {
+    console.log('arrImages', arrImages);
+
     const formData = new FormData();
     arrImages.forEach((file, index) => {
       formData.append(`files`, {
@@ -140,6 +148,28 @@ export class ProfileStore {
       ...this.dataUpdate,
       [key]: data,
     };
-    console.log('this.dataUpdate.photos', this.dataUpdate.photos);
+    console.log('this.dataUpdate', this.dataUpdate);
+  };
+  createProfile = async (profile: IProfile) => {
+    try {
+      const res = await createProfileAPI(profile);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  checkExistPofile = async () => {
+    try {
+      this.setLoading(true);
+      console.log('here1');
+
+      const res = await checkExistProfileAPI();
+      if (res.data.data) this.existProfile = true;
+      this.setLoading(false);
+      console.log('here2');
+    } catch (error) {
+      this.setLoading(false);
+
+      console.log(error);
+    }
   };
 }

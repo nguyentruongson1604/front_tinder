@@ -1,18 +1,18 @@
 import {useEffect} from 'react';
-import {useAppStore} from '../../store';
+import {useAppStore, useUserStore} from '../../store';
 import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
 import {observer} from 'mobx-react-lite';
-import {useNavigation} from '@react-navigation/native';
 
 export const NotifySnackBar = observer(() => {
   const appStore = useAppStore();
-  const navigation = useNavigation();
+  const userStore = useUserStore();
 
   const fn = () => {
     if (!appStore.message) {
       Toast.hide();
       Dialog.hide();
     } else {
+      console.log('statusCode', appStore.statusCode);
       appStore.statusCode === 401
         ? Dialog.show({
             type: ALERT_TYPE.DANGER,
@@ -20,8 +20,8 @@ export const NotifySnackBar = observer(() => {
             textBody: 'Dang nhap lai',
             button: 'back login',
             onPressButton: () => {
+              userStore.logout();
               appStore.reset();
-              navigation.navigate('Login');
             },
             onHide: appStore.reset,
           })
@@ -36,8 +36,6 @@ export const NotifySnackBar = observer(() => {
   };
 
   useEffect(() => {
-    console.log(appStore.message);
-
     fn();
   }, [appStore.message]);
   return null;

@@ -11,11 +11,13 @@ import Background from '../../components/atoms/Background';
 import Btn from '../../components/atoms/Button';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Controller, useForm} from 'react-hook-form';
-import {useUserStore} from '../../store';
+import {useProfileStore, useUserStore} from '../../store';
 import {useNavigation} from '@react-navigation/native';
+import {observer} from 'mobx-react-lite';
 
-const LoginScreen = () => {
+const LoginScreen = observer(() => {
   const userStore = useUserStore();
+  const profileStore = useProfileStore();
   const navigation = useNavigation();
   const {
     control,
@@ -32,8 +34,9 @@ const LoginScreen = () => {
 
   const onSubmit = async (data: any) => {
     const res = await userStore.userLogin({...data});
+
     if (res.data.status == 'success') {
-      // navigation.navigate('Home');
+      await profileStore.checkExistPofile();
     } else {
       setValue('email', '');
       setValue('password', '');
@@ -200,7 +203,7 @@ const LoginScreen = () => {
       </View>
     </Background>
   );
-};
+});
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -11,12 +11,13 @@ import Background from '../../components/atoms/Background';
 import Btn from '../../components/atoms/Button';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Controller, useForm} from 'react-hook-form';
-import {useUserStore} from '../../store';
+import {useProfileStore, useUserStore} from '../../store';
 import {useNavigation} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const RegisterScreen = () => {
   const userStore = useUserStore();
+  const profileStore = useProfileStore();
   const navigation = useNavigation();
   const {
     control,
@@ -39,9 +40,10 @@ const RegisterScreen = () => {
     const res = await userStore.userRegister({...data});
 
     if (res.data.status == 'success') {
+      profileStore.existProfile = false;
       navigation.navigate('CreateProfile');
     } else {
-      navigation.navigate('CreateProfile');
+      // navigation.navigate('CreateProfile');
       setValue('firstName', '');
       setValue('lastName', '');
       setValue('email', '');

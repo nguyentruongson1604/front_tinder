@@ -11,6 +11,8 @@ export class AppStore {
   }
 
   setError = (statusCode: number, message: string) => {
+    console.log('this.statusCode', this.statusCode);
+
     this.statusCode = statusCode;
     this.message = message;
   };

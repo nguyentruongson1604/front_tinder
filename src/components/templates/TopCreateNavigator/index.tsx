@@ -41,7 +41,7 @@ export const TopCreateNavigator = observer(() => {
               justifyContent: 'center',
             }}
             onPress={() => {}}>
-            <Text style={{fontWeight: '600'}}>Xong</Text>
+            {/* <Text style={{fontWeight: '600'}}>Xong</Text> */}
           </Pressable>
         </View>
       </View>
