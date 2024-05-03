@@ -8,7 +8,8 @@ import {
 } from '../../APIs/user.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {RootStore} from '../RootStore';
-import {ALERT_TYPE, Dialog, Toast} from 'react-native-alert-notification';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
+import {createPreferencesAPI} from '../../APIs/preferences.api';
 
 export interface IUserAccess {
   firstName: string;
@@ -20,10 +21,13 @@ export class UserStore {
   accessToken: any = null;
   refreshToken: any = null;
   userAccess: IUserAccess | null = null;
+  loading = false;
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
   }
-
+  setLoading(loading) {
+    this.loading = loading;
+  }
   setUser = (user: IUserAccess) => {
     this.userAccess = user;
   };
@@ -38,7 +42,7 @@ export class UserStore {
           AsyncStorage.setItem('refreshToken', res.data.refreshToken);
         }
       });
-
+      this.isAuthenticated();
       return res;
     } catch (error: any) {
       return error.response;
@@ -47,6 +51,17 @@ export class UserStore {
   userRegister = async (account: IUserAccess) => {
     try {
       const res = await registerAPI(account);
+
+      runInAction(() => {
+        this.userAccess = res.data.data;
+        if (res.data.accessToken && res.data.refreshToken) {
+          AsyncStorage.setItem('accessToken', res.data.accessToken);
+          AsyncStorage.setItem('refreshToken', res.data.refreshToken);
+        }
+      });
+      this.isAuthenticated();
+      await createPreferencesAPI();
+
       return res;
     } catch (error: any) {
       return error.response;
@@ -54,10 +69,13 @@ export class UserStore {
   };
   isAuthenticated = async () => {
     try {
+      this.setLoading(true);
       const accessToken = await AsyncStorage.getItem('accessToken');
       this.accessToken = accessToken;
+      this.setLoading(false);
     } catch (error) {
-      console.log(error);
+      this.setLoading(false);
+      console.error('expiresToken', error);
     }
   };
   abc = async () => {

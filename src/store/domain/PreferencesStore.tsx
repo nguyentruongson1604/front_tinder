@@ -26,6 +26,8 @@ export class PreferencesStore {
           res.data.data.distance;
       });
     } catch (error) {
+      console.log(error.response.status);
+
       this.rootStore.appStore.setError(
         error.response.data.statusCode,
         error.response.data.message,

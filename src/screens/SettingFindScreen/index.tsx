@@ -2,19 +2,24 @@
 /* eslint-disable react-native/no-inline-styles */
 import {observer} from 'mobx-react-lite';
 import {HobbyChoose, SettingTitle} from '../SettingScreen';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import MultiSliderSelect from '../../components/atoms/MultiSliderSelect';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {useState} from 'react';
-import {usePreferencesStore} from '../../store';
+import {usePreferencesStore, useProfileStore} from '../../store';
 import {ModalCustom} from '../../components/atoms/Modal';
+import LinearGradient from 'react-native-linear-gradient';
+import {Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 export const SettingFindScreen = observer(() => {
+  const profileStore = useProfileStore();
   const preferencesStore = usePreferencesStore();
   const [distance, setDistance] = useState<number[]>([100]);
   const [modalVisible, setModalVisible] = useState(false);
   const [gender, setGender] = useState<string>('Male');
   const [minmaxAge, setMinMaxAge] = useState<number[]>([18, 100]);
+  const navigation = useNavigation();
   const handlePressPopup = (gender: string) => {
     setGender(gender);
     preferencesStore.setDataUpdate('gender', gender);
@@ -27,6 +32,16 @@ export const SettingFindScreen = observer(() => {
   const handleDistance = (distance: number[]) => {
     setDistance(distance);
     preferencesStore.setDataUpdate('distance', distance[0]);
+  };
+
+  const handleUploadImg = async () => {
+    profileStore.updateMyPhotos(profileStore.dataUpdate.photos || []);
+  };
+  const handleCreateProfile = async () => {
+    profileStore.createProfile(profileStore.dataUpdate);
+  };
+  const handleUpdatePreferences = async () => {
+    preferencesStore.updatePreferences(preferencesStore.dataUpdate);
   };
   return (
     <View style={{flex: 1, backgroundColor: '#aaaae13b'}}>
@@ -56,6 +71,31 @@ export const SettingFindScreen = observer(() => {
         handlePress={handlePressPopup}
         title="Hiển thị cho tôi"
       />
+      <View style={{width: '100%', alignItems: 'center', marginTop: 60}}>
+        <Pressable
+          onPress={async () => {
+            await handleCreateProfile();
+            await handleUpdatePreferences();
+            // await handleUploadImg();
+            navigation.navigate('Main');
+          }}>
+          <LinearGradient
+            colors={['#F63A6E', '#e67091', '#eda084']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={{
+              height: 50,
+              width: 250,
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>
+              Hoàn tất
+            </Text>
+          </LinearGradient>
+        </Pressable>
+      </View>
     </View>
   );
 });

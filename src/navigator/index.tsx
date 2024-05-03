@@ -4,7 +4,6 @@
 import {SafeAreaView, View} from 'react-native';
 import TopNavigator from '../components/templates/TopNavigator';
 import HomeScreen from '../screens/HomeScreen';
-import SelectImage from '../components/atoms/SelectImage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InfoScreen from '../screens/InfoScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -16,21 +15,20 @@ import {
   useUserStore,
 } from '../store';
 import {observer} from 'mobx-react-lite';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import EditHobbyScreen from '../screens/EditHobbyScreen';
 import {SettingScreen} from '../screens/SettingScreen';
 import {EditProfileHeader} from '../components/templates/EditProfileHeader';
 import {EditImageScreen} from '../screens/EditImageScreen';
 import {NotifySnackBar} from '../screens/NotifySnackBar';
 import {ResetPassScreen} from '../screens/ResetPassScreen';
-import {
-  CreateProfileScreen,
-  TopCreateNavigator,
-} from '../components/templates/TopCreateNavigator';
+import {TopCreateNavigator} from '../components/templates/TopCreateNavigator';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Text} from 'react-native';
 import {SettingFindScreen} from '../screens/SettingFindScreen';
 import {EditImgCreateScreen} from '../screens/EditImgCreateScreen';
+import {ActivityIndicator} from 'react-native';
+import Welcome from '../screens/Welcome';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -66,7 +64,7 @@ export const HomeNavigator = observer(() => {
         <Stack.Screen
           options={{headerShown: false}}
           name="Switch"
-          component={CreateProfileTabs}
+          component={HomeScreen}
         />
         <Stack.Screen
           options={{headerShown: false}}
@@ -202,16 +200,44 @@ export const MainNavigator = observer(() => {
 export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
+  const profileStore = useProfileStore();
 
-  console.log('userStore.accessToken', userStore.accessToken);
+  useEffect(() => {
+    profileStore.checkExistPofile();
+    // userStore.logout();
+  }, []);
+  if (userStore.loading || profileStore.loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color={'red'} />
+      </View>
+    );
+  }
   return (
     <Stack.Navigator>
       {userStore.accessToken ? (
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="Main"
-          component={MainNavigator}
-        />
+        profileStore.existProfile ? (
+          <>
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Main"
+              component={MainNavigator}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="CreateProfile"
+              component={CreateProfileTabs}
+            />
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Main"
+              component={MainNavigator}
+            />
+          </>
+        )
       ) : (
         <>
           <Stack.Screen
@@ -229,27 +255,8 @@ export const AppNavigator = observer(() => {
             name="Register"
             component={RegisterScreen}
           />
-          <Stack.Screen
-            options={{headerShown: false}}
-            name="CreateProfile"
-            component={CreateProfileTabs}
-          />
         </>
       )}
     </Stack.Navigator>
   );
 });
-
-{
-  /* <SafeAreaView style={styles.root}>
- <HomeScreen />
- <Welcome />
- <Signup />
- <ActionsheetCustom />
- <InputChoose />
- <SliderSelect />
- <ImgSelect />
- <InfoScreen />
- <SelectImage />
-</SafeAreaView> */
-}
