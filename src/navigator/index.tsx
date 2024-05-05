@@ -178,10 +178,17 @@ export const MainNavigator = observer(() => {
 
   useEffect(() => {
     activityStore.loadInitListProfiles();
-    profileStore.getMyProfile();
-    hobbiesStore.getHobbiesType();
-    userStore.getCurrentUser();
+    // profileStore.getMyProfile();
+    // hobbiesStore.getHobbiesType();
+    // userStore.getCurrentUser();
   }, []);
+  if (activityStore.loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color={'red'} />
+      </View>
+    );
+  }
   return (
     <Stack.Navigator>
       <Stack.Screen
