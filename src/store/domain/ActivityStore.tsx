@@ -18,17 +18,22 @@ export class ActivityStore {
   idArray: string[] = [];
   nextProfile: IProfile | undefined = undefined;
   curProfile: IProfile | undefined = undefined;
+  loading: boolean = false;
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
   }
-
+  setLoading(loading: boolean) {
+    this.loading = loading;
+  }
   loadInitListProfiles = async () => {
     try {
-      const res = await getRandom10ProfileAPI();
+      this.setLoading(true);
+      // const res = await getRandom10ProfileAPI();
 
-      this.listProfile = res.data;
-      const list5IdArray = this.listProfile.map(item => item?._id as string);
-      this.idArray.push(...list5IdArray);
+      // this.listProfile = res.data;
+      // const list5IdArray = this.listProfile.map(item => item?._id as string);
+      // this.idArray.push(...list5IdArray);
+      this.setLoading(false);
     } catch (error) {
       console.error(error);
     }

@@ -11,6 +11,10 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
+// react-native-splash-screen >= 0.3.1
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+
+
 
 class MainApplication : Application(), ReactApplication {
 
