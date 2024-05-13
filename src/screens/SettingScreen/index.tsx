@@ -222,7 +222,8 @@ export const SettingScreen = observer(() => {
               backgroundColor: 'white',
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
+            }}
+            onPress={userStore.logout}>
             <Text
               style={{
                 fontSize: 18,

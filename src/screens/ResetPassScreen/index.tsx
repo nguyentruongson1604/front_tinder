@@ -25,8 +25,6 @@ export const ResetPassScreen = () => {
   });
   const navigation = useNavigation();
   const onSubmit = async (data: any) => {
-    console.log('in here');
-
     const res = await userStore.resetPasswordByEmail({emailReset: data.email});
   };
   return (

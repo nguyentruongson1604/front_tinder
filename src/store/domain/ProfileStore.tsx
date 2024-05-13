@@ -3,6 +3,7 @@ import {
   IProfile,
   checkExistProfileAPI,
   createProfileAPI,
+  getListMatchAPI,
   getMyProfileAPI,
   updateMyProfileAPI,
   uploadImageAPI,
@@ -25,6 +26,12 @@ export interface IPreferences {
 interface IPhotos {
   imageProfileUrl: string[];
 }
+interface IListMatch {
+  user: string;
+  firstName: string;
+  lastName: string;
+  photos: IPhotos;
+}
 export class ProfileStore {
   myProfile: IProfile | null = null;
   listHobby: IListHobby = {};
@@ -41,6 +48,7 @@ export class ProfileStore {
   photos: IPhotos = {
     imageProfileUrl: [],
   };
+  listMatch: IListMatch[] = [];
   dataUpdate: IProfile = {};
 
   isUpload: boolean = false;
@@ -69,6 +77,16 @@ export class ProfileStore {
         this.preferences.age.maxAge = res.data.data.preferences.age.maxAge;
         this.preferences.distance = res.data.data.preferences.distance;
         this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  getListMatch = async () => {
+    try {
+      const {data} = await getListMatchAPI();
+      runInAction(() => {
+        this.listMatch = data.data;
       });
     } catch (error) {
       console.error(error);
@@ -105,8 +123,6 @@ export class ProfileStore {
     }
   };
   updateMyPhotos = async (arrImages: any) => {
-    console.log('arrImages', arrImages);
-
     const formData = new FormData();
     arrImages.forEach((file, index) => {
       formData.append(`files`, {
@@ -160,12 +176,10 @@ export class ProfileStore {
   checkExistPofile = async () => {
     try {
       this.setLoading(true);
-      console.log('here1');
 
       const res = await checkExistProfileAPI();
       if (res.data.data) this.existProfile = true;
       this.setLoading(false);
-      console.log('here2');
     } catch (error) {
       this.setLoading(false);
 
