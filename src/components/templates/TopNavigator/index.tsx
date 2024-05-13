@@ -12,7 +12,6 @@ export type RootStackParamList = {
   Home: undefined;
   Info: undefined;
   Detail: undefined;
-  // khai báo các screen khác tại đây
 };
 const TopNavigator = () => {
   const [activeButton, setActiveButton] = useState('HOME');
@@ -49,7 +48,8 @@ const TopNavigator = () => {
           style={styles.iconWrap}
           onPress={() => {
             setActiveButton('INFO');
-            removeToken();
+            navigation.navigate('Message');
+            // removeToken();
           }}>
           <MaterialCommunityIcons
             name="star-four-points"

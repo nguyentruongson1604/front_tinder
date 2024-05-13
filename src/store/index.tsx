@@ -1,7 +1,11 @@
 import React, {useContext} from 'react';
 import {IRootStore, RootStore} from './RootStore';
-
-export const MobXStoreContext = React.createContext<IRootStore | null>(null);
+import {Socket, io} from 'socket.io-client';
+interface IStoreContext {
+  store: IRootStore;
+  socket: Socket;
+}
+export const MobXStoreContext = React.createContext<IStoreContext | null>(null);
 export interface IMobxStoreProviderProps {
   children: React.ReactNode;
 }
@@ -9,25 +13,28 @@ export const MobxStoreProvider: React.FC<IMobxStoreProviderProps> = ({
   children,
 }) => {
   const store = new RootStore();
-  // useEffect(() => {
-  //   const init = async () => {
-  //     await store.userStore.isAuthenticated();
-  //   };
-  //   init();
-  // }, []);
+  const socket = io('http://192.168.100.57:3001');
   return (
-    <MobXStoreContext.Provider value={store}>
+    <MobXStoreContext.Provider value={{store, socket}}>
       {children}
     </MobXStoreContext.Provider>
   );
 };
 
 export const useStore = (): IRootStore => {
-  const store = useContext(MobXStoreContext);
-  if (!store) {
+  const context = useContext(MobXStoreContext);
+  if (!context) {
     throw new Error('Hook must be call in StoreProvider');
   }
-  return store;
+  return context.store;
+};
+
+export const useSocket = (): Socket => {
+  const context = useContext(MobXStoreContext);
+  if (!context) {
+    throw new Error('Hook must be call in StoreProvider');
+  }
+  return context.socket;
 };
 
 export const useUserStore = () => {
@@ -57,4 +64,9 @@ export const usePreferencesStore = () => {
 export const useAppStore = () => {
   const store = useStore();
   return store.appStore;
+};
+
+export const useMessageStore = () => {
+  const store = useStore();
+  return store.messageStore;
 };

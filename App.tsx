@@ -5,13 +5,12 @@ import {AppNavigator} from './src/navigator';
 import {MobxStoreProvider} from './src/store';
 import {AlertNotificationRoot} from 'react-native-alert-notification';
 import SplashScreen from 'react-native-splash-screen';
+// import {io} from 'socket.io-client';
 
 const App = () => {
   useEffect(() => {
-    // if (SplashScreen) {
-    console.log('here');
-
     SplashScreen.hide();
+    // const socket = io('http://192.168.100.57:3001');
     // }
   }, []);
   return (

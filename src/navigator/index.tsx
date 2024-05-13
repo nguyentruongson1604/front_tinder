@@ -12,10 +12,11 @@ import {
   useActivityStore,
   useHobbiesStore,
   useProfileStore,
+  useSocket,
   useUserStore,
 } from '../store';
 import {observer} from 'mobx-react-lite';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import EditHobbyScreen from '../screens/EditHobbyScreen';
 import {SettingScreen} from '../screens/SettingScreen';
 import {EditProfileHeader} from '../components/templates/EditProfileHeader';
@@ -29,6 +30,8 @@ import {SettingFindScreen} from '../screens/SettingFindScreen';
 import {EditImgCreateScreen} from '../screens/EditImgCreateScreen';
 import {ActivityIndicator} from 'react-native';
 import Welcome from '../screens/Welcome';
+import {ChannelListScreen} from '../screens/ListMatchScreen';
+import {ChatScreen} from '../screens/ChatScreen';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -45,6 +48,26 @@ export const EditProfileNavigator = observer(() => {
           options={{headerShown: false}}
           name="EditHobby"
           component={EditHobbyScreen}
+        />
+      </Stack.Navigator>
+    </SafeAreaView>
+  );
+});
+
+export const MessageNavigator = observer(() => {
+  const Stack = createNativeStackNavigator();
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <Stack.Navigator initialRouteName="MessageChannel">
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="MessageChannel"
+          component={ChannelListScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="MessageChat"
+          component={ChatScreen}
         />
       </Stack.Navigator>
     </SafeAreaView>
@@ -75,6 +98,11 @@ export const HomeNavigator = observer(() => {
           options={{headerShown: false}}
           name="Detail"
           component={EditProfileNavigator}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Message"
+          component={MessageNavigator}
         />
       </Stack.Navigator>
     </SafeAreaView>
@@ -175,13 +203,19 @@ export const MainNavigator = observer(() => {
   const hobbiesStore = useHobbiesStore();
   const profileStore = useProfileStore();
   const userStore = useUserStore();
+  const socket = useSocket();
 
   useEffect(() => {
     activityStore.loadInitListProfiles();
-    // profileStore.getMyProfile();
-    // hobbiesStore.getHobbiesType();
-    // userStore.getCurrentUser();
+    profileStore.getMyProfile();
+    profileStore.getListMatch();
+    hobbiesStore.getHobbiesType();
+    userStore.getCurrentUser();
   }, []);
+  if (userStore.userAccess?._id) {
+    socket.emit('addNewUsers', userStore.userAccess?._id);
+  }
+
   if (activityStore.loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

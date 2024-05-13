@@ -92,6 +92,23 @@ export const getMyProfileAPI = async () => {
   return res;
 };
 
+export const getListMatchAPI = async () => {
+  const option: axiosInstanceOptions = {
+    // method: 'GET',
+    baseURL: 'http://192.168.100.57:3031/api/getListMatch',
+    // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  // return await createAxiosInstance(option);
+  const instance = createAxiosInstance(option);
+  const res = await instance.get('/');
+  // console.log('upload result: ', res)
+  return res;
+};
+
 export const updateMyProfileAPI = async (profile: IProfile) => {
   const option: axiosInstanceOptions = {
     baseURL: 'http://192.168.100.57:3031/api/updateProfile',

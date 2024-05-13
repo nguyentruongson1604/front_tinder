@@ -12,6 +12,7 @@ import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
 import {createPreferencesAPI} from '../../APIs/preferences.api';
 
 export interface IUserAccess {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
