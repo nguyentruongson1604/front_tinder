@@ -19,7 +19,7 @@ export class ActivityStore {
   nextProfile: IProfile | undefined = undefined;
   curProfile: IProfile | undefined = undefined;
   loading: boolean = false;
-  constructor(rootStore: RootStore) {
+  constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
   }
   setLoading(loading: boolean) {
@@ -28,11 +28,11 @@ export class ActivityStore {
   loadInitListProfiles = async () => {
     try {
       this.setLoading(true);
-      // const res = await getRandom10ProfileAPI();
+      const res = await getRandom10ProfileAPI();
 
-      // this.listProfile = res.data;
-      // const list5IdArray = this.listProfile.map(item => item?._id as string);
-      // this.idArray.push(...list5IdArray);
+      this.listProfile = res.data;
+      const list5IdArray = this.listProfile.map(item => item?._id as string);
+      this.idArray.push(...list5IdArray);
       this.setLoading(false);
     } catch (error) {
       console.error(error);

@@ -1,12 +1,13 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {RootStore} from '../RootStore';
-import {getMessageAPI} from '../../APIs/message.api';
+import {createMessageAPI, getMessageAPI} from '../../APIs/message.api';
 
 export interface IMessage {
+  _id: string;
   sender: string;
   recipient: string;
   content: string;
-  createAt: Date;
+  createdAt: Date;
 }
 export class MessageStore {
   messages: IMessage[] = [];
@@ -22,19 +23,36 @@ export class MessageStore {
         recipient: this.recipient,
         skipCount: 0,
       });
-      console.log('dfsaf', data);
-
-      this.messages = data;
+      runInAction(() => {
+        this.messages = data.data;
+      });
     } catch (error) {
       console.error(error);
     }
   };
   getMoreMessages = async () => {
     try {
-      const res = await getMessageAPI({
+      const {data} = await getMessageAPI({
         recipient: this.recipient,
         skipCount: this.skipCount,
       });
+      runInAction(() => {
+        this.messages = [...this.messages, data.data];
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  addMessage = (message: IMessage) => {
+    this.messages = [...this.messages, message];
+  };
+  createMessage = async (content: string, recipient: string) => {
+    try {
+      const {data} = await createMessageAPI({content, recipient});
+      runInAction(() => {
+        this.addMessage(data.data);
+      });
+      return data.data;
     } catch (error) {
       console.error(error);
     }

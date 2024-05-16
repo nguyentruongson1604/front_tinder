@@ -29,7 +29,6 @@ import {Text} from 'react-native';
 import {SettingFindScreen} from '../screens/SettingFindScreen';
 import {EditImgCreateScreen} from '../screens/EditImgCreateScreen';
 import {ActivityIndicator} from 'react-native';
-import Welcome from '../screens/Welcome';
 import {ChannelListScreen} from '../screens/ListMatchScreen';
 import {ChatScreen} from '../screens/ChatScreen';
 
