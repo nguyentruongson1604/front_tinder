@@ -1,83 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-// import React from 'react';
-// import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-// import FontistoIcon from 'react-native-vector-icons/Fontisto';
-// import AntDesign from 'react-native-vector-icons/AntDesign';
-
-// const ChatScreen = () => {
-//   return (
-//     <SafeAreaView style={styles.root}>
-//       <View style={styles.container}>
-//         <Text style={{fontWeight: 'bold', fontSize: 24, color: '#F63A6E'}}>
-//           New Matches
-//         </Text>
-//         <View style={styles.users}>
-//           <View style={styles.user}>
-//             <Image
-//               source={{
-//                 uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',
-//               }}
-//               style={styles.image}
-//             />
-//           </View>
-//           <View style={styles.user}>
-//             <Image
-//               source={{
-//                 uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',
-//               }}
-//               style={styles.image}
-//             />
-//           </View>
-//           <View style={styles.user}>
-//             <Image
-//               source={{
-//                 uri: 'https://assets.vogue.in/photos/640592409d03d0d41504f3a0/master/pass/Face%20taping%20.jpg',
-//               }}
-//               style={styles.image}
-//             />
-//           </View>
-//         </View>
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   root: {
-//     width: '100%',
-//     flex: 1,
-//     padding: 10,
-//   },
-//   container: {
-//     padding: 10,
-//   },
-//   users: {
-//     flexDirection: 'row',
-//     flexWrap: 'wrap',
-//   },
-//   user: {
-//     width: 100,
-//     height: 100,
-//     margin: 10,
-//     borderRadius: 50,
-
-//     borderWidth: 2,
-//     padding: 3,
-//     borderColor: '#F63A6E',
-//   },
-//   image: {
-//     width: '100%',
-//     height: '100%',
-//     borderRadius: 50,
-//   },
-// });
-
-// // https://www.youtube.com/watch?v=sB5Wa7-RD3A
-// export default ChatScreen;
-
 import {useRoute} from '@react-navigation/native';
 import {observer} from 'mobx-react-lite';
-import React, {useEffect, useState} from 'react';
+import React, {forwardRef, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -85,46 +9,83 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {Image} from 'react-native-svg';
-import {useMessageStore, useSocket} from '../../store';
+import {useMessageStore, useSocket, useUserStore} from '../../store';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+export interface IMessage {
+  sender: string;
+  recipient: string;
+  content: string;
+  createAt: Date;
+}
 
 export const ChatScreen = observer(() => {
   const route = useRoute();
   const {item} = route.params;
   const socket = useSocket();
-  const mes = useMessageStore();
+  const messageStore = useMessageStore();
+  const userStore = useUserStore();
+  const scrollViewRef = useRef<ScrollView>(null);
+
   useEffect(() => {
-    mes.recipient = item.user;
-    mes.getInitMessage();
+    messageStore.recipient = item.user;
+    messageStore.getInitMessage();
   }, []);
 
-  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (inputText.trim() === '') return;
-    const newMessage = {id: messages.length, text: inputText, sender: 'Me'};
-    setMessages([...messages, newMessage]);
-    socket.emit('sendMessage', {message: inputText, recipientId: item.user});
+    const res = await messageStore.createMessage(inputText, item.user || '');
+    socket.emit('sendMessage', {
+      _id: res._id,
+      message: inputText,
+      recipientId: item.user,
+      sender: res.sender,
+      createdAt: res.createdAt,
+    });
     setInputText('');
+    scrollToBottom();
   };
 
-  socket.on('getMessage', res => {
-    console.log('resin', res);
+  const scrollToBottom = () => {
+    scrollViewRef.current?.scrollToEnd({animated: true});
+  };
 
-    const newMessage = {
-      id: messages.length,
-      text: res.message,
-      sender: 'Other',
+  useEffect(() => {
+    socket.on('getMessage', res => {
+      console.log('res', res);
+
+      const newMessage = {
+        _id: res._id,
+        content: res.message,
+        sender: res.sender,
+        recipient: res.recipientId,
+        createdAt: res.createdAt,
+      };
+      messageStore.addMessage(newMessage);
+      scrollToBottom();
+    });
+
+    return () => {
+      socket.off('getMessage');
     };
-    setMessages([...messages, newMessage]);
-  });
+  }, [messageStore, socket]);
 
-  console.log('mess', messages);
+  useEffect(() => {
+    if (messageStore.messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messageStore.messages]);
 
   return (
+    // <KeyboardAvoidingView
+    //   style={{flex: 1}}
+    //   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
     <View style={styles.container}>
       <View
         style={{
@@ -141,28 +102,42 @@ export const ChatScreen = observer(() => {
         />
         <Text>{item.firstName}</Text>
       </View>
-      <ScrollView style={styles.messagesContainer}>
-        {messages.map(message => (
+      {/* <KeyboardAwareScrollView
+        style={{width: '100%'}}
+        resetScrollToCoords={{x: 0, y: 0}}
+        scrollEnabled={true}
+        keyboardShouldPersistTaps="handled"> */}
+      <ScrollView
+        style={styles.messagesContainer}
+        ref={scrollViewRef}
+        onContentSizeChange={() => scrollToBottom()}>
+        {messageStore.messages.map((message, i) => (
           <View
-            key={message.id}
+            key={`${message._id}-${i}`}
             style={
-              message.sender === 'Me' ? styles.myMessage : styles.theirMessage
+              message.sender === userStore.userAccess?._id
+                ? styles.myMessage
+                : styles.theirMessage
             }>
-            <Text style={styles.messageText}>{message.text}</Text>
+            <Text style={styles.messageText}>{message.content}</Text>
           </View>
         ))}
       </ScrollView>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Type a message..."
-          value={inputText}
-          onChangeText={text => setInputText(text)}
-        />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 104 : 0}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Type a message..."
+            value={inputText}
+            onChangeText={text => setInputText(text)}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 });
@@ -176,6 +151,7 @@ const styles = StyleSheet.create({
   messagesContainer: {
     flex: 1,
     paddingHorizontal: 10,
+    // height: 500,
   },
   myMessage: {
     alignSelf: 'flex-end',
