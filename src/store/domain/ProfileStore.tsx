@@ -5,6 +5,7 @@ import {
   createProfileAPI,
   getListMatchAPI,
   getMyProfileAPI,
+  updateLocationAPI,
   updateMyProfileAPI,
   uploadImageAPI,
 } from '../../APIs/profile.api';
@@ -32,6 +33,10 @@ interface IListMatch {
   lastName: string;
   photos: IPhotos;
 }
+export interface ILocation {
+  longitude: number | string;
+  latitude: number | string;
+}
 export class ProfileStore {
   myProfile: IProfile | null = null;
   listHobby: IListHobby = {};
@@ -40,6 +45,7 @@ export class ProfileStore {
   adress: string = '';
   age: number = 18;
   gender: string = '';
+  location: ILocation = {longitude: 0, latitude: 0};
   preferences: IPreferences = {
     gender: '',
     age: {minAge: 18, maxAge: 100},
@@ -186,4 +192,11 @@ export class ProfileStore {
       console.log(error);
     }
   };
+  updateLocation = async (location: ILocation) => {
+    try {
+      await updateLocationAPI(location);
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
