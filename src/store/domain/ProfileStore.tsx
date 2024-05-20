@@ -5,6 +5,7 @@ import {
   createProfileAPI,
   getListMatchAPI,
   getMyProfileAPI,
+  updateListMatchAPI,
   updateMyProfileAPI,
   uploadImageAPI,
 } from '../../APIs/profile.api';
@@ -159,6 +160,7 @@ export class ProfileStore {
       });
     }
   };
+
   setDataUpdate = (key: string, data: any) => {
     this.dataUpdate = {
       ...this.dataUpdate,
@@ -183,7 +185,57 @@ export class ProfileStore {
     } catch (error) {
       this.setLoading(false);
 
-      console.log(error);
+      console.error('checkExistPofile', error);
+    }
+  };
+  updateMyCreatePhotos = async (arrImages: any) => {
+    const formData = new FormData();
+    arrImages.forEach((file, index) => {
+      formData.append(`files`, {
+        name: `${Date.now()}.jpg`,
+        file: file,
+        uri: file,
+        type: 'image/jpeg',
+      });
+    });
+    try {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: 'Waiting...',
+        textBody: 'Ảnh đang tải lên vui lòng đợi',
+        closeOnOverlayTap: false,
+      });
+      const res = await uploadImageAPI(formData);
+      this.isUpload = true;
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Succes',
+        textBody: 'Ảnh tải lên thành công',
+        button: 'OK',
+        onPressButton: () => {
+          this.existProfile = true;
+        },
+      });
+      this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
+    } catch (error) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'ERROR',
+        textBody: `${
+          error.response.data.message || 'Ảnh tải lên không thành công'
+        }`,
+        button: 'OK',
+      });
+    }
+  };
+
+  updateListMatch = async (otherUser: string) => {
+    try {
+      const {data} = await updateListMatchAPI(otherUser);
+      //update o backend kho qua thi dung get
+      runInAction(() => {});
+    } catch (error) {
+      console.error(error);
     }
   };
 }

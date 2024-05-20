@@ -35,7 +35,8 @@ export class ActivityStore {
       this.idArray.push(...list5IdArray);
       this.setLoading(false);
     } catch (error) {
-      console.error(error);
+      this.setLoading(false);
+      console.error('loadInitListProfiles', error);
     }
   };
 

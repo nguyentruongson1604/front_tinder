@@ -16,7 +16,7 @@ import {
   useUserStore,
 } from '../store';
 import {observer} from 'mobx-react-lite';
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import EditHobbyScreen from '../screens/EditHobbyScreen';
 import {SettingScreen} from '../screens/SettingScreen';
 import {EditProfileHeader} from '../components/templates/EditProfileHeader';
@@ -205,11 +205,11 @@ export const MainNavigator = observer(() => {
   const socket = useSocket();
 
   useEffect(() => {
-    activityStore.loadInitListProfiles();
     profileStore.getMyProfile();
     profileStore.getListMatch();
     hobbiesStore.getHobbiesType();
     userStore.getCurrentUser();
+    activityStore.loadInitListProfiles();
   }, []);
   if (userStore.userAccess?._id) {
     socket.emit('addNewUsers', userStore.userAccess?._id);
@@ -246,6 +246,8 @@ export const AppNavigator = observer(() => {
     profileStore.checkExistPofile();
     // userStore.logout();
   }, []);
+  console.log('profileStore.existProfile', profileStore.existProfile);
+
   if (userStore.loading || profileStore.loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -265,18 +267,11 @@ export const AppNavigator = observer(() => {
             />
           </>
         ) : (
-          <>
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="CreateProfile"
-              component={CreateProfileTabs}
-            />
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Main"
-              component={MainNavigator}
-            />
-          </>
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="CreateProfile"
+            component={CreateProfileTabs}
+          />
         )
       ) : (
         <>

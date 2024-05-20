@@ -41,7 +41,7 @@ const RegisterScreen = () => {
 
     if (res.data.status == 'success') {
       profileStore.existProfile = false;
-      navigation.navigate('CreateProfile');
+      navigation.navigate('Main');
     } else {
       // navigation.navigate('CreateProfile');
       setValue('firstName', '');
