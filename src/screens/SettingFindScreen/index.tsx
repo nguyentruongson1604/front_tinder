@@ -35,7 +35,7 @@ export const SettingFindScreen = observer(() => {
   };
 
   const handleUploadImg = async () => {
-    profileStore.updateMyPhotos(profileStore.dataUpdate.photos || []);
+    profileStore.updateMyCreatePhotos(profileStore.dataUpdate.photos || []);
   };
   const handleCreateProfile = async () => {
     profileStore.createProfile(profileStore.dataUpdate);
@@ -77,7 +77,6 @@ export const SettingFindScreen = observer(() => {
             await handleCreateProfile();
             await handleUpdatePreferences();
             // await handleUploadImg();
-            navigation.navigate('Main');
           }}>
           <LinearGradient
             colors={['#F63A6E', '#e67091', '#eda084']}

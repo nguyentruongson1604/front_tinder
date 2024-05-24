@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {observer} from 'mobx-react-lite';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,9 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {useProfileStore} from '../../store';
+import {useProfileStore, useSocket} from '../../store';
 import {useNavigation} from '@react-navigation/native';
+import {IListMatch} from '../../store/domain/ProfileStore';
 
 const renderChannelItem = ({item, navigation}) => (
   <TouchableOpacity
@@ -41,6 +42,16 @@ const renderChannelItem = ({item, navigation}) => (
 export const ChannelListScreen = observer(() => {
   const profileStore = useProfileStore();
   const navigation = useNavigation();
+  const socket = useSocket();
+  useEffect(() => {
+    socket.on('getNewMatch', res => {
+      const newMatchProfile: IListMatch = res;
+      profileStore.listMatch = [newMatchProfile, ...profileStore.listMatch];
+    });
+    return () => {
+      socket.off('getNewMatch');
+    };
+  }, [profileStore, socket]);
   return (
     <SafeAreaView style={styles.root}>
       <View style={{marginLeft: 10}}>

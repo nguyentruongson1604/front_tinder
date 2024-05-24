@@ -26,8 +26,6 @@ const ActionsheetCustom: React.FC<IActionsheetCustom> = ({
   listHobby,
 }) => {
   const profileStore = useProfileStore();
-  // console.log('actionSheetTitle.type', actionSheetTitle.type);
-
   const [isSelect, setisSelect] = useState<string[]>([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   useEffect(() => {

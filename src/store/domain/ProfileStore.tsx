@@ -6,6 +6,7 @@ import {
   getListMatchAPI,
   getMyProfileAPI,
   updateLocationAPI,
+  updateListMatchAPI,
   updateMyProfileAPI,
   uploadImageAPI,
 } from '../../APIs/profile.api';
@@ -27,7 +28,7 @@ export interface IPreferences {
 interface IPhotos {
   imageProfileUrl: string[];
 }
-interface IListMatch {
+export interface IListMatch {
   user: string;
   firstName: string;
   lastName: string;
@@ -165,12 +166,12 @@ export class ProfileStore {
       });
     }
   };
+
   setDataUpdate = (key: string, data: any) => {
     this.dataUpdate = {
       ...this.dataUpdate,
       [key]: data,
     };
-    console.log('this.dataUpdate', this.dataUpdate);
   };
   createProfile = async (profile: IProfile) => {
     try {
@@ -189,14 +190,88 @@ export class ProfileStore {
     } catch (error) {
       this.setLoading(false);
 
-      console.log(error);
+      console.error('checkExistPofile', error);
+    }
+  };
+  updateMyCreatePhotos = async (arrImages: any) => {
+    const formData = new FormData();
+    arrImages.forEach((file, index) => {
+      formData.append(`files`, {
+        name: `${Date.now()}.jpg`,
+        file: file,
+        uri: file,
+        type: 'image/jpeg',
+      });
+    });
+    try {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: 'Waiting...',
+        textBody: 'Ảnh đang tải lên vui lòng đợi',
+        closeOnOverlayTap: false,
+      });
+      const res = await uploadImageAPI(formData);
+      this.isUpload = true;
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Succes',
+        textBody: 'Ảnh tải lên thành công',
+        button: 'OK',
+        onPressButton: () => {
+          this.existProfile = true;
+        },
+      });
+      this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
+    } catch (error) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'ERROR',
+        textBody: `${
+          error.response.data.message || 'Ảnh tải lên không thành công'
+        }`,
+        button: 'OK',
+      });
+    }
+  };
+
+  updateListMatch = async (otherUser: any) => {
+    try {
+      console.log('otherUser', otherUser);
+
+      const {data} = await updateListMatchAPI({
+        userId: otherUser.user._id,
+        profileId: otherUser._id,
+      });
+      //update o backend kho qua thi dung get
+      runInAction(() => {
+        const newUser: IListMatch = {
+          user: otherUser.user._id,
+          firstName: otherUser.user.firstName,
+          lastName: otherUser.user.lastName,
+          photos: {
+            imageProfileUrl: otherUser?.photos?.imageProfileUrl || '',
+          },
+        };
+        this.listMatch = [newUser, ...this.listMatch];
+      });
+      return {
+        otherUser: otherUser.user._id,
+        user: data.data.user._id,
+        firstName: data.data.user.firstName,
+        lastName: data.data.user.lastName,
+        photos: {
+          imageProfileUrl: data.data.photos.imageProfileUrl,
+        },
+      };
+    } catch (error) {
+      console.error(error);
     }
   };
   updateLocation = async (location: ILocation) => {
     try {
       await updateLocationAPI(location);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 }

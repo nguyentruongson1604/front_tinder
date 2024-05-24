@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useState} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 
 import CardProfile from '../../components/templates/CardProfile';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useActivityStore} from '../../store';
+import {useActivityStore, useProfileStore, useSocket} from '../../store';
 import {observer} from 'mobx-react-lite';
 import MatchScreen from '../MatchScreen';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,8 @@ const HomeScreen = observer(() => {
   const [dataInMatch, setDataInMatch] = useState({});
   const navigation = useNavigation();
   const activityStore = useActivityStore();
+  const profileStore = useProfileStore();
+  const socket = useSocket();
   const swiperRef = useRef<Swiper<any>>(null);
   const [swiping, setSwiping] = React.useState<boolean>(false);
   const swipeRight = async user => {
@@ -25,6 +27,8 @@ const HomeScreen = observer(() => {
     if (res) {
       setOpenMatchScreen(true);
       setDataInMatch(user);
+      const res = await profileStore.updateListMatch(user);
+      socket.emit('sendNewMatch', res);
     }
   };
   const swipeLeft = async user => {
@@ -34,18 +38,18 @@ const HomeScreen = observer(() => {
 
   const handlePressMessage = () => {
     setOpenMatchScreen(false);
-    // navigation.navigate('Switch');
+    navigation.navigate('Message');
   };
   const handlePressHome = () => {
     setOpenMatchScreen(false);
     navigation.navigate('Switch');
   };
-  const cards = [
-    {text: 'Card 1', color: '#24C6DC'},
-    {text: 'Card 2', color: '#514A9D'},
-    {text: 'Card 3', color: '#FFC65D'},
-    // thêm nhiều card tùy ý
-  ];
+  // const cards = [
+  //   {text: 'Card 1', color: '#24C6DC'},
+  //   {text: 'Card 2', color: '#514A9D'},
+  //   {text: 'Card 3', color: '#FFC65D'},
+  //   // thêm nhiều card tùy ý
+  // ];
 
   return (
     // <View style={{flex: 1}}>

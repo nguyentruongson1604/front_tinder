@@ -1,5 +1,5 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
-import { ILocation } from '../store/domain/ProfileStore';
+import {ILocation} from '../store/domain/ProfileStore';
 
 export interface IProfile {
   _id?: string;
@@ -169,6 +169,25 @@ export const updateLocationAPI = async (location: ILocation) => {
   };
   const instance = createAxiosInstance(option);
   const res = await instance.put('', location); //phải dùng {} vì idArray là 1 mảng nhưng gửi req cần 1 Object
+  return res;
+};
+
+export const updateListMatchAPI = async (otherUser: {
+  userId: string;
+  profileId: string;
+}) => {
+  const option: axiosInstanceOptions = {
+    baseURL: 'http://192.168.100.57:3031/api/updateListMatch',
+    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    // url: 'http://192.168.55.112:3031/api/getRandomProfile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    // data: idArray,
+  };
+  const instance = createAxiosInstance(option);
+  const res = await instance.put('', otherUser); //phải dùng {} vì idArray là 1 mảng nhưng gửi req cần 1 Object
   return res;
 };
 // export const getRandom10ProfileAPI = async () => {
