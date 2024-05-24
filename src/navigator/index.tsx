@@ -31,6 +31,7 @@ import {EditImgCreateScreen} from '../screens/EditImgCreateScreen';
 import {ActivityIndicator} from 'react-native';
 import {ChannelListScreen} from '../screens/ListMatchScreen';
 import {ChatScreen} from '../screens/ChatScreen';
+import Geolocation from '@react-native-community/geolocation';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -75,7 +76,17 @@ export const MessageNavigator = observer(() => {
 
 export const HomeNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
-
+  const profileStore = useProfileStore();
+  const socket = useSocket();
+  useEffect(() => {
+    socket.on('getNewMatch', res => {
+      const newMatchProfile = res;
+      profileStore.listMatch = [newMatchProfile, ...profileStore.listMatch];
+    });
+    return () => {
+      socket.off('getNewMatch');
+    };
+  }, [profileStore, socket]);
   return (
     <SafeAreaView style={{flex: 1}}>
       <View>
@@ -204,12 +215,25 @@ export const MainNavigator = observer(() => {
   const userStore = useUserStore();
   const socket = useSocket();
 
+  const init = async () => {
+    /* ***LOCATION IN HERE***  */
+    // Geolocation.getCurrentPosition(
+    //   async position => {
+    //     const {longitude, latitude} = position.coords;
+    //     await profileStore.updateLocation({longitude, latitude});
+    //     console.log('{latitude, longitude}', {longitude, latitude});
+    //   },
+    //   error => console.log(error),
+    //   {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    // );
+    await profileStore.getMyProfile();
+    await profileStore.getListMatch();
+    await hobbiesStore.getHobbiesType();
+    await userStore.getCurrentUser();
+    await activityStore.loadInitListProfiles();
+  };
   useEffect(() => {
-    profileStore.getMyProfile();
-    profileStore.getListMatch();
-    hobbiesStore.getHobbiesType();
-    userStore.getCurrentUser();
-    activityStore.loadInitListProfiles();
+    init();
   }, []);
   if (userStore.userAccess?._id) {
     socket.emit('addNewUsers', userStore.userAccess?._id);
@@ -244,9 +268,8 @@ export const AppNavigator = observer(() => {
 
   useEffect(() => {
     profileStore.checkExistPofile();
-    // userStore.logout();
   }, []);
-  console.log('profileStore.existProfile', profileStore.existProfile);
+  // console.log('profileStore.existProfile', profileStore.existProfile);
 
   if (userStore.loading || profileStore.loading) {
     return (

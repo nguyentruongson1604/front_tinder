@@ -58,7 +58,7 @@ export const ChatScreen = observer(() => {
 
   useEffect(() => {
     socket.on('getMessage', res => {
-      console.log('res', res);
+      console.log('herer');
 
       const newMessage = {
         _id: res._id,
@@ -74,7 +74,7 @@ export const ChatScreen = observer(() => {
     return () => {
       socket.off('getMessage');
     };
-  }, [messageStore, socket]);
+  }, [messageStore, socket]); //phải để socket trong useEffect vì khi re render. socket cũ sẽ ko mất đi mà sẽ tạo ra socket.on mới => sẽ bị tạo rất nhiều sự kiện socket.on
 
   useEffect(() => {
     if (messageStore.messages.length > 0) {

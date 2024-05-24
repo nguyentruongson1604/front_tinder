@@ -5,6 +5,7 @@ import {
   createProfileAPI,
   getListMatchAPI,
   getMyProfileAPI,
+  updateLocationAPI,
   updateListMatchAPI,
   updateMyProfileAPI,
   uploadImageAPI,
@@ -27,11 +28,15 @@ export interface IPreferences {
 interface IPhotos {
   imageProfileUrl: string[];
 }
-interface IListMatch {
+export interface IListMatch {
   user: string;
   firstName: string;
   lastName: string;
   photos: IPhotos;
+}
+export interface ILocation {
+  longitude: number | string;
+  latitude: number | string;
 }
 export class ProfileStore {
   myProfile: IProfile | null = null;
@@ -41,6 +46,7 @@ export class ProfileStore {
   adress: string = '';
   age: number = 18;
   gender: string = '';
+  location: ILocation = {longitude: 0, latitude: 0};
   preferences: IPreferences = {
     gender: '',
     age: {minAge: 18, maxAge: 100},
@@ -166,7 +172,6 @@ export class ProfileStore {
       ...this.dataUpdate,
       [key]: data,
     };
-    console.log('this.dataUpdate', this.dataUpdate);
   };
   createProfile = async (profile: IProfile) => {
     try {
@@ -229,11 +234,42 @@ export class ProfileStore {
     }
   };
 
-  updateListMatch = async (otherUser: string) => {
+  updateListMatch = async (otherUser: any) => {
     try {
-      const {data} = await updateListMatchAPI(otherUser);
+      console.log('otherUser', otherUser);
+
+      const {data} = await updateListMatchAPI({
+        userId: otherUser.user._id,
+        profileId: otherUser._id,
+      });
       //update o backend kho qua thi dung get
-      runInAction(() => {});
+      runInAction(() => {
+        const newUser: IListMatch = {
+          user: otherUser.user._id,
+          firstName: otherUser.user.firstName,
+          lastName: otherUser.user.lastName,
+          photos: {
+            imageProfileUrl: otherUser?.photos?.imageProfileUrl || '',
+          },
+        };
+        this.listMatch = [newUser, ...this.listMatch];
+      });
+      return {
+        otherUser: otherUser.user._id,
+        user: data.data.user._id,
+        firstName: data.data.user.firstName,
+        lastName: data.data.user.lastName,
+        photos: {
+          imageProfileUrl: data.data.photos.imageProfileUrl,
+        },
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  updateLocation = async (location: ILocation) => {
+    try {
+      await updateLocationAPI(location);
     } catch (error) {
       console.error(error);
     }

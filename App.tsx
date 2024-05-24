@@ -10,8 +10,6 @@ import SplashScreen from 'react-native-splash-screen';
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    // const socket = io('http://192.168.100.57:3001');
-    // }
   }, []);
   return (
     <MobxStoreProvider>

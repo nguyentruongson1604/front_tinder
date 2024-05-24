@@ -76,7 +76,7 @@ export const SettingFindScreen = observer(() => {
           onPress={async () => {
             await handleCreateProfile();
             await handleUpdatePreferences();
-            await handleUploadImg();
+            // await handleUploadImg();
           }}>
           <LinearGradient
             colors={['#F63A6E', '#e67091', '#eda084']}

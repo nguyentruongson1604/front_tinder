@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React from 'react';
 import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Button} from '../../components/atoms/ButtonCustom';
 import {observer} from 'mobx-react-lite';
 import {useProfileStore} from '../../store';
+import FastImage from 'react-native-fast-image';
 
 interface IMatchScreen {
   open: boolean;
@@ -22,7 +22,7 @@ const MatchScreen: React.FC<IMatchScreen> = observer(
           <LinearGradient
             style={{flex: 1, paddingTop: 30}}
             colors={['#ebcfd7', '#d5b9c1']}>
-            <Image
+            <FastImage
               source={require('../../assets/images/matchgif.gif')}
               style={styles.matchPic}
             />
