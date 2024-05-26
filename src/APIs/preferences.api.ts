@@ -1,9 +1,10 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
 import {IUpdatePreferences} from '../store/domain/PreferencesStore';
+import { ipAdressAdroid } from './activity.api';
 
 export const createPreferencesAPI = async () => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/createPreferences',
+    baseURL: `${ipAdressAdroid}createPreferences`,
     // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
@@ -19,7 +20,7 @@ export const createPreferencesAPI = async () => {
 
 export const updatePreferencesAPI = async (preference: IUpdatePreferences) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/updatePreferences',
+    baseURL: `${ipAdressAdroid}updatePreferences`,
     // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {

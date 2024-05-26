@@ -73,6 +73,8 @@ export class UserStore {
       this.setLoading(true);
       const accessToken = await AsyncStorage.getItem('accessToken');
       this.accessToken = accessToken;
+      console.log('ac token in init', this.accessToken);
+      
       this.setLoading(false);
     } catch (error) {
       this.setLoading(false);

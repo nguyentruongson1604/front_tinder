@@ -1,5 +1,6 @@
 import axios, {AxiosRequestConfig} from 'axios';
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
+import { ipAdressAdroid } from './activity.api';
 
 export const registerAPI = async (account: {
   firstName: string;
@@ -9,7 +10,7 @@ export const registerAPI = async (account: {
 }) => {
   const option: AxiosRequestConfig = {
     method: 'POST',
-    url: 'http://192.168.100.57:3031/api/register',
+    url: `${ipAdressAdroid}register`,
     // url: 'http://192.168.100.57:3031/api/register',
     data: account,
     headers: {
@@ -22,7 +23,7 @@ export const registerAPI = async (account: {
 export const loginAPI = async (account: {email: string; password: string}) => {
   const option: AxiosRequestConfig = {
     method: 'POST',
-    url: 'http://192.168.100.57:3031/api/login',
+    url: `${ipAdressAdroid}login`,
     // url: 'http://192.168.100.57:3031/api/login',
     // url: 'http://192.168.55.112:3031/api/login',
     data: account,
@@ -36,7 +37,7 @@ export const loginAPI = async (account: {email: string; password: string}) => {
 
 export const getCurrentUserAPI = async () => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/getCurrentUser',
+    baseURL: `${ipAdressAdroid}getCurrentUser`,
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',
@@ -51,7 +52,7 @@ export const getCurrentUserAPI = async () => {
 export const resetPasswordByMailAPI = async (email: {emailRest: string}) => {
   const option: AxiosRequestConfig = {
     method: 'POST',
-    url: 'http://192.168.100.57:3031/api/resetPasswordByMail',
+    url: `${ipAdressAdroid}resetPasswordByMail`,
     // url: 'http://192.168.100.57:3031/api/login',
     // url: 'http://192.168.55.112:3031/api/login',
     data: email,
@@ -68,7 +69,7 @@ export const changePasswordAPI = async (data: {
   newPassword: string;
 }) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/changePassword',
+    baseURL: `${ipAdressAdroid}changePassword`,
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',

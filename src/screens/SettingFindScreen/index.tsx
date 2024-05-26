@@ -11,6 +11,7 @@ import {ModalCustom} from '../../components/atoms/Modal';
 import LinearGradient from 'react-native-linear-gradient';
 import {Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import { convertGender } from '../EditHobbyScreen';
 
 export const SettingFindScreen = observer(() => {
   const profileStore = useProfileStore();
@@ -50,7 +51,7 @@ export const SettingFindScreen = observer(() => {
         <MultiSliderSelect value={minmaxAge} setValue={handleMinMaxAge} />
         <HobbyChoose
           title="Hiển thị cho tôi"
-          content={gender}
+          content={convertGender[gender]}
           isPress
           onPress={() => {
             setModalVisible(true);

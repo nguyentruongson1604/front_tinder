@@ -13,6 +13,7 @@ import {ModalCustom} from '../../components/atoms/Modal';
 import {IUpdatePreferences} from '../../store/domain/PreferencesStore';
 import {ActionSheetPassword} from '../../components/atoms/ActionSheetPassword';
 import {useDisclose} from 'native-base';
+import { convertGender } from '../EditHobbyScreen';
 
 export interface ISettingChoose {
   title: string;
@@ -197,7 +198,7 @@ export const SettingScreen = observer(() => {
             <MultiSliderSelect value={minmaxAge} setValue={setMinMaxAge} />
             <HobbyChoose
               title="Hiển thị cho tôi"
-              content={gender}
+              content={convertGender[gender]}
               isPress
               onPress={() => {
                 setModalVisible(true);

@@ -265,19 +265,20 @@ export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
   const profileStore = useProfileStore();
+console.log('userStore.accessToken',userStore.accessToken);
 
   useEffect(() => {
     profileStore.checkExistPofile();
   }, []);
   // console.log('profileStore.existProfile', profileStore.existProfile);
 
-  if (userStore.loading || profileStore.loading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color={'red'} />
-      </View>
-    );
-  }
+  // if (userStore.loading || profileStore.loading) {
+  //   return (
+  //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+  //       <ActivityIndicator size="large" color={'red'} />
+  //     </View>
+  //   );
+  // }
   return (
     <Stack.Navigator>
       {userStore.accessToken ? (

@@ -125,7 +125,19 @@ export class ProfileStore {
         this.age = res.data.data.age;
         this.gender = res.data.data.gender;
       });
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Succes',
+        textBody: 'Sửa thông tin thành công',
+        button: 'OK',
+      });
     } catch (error) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'ERROR',
+        textBody: 'Lỗi khi sửa thông tin',
+        button: 'OK',
+      });
       console.error(error);
     }
   };
@@ -183,7 +195,9 @@ export class ProfileStore {
   checkExistPofile = async () => {
     try {
       this.setLoading(true);
-
+      console.log('run in herreeeeee');
+      console.log('token',this.rootStore.userStore.accessToken);
+      
       const res = await checkExistProfileAPI();
       if (res.data.data) this.existProfile = true;
       this.setLoading(false);
