@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {RootStore} from '../RootStore';
 import {updatePreferencesAPI} from '../../APIs/preferences.api';
+import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 export interface IUpdatePreferences {
   gender?: string;
@@ -24,6 +25,12 @@ export class PreferencesStore {
           res.data.data.age.maxAge;
         this.rootStore.profileStore.preferences.distance =
           res.data.data.distance;
+      });
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Succes',
+        textBody: 'Sửa tìm kiếm thành công',
+        button: 'OK',
       });
     } catch (error) {
       console.log(error.response.status);

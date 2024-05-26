@@ -42,6 +42,11 @@ export interface IActionSheetTitle {
   icon?: any;
   smallTitle: string;
 }
+export const convertGender = {
+  Male: 'Nam',
+  Female: 'Nữ',
+  Other: 'Khác'
+}
 const mainHobby = {
   zodiac: {
     icon: <Ionicons name="moon" style={{fontSize: 22, color: '#948d8d'}} />,
@@ -336,7 +341,7 @@ const EditHobbyScreen = observer(() => {
         />
         <HobbyChoose
           title="Giới tính"
-          textChoose={gender}
+          textChoose={convertGender[gender]}
           onPress={() => {
             setModalVisible(true);
           }}

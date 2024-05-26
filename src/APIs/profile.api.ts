@@ -1,5 +1,6 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
 import {ILocation} from '../store/domain/ProfileStore';
+import { ipAdressAdroid } from './activity.api';
 
 export interface IProfile {
   _id?: string;
@@ -14,8 +15,8 @@ export interface IProfile {
 }
 export const createProfileAPI = async (profile: IProfile) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/createProfile',
-    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    baseURL: `${ipAdressAdroid}createProfile`,
+    // baseURL: `${ipAdressAdroid}getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
@@ -45,8 +46,8 @@ export const createProfileAPI = async (profile: IProfile) => {
 
 export const getRandomProfileAPI = async (idArray: string[]) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
-    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    baseURL: `${ipAdressAdroid}getRandomProfile`,
+    // baseURL: `${ipAdressAdroid}getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
@@ -62,7 +63,7 @@ export const getRandomProfileAPI = async (idArray: string[]) => {
 export const getRandom10ProfileAPI = async () => {
   const option: axiosInstanceOptions = {
     // method: 'GET',
-    baseURL: 'http://192.168.100.57:3031/api/getRandom10Profile',
+    baseURL: `${ipAdressAdroid}getRandom10Profile`,
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',
@@ -79,7 +80,7 @@ export const getRandom10ProfileAPI = async () => {
 export const getMyProfileAPI = async () => {
   const option: axiosInstanceOptions = {
     // method: 'GET',
-    baseURL: 'http://192.168.100.57:3031/api/getMyProfile',
+    baseURL: `${ipAdressAdroid}getMyProfile`,
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',
@@ -96,7 +97,7 @@ export const getMyProfileAPI = async () => {
 export const getListMatchAPI = async () => {
   const option: axiosInstanceOptions = {
     // method: 'GET',
-    baseURL: 'http://192.168.100.57:3031/api/getListMatch',
+    baseURL: `${ipAdressAdroid}getListMatch`,
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',
@@ -112,8 +113,8 @@ export const getListMatchAPI = async () => {
 
 export const updateMyProfileAPI = async (profile: IProfile) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/updateProfile',
-    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    baseURL: `${ipAdressAdroid}updateProfile`,
+    // baseURL: `${ipAdressAdroid}getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
@@ -128,8 +129,8 @@ export const updateMyProfileAPI = async (profile: IProfile) => {
 
 export const uploadImageAPI = async (formData: any) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/cloudinary-upload',
-    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    baseURL: `${ipAdressAdroid}cloudinary-upload`,
+    // baseURL: `${ipAdressAdroid}getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
@@ -144,7 +145,7 @@ export const uploadImageAPI = async (formData: any) => {
 
 export const checkExistProfileAPI = async () => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/checkExistProfile',
+    baseURL: `${ipAdressAdroid}checkExistProfile`,
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',
@@ -158,8 +159,8 @@ export const checkExistProfileAPI = async () => {
 
 export const updateLocationAPI = async (location: ILocation) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/updateLocation',
-    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    baseURL: `${ipAdressAdroid}updateLocation`,
+    // baseURL: `${ipAdressAdroid}getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',
@@ -177,8 +178,8 @@ export const updateListMatchAPI = async (otherUser: {
   profileId: string;
 }) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/updateListMatch',
-    // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
+    baseURL: `${ipAdressAdroid}updateListMatch`,
+    // baseURL: `${ipAdressAdroid}getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
       accept: 'application/json',

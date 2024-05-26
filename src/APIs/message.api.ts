@@ -1,4 +1,5 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
+import { ipAdressAdroid } from './activity.api';
 
 interface IMessage {
   sender?: string;
@@ -7,7 +8,7 @@ interface IMessage {
 }
 export const createMessageAPI = async (message: IMessage) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/createMessage',
+    baseURL: `${ipAdressAdroid}createMessage`,
     // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
@@ -26,7 +27,7 @@ export const getMessageAPI = async (condition: {
   skipCount: number;
 }) => {
   const option: axiosInstanceOptions = {
-    baseURL: 'http://192.168.100.57:3031/api/getMessage',
+    baseURL: `${ipAdressAdroid}getMessage`,
     // baseURL: 'http://192.168.100.57:3031/api/getRandomProfile',
     // url: 'http://192.168.55.112:3031/api/getRandomProfile',
     headers: {
