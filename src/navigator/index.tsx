@@ -265,7 +265,7 @@ export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
   const profileStore = useProfileStore();
-console.log('userStore.accessToken',userStore.accessToken);
+  console.log('userStore.accessToken', userStore.accessToken);
 
   useEffect(() => {
     profileStore.checkExistPofile();

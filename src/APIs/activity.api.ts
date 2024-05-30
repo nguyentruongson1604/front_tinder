@@ -1,6 +1,6 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
 
-export const ipAdressAdroid = 'http://192.168.55.112:3031/api/';
+export const ipAdressAdroid = 'http://192.168.100.57:3031/api/';
 export const ipAdressIphone = 'http://192.168.100.57:3031/api/';
 export const updateActivityAPI = async (activityInfo: {
   senderUser: string;

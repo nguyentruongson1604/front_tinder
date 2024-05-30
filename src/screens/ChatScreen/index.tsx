@@ -129,12 +129,12 @@ export const ChatScreen = observer(() => {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Type a message..."
+            placeholder="Nhập tin nhắn..."
             value={inputText}
             onChangeText={text => setInputText(text)}
           />
           <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Text style={styles.sendButtonText}>Send</Text>
+            <Text style={styles.sendButtonText}>Gửi</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
