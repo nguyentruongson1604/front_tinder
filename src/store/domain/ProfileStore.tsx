@@ -196,8 +196,8 @@ export class ProfileStore {
     try {
       this.setLoading(true);
       console.log('run in herreeeeee');
-      console.log('token',this.rootStore.userStore.accessToken);
-      
+      console.log('token', this.rootStore.userStore.accessToken);
+
       const res = await checkExistProfileAPI();
       if (res.data.data) this.existProfile = true;
       this.setLoading(false);
@@ -287,5 +287,17 @@ export class ProfileStore {
     } catch (error) {
       console.error(error);
     }
+  };
+  deleteDataWhenLogout = () => {
+    this.description = '';
+    this.title = '';
+    this.adress = '';
+    this.age = 18;
+    this.gender = 'Male';
+    this.preferences.gender = 'Female';
+    this.preferences.age.minAge = 18;
+    this.preferences.age.maxAge = 100;
+    this.preferences.distance = 100;
+    this.photos.imageProfileUrl = [];
   };
 }

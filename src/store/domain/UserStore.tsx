@@ -74,7 +74,7 @@ export class UserStore {
       const accessToken = await AsyncStorage.getItem('accessToken');
       this.accessToken = accessToken;
       console.log('ac token in init', this.accessToken);
-      
+
       this.setLoading(false);
     } catch (error) {
       this.setLoading(false);
@@ -109,7 +109,9 @@ export class UserStore {
   logout = async () => {
     await AsyncStorage.removeItem('accessToken');
     await AsyncStorage.removeItem('refreshToken');
+    this.rootStore.profileStore.deleteDataWhenLogout();
     this.accessToken = null;
+    this.refreshToken = null;
   };
   get infoUser() {
     return this.userAccess;

@@ -234,10 +234,18 @@ export const MainNavigator = observer(() => {
   };
   useEffect(() => {
     init();
+    if (userStore.userAccess?._id) {
+      socket.emit('addNewUsers', userStore.userAccess?._id);
+    }
+    socket.on('getNotify', res => {
+      console.log('socket in hereeeeee');
+    });
+
+    return () => {
+      socket.off('addNewUsers');
+      socket.off('getNotify');
+    };
   }, []);
-  if (userStore.userAccess?._id) {
-    socket.emit('addNewUsers', userStore.userAccess?._id);
-  }
 
   if (activityStore.loading) {
     return (
@@ -265,8 +273,8 @@ export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
   const profileStore = useProfileStore();
-console.log('userStore.accessToken',userStore.accessToken);
-
+  console.log('userStore.accessToken', userStore.accessToken);
+  // userStore.logout();
   useEffect(() => {
     profileStore.checkExistPofile();
   }, []);
