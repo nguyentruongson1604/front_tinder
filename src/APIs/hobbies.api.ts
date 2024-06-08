@@ -1,5 +1,5 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
-import { ipAdressAdroid } from './activity.api';
+import {ipAdressAdroid} from './activity.api';
 
 export const getHobbiesTypeAPI = async () => {
   const option: axiosInstanceOptions = {

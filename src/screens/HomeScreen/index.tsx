@@ -28,6 +28,8 @@ const HomeScreen = observer(() => {
       setOpenMatchScreen(true);
       setDataInMatch(user);
       const res = await profileStore.updateListMatch(user);
+      console.log('res new match', res);
+
       socket.emit('sendNewMatch', res);
     }
   };

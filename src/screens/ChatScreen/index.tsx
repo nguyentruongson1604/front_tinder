@@ -30,6 +30,7 @@ export const ChatScreen = observer(() => {
   const messageStore = useMessageStore();
   const userStore = useUserStore();
   const scrollViewRef = useRef<ScrollView>(null);
+  console.log('item in herer', item);
 
   useEffect(() => {
     messageStore.recipient = item.user;
@@ -58,7 +59,7 @@ export const ChatScreen = observer(() => {
 
   useEffect(() => {
     socket.on('getMessage', res => {
-      console.log('herer');
+      console.log('herer', res.message);
 
       const newMessage = {
         _id: res._id,
@@ -67,6 +68,8 @@ export const ChatScreen = observer(() => {
         recipient: res.recipientId,
         createdAt: res.createdAt,
       };
+      console.log('newMessage', newMessage);
+
       messageStore.addMessage(newMessage);
       scrollToBottom();
     });
