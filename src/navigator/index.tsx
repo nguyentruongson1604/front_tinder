@@ -32,6 +32,7 @@ import {ActivityIndicator} from 'react-native';
 import {ChannelListScreen} from '../screens/ListMatchScreen';
 import {ChatScreen} from '../screens/ChatScreen';
 import Geolocation from '@react-native-community/geolocation';
+import {IListMatch} from '../store/domain/ProfileStore';
 
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
@@ -80,13 +81,15 @@ export const HomeNavigator = observer(() => {
   const socket = useSocket();
   useEffect(() => {
     socket.on('getNewMatch', res => {
-      const newMatchProfile = res;
+      const newMatchProfile: IListMatch = res;
       profileStore.listMatch = [newMatchProfile, ...profileStore.listMatch];
     });
     return () => {
       socket.off('getNewMatch');
     };
   }, [profileStore, socket]);
+  console.log('profileStore.listMatch navigate', profileStore.listMatch);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View>
@@ -234,19 +237,17 @@ export const MainNavigator = observer(() => {
   };
   useEffect(() => {
     init();
-    if (userStore.userAccess?._id) {
-      socket.emit('addNewUsers', userStore.userAccess?._id);
-    }
     socket.on('getNotify', res => {
       console.log('socket in hereeeeee');
     });
 
     return () => {
-      socket.off('addNewUsers');
       socket.off('getNotify');
     };
   }, []);
-
+  if (userStore.userAccess?._id) {
+    socket.emit('addNewUsers', userStore.userAccess?._id);
+  }
   if (activityStore.loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

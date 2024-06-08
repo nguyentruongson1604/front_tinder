@@ -250,12 +250,18 @@ export class ProfileStore {
 
   updateListMatch = async (otherUser: any) => {
     try {
-      console.log('otherUser', otherUser);
+      // console.log('otherUser', otherUser);
+      console.log('otherUser', {
+        userId: otherUser.user._id,
+        profileId: otherUser._id,
+      });
 
       const {data} = await updateListMatchAPI({
         userId: otherUser.user._id,
         profileId: otherUser._id,
       });
+      console.log('dataaa', data.data);
+
       //update o backend kho qua thi dung get
       runInAction(() => {
         const newUser: IListMatch = {
@@ -270,9 +276,9 @@ export class ProfileStore {
       });
       return {
         otherUser: otherUser.user._id,
-        user: data.data.user._id,
-        firstName: data.data.user.firstName,
-        lastName: data.data.user.lastName,
+        user: data.data.user,
+        firstName: data.data.firstName,
+        lastName: data.data.lastName,
         photos: {
           imageProfileUrl: data.data.photos.imageProfileUrl,
         },

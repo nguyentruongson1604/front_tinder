@@ -42,16 +42,16 @@ const renderChannelItem = ({item, navigation}) => (
 export const ChannelListScreen = observer(() => {
   const profileStore = useProfileStore();
   const navigation = useNavigation();
-  const socket = useSocket();
-  useEffect(() => {
-    socket.on('getNewMatch', res => {
-      const newMatchProfile: IListMatch = res;
-      profileStore.listMatch = [newMatchProfile, ...profileStore.listMatch];
-    });
-    return () => {
-      socket.off('getNewMatch');
-    };
-  }, [profileStore, socket]);
+  // const socket = useSocket();
+  // useEffect(() => {
+  //   socket.on('getNewMatch', res => {
+  //     const newMatchProfile: IListMatch = res;
+  //     profileStore.listMatch = [newMatchProfile, ...profileStore.listMatch];
+  //   });
+  //   return () => {
+  //     socket.off('getNewMatch');
+  //   };
+  // }, [profileStore, socket]);
   return (
     <SafeAreaView style={styles.root}>
       <View style={{marginLeft: 10}}>
