@@ -156,78 +156,82 @@ const HomeScreen = observer(() => {
         style={{
           flex: 1,
         }}>
-        <Swiper
-          ref={swiperRef}
-          cards={activityStore.listProfile}
-          renderCard={card => {
-            return <CardProfile user={card} />;
-          }}
-          onSwipedAll={() => {
-            console.log('het');
-          }}
-          onSwiped={() => setSwiping(false)}
-          onSwipedLeft={cardIndex => {
-            swipeLeft(activityStore.listProfile[cardIndex]);
-          }}
-          onSwipedRight={cardIndex => {
-            swipeRight(activityStore.listProfile[cardIndex]);
-          }}
-          backgroundColor={'#ededed'}
-          cardVerticalMargin={50}
-          stackSize={2} // Số card hiển thị phía sau
-          horizontalThreshold={100}
-          verticalThreshold={3000}
-          stackScale={20}
-          swipeAnimationDuration={700}
-          animateCardOpacity
-          animateOverlayLabelsOpacity={true}
-          overlayLabels={{
-            left: {
-              element: (
-                <Image
-                  source={require('../../assets/images/nope.png')}
-                  style={styles.nopePic}
-                />
-              ) /* Optional */,
-              title: 'NOPE',
-              style: {
-                label: {
-                  backgroundColor: 'black',
-                  borderColor: 'black',
-                  color: 'white',
-                  borderWidth: 1,
-                },
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  justifyContent: 'flex-start',
-                  marginTop: 30,
-                  marginLeft: -30,
-                  zIndex: 4,
-                },
-              },
-            },
-            right: {
-              element: (
-                <Image
-                  source={require('../../assets/images/LIKE.png')}
-                  style={styles.likePic}
-                />
-              ) /* Optional */,
-              title: 'LIKE',
-              style: {
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
-                  marginTop: 30,
-                  marginLeft: 40,
-                  zIndex: 4,
+        {activityStore.listProfile.length == 0 || !activityStore.listProfile ? (
+          <></>
+        ) : (
+          <Swiper
+            ref={swiperRef}
+            cards={activityStore.listProfile}
+            renderCard={card => {
+              return <CardProfile user={card} />;
+            }}
+            onSwipedAll={() => {
+              console.log('het');
+            }}
+            onSwiped={() => setSwiping(false)}
+            onSwipedLeft={cardIndex => {
+              swipeLeft(activityStore.listProfile[cardIndex]);
+            }}
+            onSwipedRight={cardIndex => {
+              swipeRight(activityStore.listProfile[cardIndex]);
+            }}
+            backgroundColor={'#ededed'}
+            cardVerticalMargin={50}
+            stackSize={2} // Số card hiển thị phía sau
+            horizontalThreshold={100}
+            verticalThreshold={3000}
+            stackScale={20}
+            swipeAnimationDuration={700}
+            animateCardOpacity
+            animateOverlayLabelsOpacity={true}
+            overlayLabels={{
+              left: {
+                element: (
+                  <Image
+                    source={require('../../assets/images/nope.png')}
+                    style={styles.nopePic}
+                  />
+                ) /* Optional */,
+                title: 'NOPE',
+                style: {
+                  label: {
+                    backgroundColor: 'black',
+                    borderColor: 'black',
+                    color: 'white',
+                    borderWidth: 1,
+                  },
+                  wrapper: {
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    justifyContent: 'flex-start',
+                    marginTop: 30,
+                    marginLeft: -30,
+                    zIndex: 4,
+                  },
                 },
               },
-            },
-          }}
-        />
+              right: {
+                element: (
+                  <Image
+                    source={require('../../assets/images/LIKE.png')}
+                    style={styles.likePic}
+                  />
+                ) /* Optional */,
+                title: 'LIKE',
+                style: {
+                  wrapper: {
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                    marginTop: 30,
+                    marginLeft: 40,
+                    zIndex: 4,
+                  },
+                },
+              },
+            }}
+          />
+        )}
       </View>
       <View style={styles.bottomNavigation}>
         <View style={[styles.button]}>
