@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {observer} from 'mobx-react-lite';
+import {Observer, observer} from 'mobx-react-lite';
 import React, {useEffect} from 'react';
 import {
   View,
@@ -10,6 +10,7 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  Pressable,
 } from 'react-native';
 import {useProfileStore, useSocket} from '../../store';
 import {useNavigation} from '@react-navigation/native';
@@ -59,16 +60,23 @@ export const ChannelListScreen = observer(() => {
           New Matches
         </Text>
         <ScrollView horizontal={true}>
-          {profileStore.listMatch.map(item => {
+          {profileStore.listMatchWithoutArrange.map(item => {
             return (
-              <View style={styles.user}>
+              <Pressable
+                style={styles.user}
+                onPress={async () => {
+                  const user = await profileStore.getOtherProfile({
+                    user: item.user,
+                  });
+                  navigation.navigate('Info', {user});
+                }}>
                 <Image
                   source={{
                     uri: item?.photos?.imageProfileUrl[0] || '',
                   }}
                   style={styles.image}
                 />
-              </View>
+              </Pressable>
             );
           })}
         </ScrollView>
@@ -84,13 +92,26 @@ export const ChannelListScreen = observer(() => {
         }}>
         Message
       </Text>
-      <View style={styles.container}>
-        <FlatList
-          data={profileStore.listMatch}
-          keyExtractor={item => item.user.toString()}
-          renderItem={({item}) => renderChannelItem({item, navigation})}
-        />
-      </View>
+      <Observer>
+        {() => {
+          return (
+            <View style={styles.container}>
+              <FlatList
+                data={profileStore.listMatch}
+                keyExtractor={item => item.user.toString()}
+                renderItem={({item}) => {
+                  return (
+                    <Observer>
+                      {() => renderChannelItem({item, navigation})}
+                    </Observer>
+                    // renderChannelItem({item, navigation})
+                  );
+                }}
+              />
+            </View>
+          );
+        }}
+      </Observer>
     </SafeAreaView>
   );
 });

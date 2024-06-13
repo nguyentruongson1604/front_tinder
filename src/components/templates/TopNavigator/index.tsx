@@ -44,11 +44,27 @@ const TopNavigator = () => {
           name="qrcode"
           style={{fontWeight: 'bold', fontSize: 24, color: '#F63A6E'}}
         /> */}
+
+        <Pressable
+          style={styles.iconWrap}
+          onPress={() => {
+            setActiveButton('CHAT');
+            navigation.navigate('Message');
+          }}>
+          <AntDesign
+            name="wechat"
+            style={{
+              fontWeight: 'bold',
+              fontSize: 30,
+              color: activeButton === 'CHAT' ? '#F63A6E' : '#b5b5b5',
+            }}
+          />
+        </Pressable>
         <Pressable
           style={styles.iconWrap}
           onPress={() => {
             setActiveButton('INFO');
-            navigation.navigate('Message');
+            navigation.navigate('Detail');
             // removeToken();
           }}>
           <MaterialCommunityIcons
@@ -57,21 +73,6 @@ const TopNavigator = () => {
               fontWeight: 'bold',
               fontSize: 30,
               color: activeButton === 'INFO' ? '#F63A6E' : '#b5b5b5',
-            }}
-          />
-        </Pressable>
-        <Pressable
-          style={styles.iconWrap}
-          onPress={() => {
-            setActiveButton('CHAT');
-            navigation.navigate('Detail');
-          }}>
-          <AntDesign
-            name="wechat"
-            style={{
-              fontWeight: 'bold',
-              fontSize: 30,
-              color: activeButton === 'CHAT' ? '#F63A6E' : '#b5b5b5',
             }}
           />
         </Pressable>

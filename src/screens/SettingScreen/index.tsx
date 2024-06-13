@@ -7,13 +7,19 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MultiSliderSelect from '../../components/atoms/MultiSliderSelect';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {observer} from 'mobx-react-lite';
-import {useState} from 'react';
-import {usePreferencesStore, useProfileStore, useUserStore} from '../../store';
+import {useEffect, useState} from 'react';
+import {
+  usePreferencesStore,
+  useProfileStore,
+  useSocket,
+  useUserStore,
+} from '../../store';
 import {ModalCustom} from '../../components/atoms/Modal';
 import {IUpdatePreferences} from '../../store/domain/PreferencesStore';
 import {ActionSheetPassword} from '../../components/atoms/ActionSheetPassword';
 import {useDisclose} from 'native-base';
-import { convertGender } from '../EditHobbyScreen';
+import {convertGender} from '../EditHobbyScreen';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
 
 export interface ISettingChoose {
   title: string;
@@ -116,6 +122,7 @@ export const SettingScreen = observer(() => {
   const profileStore = useProfileStore();
   const userStore = useUserStore();
   const preferencesStore = usePreferencesStore();
+  const socket = useSocket();
   const [distance, setDistance] = useState<number[]>(
     [profileStore.preferences.distance] || [100],
   );
@@ -136,7 +143,20 @@ export const SettingScreen = observer(() => {
   const handlePressDone = async (data: IUpdatePreferences) => {
     await preferencesStore.updatePreferences(data);
   };
+  useEffect(() => {
+    socket.on('getNotifyForSetting', res => {
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Message',
+        textBody: 'Bạn có tin nhắn mới',
+        autoClose: 3000,
+      });
+    });
 
+    return () => {
+      socket.off('getNotifyForSetting');
+    };
+  }, [socket]);
   return (
     <View style={{flex: 1}}>
       <View style={styles.fixedHeader}>
@@ -162,8 +182,14 @@ export const SettingScreen = observer(() => {
           </View>
 
           <Pressable
-            onPress={() => {
-              handlePressDone({
+            onPress={async () => {
+              console.log('ininin', {
+                gender,
+                age: {minAge: minmaxAge[0], maxAge: minmaxAge[1]},
+                distance: distance[0],
+              });
+
+              await handlePressDone({
                 gender,
                 age: {minAge: minmaxAge[0], maxAge: minmaxAge[1]},
                 distance: distance[0],

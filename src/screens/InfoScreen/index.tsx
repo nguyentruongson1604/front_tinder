@@ -77,7 +77,8 @@ const InfoScreen = () => {
           </View>
           <Pressable
             onPress={() => {
-              navigation.navigate('Switch');
+              // navigation.navigate('Switch');
+              navigation.goBack();
             }}>
             <FontAwesome6
               name="circle-down"
@@ -97,7 +98,7 @@ const InfoScreen = () => {
               alignItems: 'center',
               marginBottom: 10,
             }}>
-            <ImgSelect width={Dimensions.get('window').width} />
+            <ImgSelect width={Dimensions.get('window').width} user={user} />
           </View>
           <WrapcardInfo
             icon={

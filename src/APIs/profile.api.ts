@@ -1,6 +1,6 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
 import {ILocation} from '../store/domain/ProfileStore';
-import { ipAdressAdroid } from './activity.api';
+import {ipAdressAdroid} from './activity.api';
 
 export interface IProfile {
   _id?: string;
@@ -94,10 +94,44 @@ export const getMyProfileAPI = async () => {
   return res;
 };
 
+export const getOtherProfileAPI = async (data: {user: string}) => {
+  const option: axiosInstanceOptions = {
+    // method: 'GET',
+    baseURL: `${ipAdressAdroid}getOtherProfile`,
+    // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  // return await createAxiosInstance(option);
+  const instance = createAxiosInstance(option);
+  const res = await instance.post('', data);
+  // console.log('upload result: ', res)
+  return res;
+};
+
 export const getListMatchAPI = async () => {
   const option: axiosInstanceOptions = {
     // method: 'GET',
     baseURL: `${ipAdressAdroid}getListMatch`,
+    // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+  };
+  // return await createAxiosInstance(option);
+  const instance = createAxiosInstance(option);
+  const res = await instance.get('/');
+  // console.log('upload result: ', res)
+  return res;
+};
+
+export const getListMatchWithoutArrangeAPI = async () => {
+  const option: axiosInstanceOptions = {
+    // method: 'GET',
+    baseURL: `${ipAdressAdroid}getListMatchWithoutArrange`,
     // url: 'http://192.168.55.112:3031/api/getRandom10Profile',
     headers: {
       accept: 'application/json',

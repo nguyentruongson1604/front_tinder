@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 
 import CardProfile from '../../components/templates/CardProfile';
@@ -11,6 +11,7 @@ import {observer} from 'mobx-react-lite';
 import MatchScreen from '../MatchScreen';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-deck-swiper';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
 
 const HomeScreen = observer(() => {
   const [openMatchScreen, setOpenMatchScreen] = useState<boolean>(false);
@@ -21,6 +22,7 @@ const HomeScreen = observer(() => {
   const socket = useSocket();
   const swiperRef = useRef<Swiper<any>>(null);
   const [swiping, setSwiping] = React.useState<boolean>(false);
+
   const swipeRight = async user => {
     const res = await activityStore.updateActivity(user, 'Like');
     await activityStore.addOnePersonToList();
@@ -28,8 +30,6 @@ const HomeScreen = observer(() => {
       setOpenMatchScreen(true);
       setDataInMatch(user);
       const res = await profileStore.updateListMatch(user);
-      console.log('res new match', res);
-
       socket.emit('sendNewMatch', res);
     }
   };
@@ -46,12 +46,14 @@ const HomeScreen = observer(() => {
     setOpenMatchScreen(false);
     navigation.navigate('Switch');
   };
+
   // const cards = [
   //   {text: 'Card 1', color: '#24C6DC'},
   //   {text: 'Card 2', color: '#514A9D'},
   //   {text: 'Card 3', color: '#FFC65D'},
   //   // thêm nhiều card tùy ý
   // ];
+  console.log('activityStore.listProfile', activityStore.listProfile.length);
 
   return (
     // <View style={{flex: 1}}>
@@ -157,7 +159,12 @@ const HomeScreen = observer(() => {
         <Swiper
           ref={swiperRef}
           cards={activityStore.listProfile}
-          renderCard={card => <CardProfile user={card} />}
+          renderCard={card => {
+            return <CardProfile user={card} />;
+          }}
+          onSwipedAll={() => {
+            console.log('het');
+          }}
           onSwiped={() => setSwiping(false)}
           onSwipedLeft={cardIndex => {
             swipeLeft(activityStore.listProfile[cardIndex]);

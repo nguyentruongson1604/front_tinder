@@ -6,16 +6,21 @@ import {Pressable, View} from 'react-native';
 import MultiSliderSelect from '../../components/atoms/MultiSliderSelect';
 import SingleSlider from '../../components/atoms/SingleSlider';
 import {useState} from 'react';
-import {usePreferencesStore, useProfileStore} from '../../store';
+import {
+  useActivityStore,
+  usePreferencesStore,
+  useProfileStore,
+} from '../../store';
 import {ModalCustom} from '../../components/atoms/Modal';
 import LinearGradient from 'react-native-linear-gradient';
 import {Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import { convertGender } from '../EditHobbyScreen';
+import {convertGender} from '../EditHobbyScreen';
 
 export const SettingFindScreen = observer(() => {
   const profileStore = useProfileStore();
   const preferencesStore = usePreferencesStore();
+  const activityStore = useActivityStore();
   const [distance, setDistance] = useState<number[]>([100]);
   const [modalVisible, setModalVisible] = useState(false);
   const [gender, setGender] = useState<string>('Male');
@@ -36,13 +41,18 @@ export const SettingFindScreen = observer(() => {
   };
 
   const handleUploadImg = async () => {
-    profileStore.updateMyCreatePhotos(profileStore.dataUpdate.photos || []);
+    const res = await profileStore.updateMyCreatePhotos(
+      profileStore.dataUpdate.photos || [],
+    );
+    console.log(res);
+
+    return res;
   };
   const handleCreateProfile = async () => {
     profileStore.createProfile(profileStore.dataUpdate);
   };
   const handleUpdatePreferences = async () => {
-    preferencesStore.updatePreferences(preferencesStore.dataUpdate);
+    preferencesStore.updateCreatePreferences(preferencesStore.dataUpdate);
   };
   return (
     <View style={{flex: 1, backgroundColor: '#aaaae13b'}}>
@@ -75,9 +85,14 @@ export const SettingFindScreen = observer(() => {
       <View style={{width: '100%', alignItems: 'center', marginTop: 60}}>
         <Pressable
           onPress={async () => {
-            await handleCreateProfile();
+            // await handleCreateProfile();
             await handleUpdatePreferences();
-            // await handleUploadImg();
+            await profileStore.updateMyCreateProfile(profileStore.dataUpdate);
+            await activityStore.loadInitListProfiles();
+            const res = await handleUploadImg();
+            if (res) {
+              profileStore.isCreateProfile = false;
+            }
           }}>
           <LinearGradient
             colors={['#F63A6E', '#e67091', '#eda084']}
