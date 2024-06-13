@@ -13,7 +13,12 @@ import {
   Platform,
 } from 'react-native';
 import {Image} from 'react-native-svg';
-import {useMessageStore, useSocket, useUserStore} from '../../store';
+import {
+  useMessageStore,
+  useProfileStore,
+  useSocket,
+  useUserStore,
+} from '../../store';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export interface IMessage {
@@ -28,6 +33,7 @@ export const ChatScreen = observer(() => {
   const {item} = route.params;
   const socket = useSocket();
   const messageStore = useMessageStore();
+  const profileStore = useProfileStore();
   const userStore = useUserStore();
   const scrollViewRef = useRef<ScrollView>(null);
   console.log('item in herer', item);
@@ -51,6 +57,13 @@ export const ChatScreen = observer(() => {
     });
     setInputText('');
     scrollToBottom();
+    const index = profileStore.listMatch.findIndex(
+      match => match.user === item.user,
+    );
+    if (index !== -1) {
+      const [removed] = profileStore.listMatch.splice(index, 1);
+      profileStore.listMatch.unshift(removed);
+    }
   };
 
   const scrollToBottom = () => {
@@ -59,8 +72,6 @@ export const ChatScreen = observer(() => {
 
   useEffect(() => {
     socket.on('getMessage', res => {
-      console.log('herer', res.message);
-
       const newMessage = {
         _id: res._id,
         content: res.message,
@@ -68,8 +79,6 @@ export const ChatScreen = observer(() => {
         recipient: res.recipientId,
         createdAt: res.createdAt,
       };
-      console.log('newMessage', newMessage);
-
       messageStore.addMessage(newMessage);
       scrollToBottom();
     });

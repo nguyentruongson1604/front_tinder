@@ -9,6 +9,8 @@ import {
   updateListMatchAPI,
   updateMyProfileAPI,
   uploadImageAPI,
+  getListMatchWithoutArrangeAPI,
+  getOtherProfileAPI,
 } from '../../APIs/profile.api';
 import {RootStore} from '../RootStore';
 import {ALERT_TYPE, Dialog} from 'react-native-alert-notification';
@@ -56,10 +58,12 @@ export class ProfileStore {
     imageProfileUrl: [],
   };
   listMatch: IListMatch[] = [];
+  listMatchWithoutArrange: IListMatch[] = [];
   dataUpdate: IProfile = {};
 
   isUpload: boolean = false;
   existProfile: boolean = false;
+  isCreateProfile: boolean = false;
   loading: boolean = false;
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
@@ -94,6 +98,16 @@ export class ProfileStore {
       const {data} = await getListMatchAPI();
       runInAction(() => {
         this.listMatch = data.data;
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  getListMatchWArrange = async () => {
+    try {
+      const {data} = await getListMatchWithoutArrangeAPI();
+      runInAction(() => {
+        this.listMatchWithoutArrange = data.data;
       });
     } catch (error) {
       console.error(error);
@@ -187,16 +201,17 @@ export class ProfileStore {
   };
   createProfile = async (profile: IProfile) => {
     try {
+      this.setLoading(true);
       const res = await createProfileAPI(profile);
+      this.setLoading(false);
     } catch (error) {
+      this.setLoading(false);
       console.error(error);
     }
   };
   checkExistPofile = async () => {
     try {
       this.setLoading(true);
-      console.log('run in herreeeeee');
-      console.log('token', this.rootStore.userStore.accessToken);
 
       const res = await checkExistProfileAPI();
       if (res.data.data) this.existProfile = true;
@@ -221,7 +236,7 @@ export class ProfileStore {
       Dialog.show({
         type: ALERT_TYPE.WARNING,
         title: 'Waiting...',
-        textBody: 'Ảnh đang tải lên vui lòng đợi',
+        textBody: 'Hồ sơ đang được tạo vui lòng đợi',
         closeOnOverlayTap: false,
       });
       const res = await uploadImageAPI(formData);
@@ -229,13 +244,11 @@ export class ProfileStore {
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: 'Succes',
-        textBody: 'Ảnh tải lên thành công',
+        textBody: 'Hãy cùng hẹn hò nào!!',
         button: 'OK',
-        onPressButton: () => {
-          this.existProfile = true;
-        },
       });
       this.photos.imageProfileUrl = res.data.data.photos.imageProfileUrl;
+      return true;
     } catch (error) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -245,9 +258,37 @@ export class ProfileStore {
         }`,
         button: 'OK',
       });
+      return false;
     }
   };
-
+  updateMyCreateProfile = async (profile: IProfile) => {
+    try {
+      const res = await updateMyProfileAPI(profile);
+      runInAction(() => {
+        this.myProfile = res.data.data;
+        this.getListHobby();
+        this.description = res.data.data.description;
+        this.title = res.data.data.title;
+        this.adress = res.data.data.adress;
+        this.age = res.data.data.age;
+        this.gender = res.data.data.gender;
+      });
+      // Dialog.show({
+      //   type: ALERT_TYPE.SUCCESS,
+      //   title: 'Succes',
+      //   textBody: 'Sửa thông tin thành công',
+      //   button: 'OK',
+      // });
+    } catch (error) {
+      // Dialog.show({
+      //   type: ALERT_TYPE.DANGER,
+      //   title: 'ERROR',
+      //   textBody: 'Lỗi khi sửa thông tin',
+      //   button: 'OK',
+      // });
+      console.error(error);
+    }
+  };
   updateListMatch = async (otherUser: any) => {
     try {
       // console.log('otherUser', otherUser);
@@ -260,8 +301,6 @@ export class ProfileStore {
         userId: otherUser.user._id,
         profileId: otherUser._id,
       });
-      console.log('dataaa', data.data);
-
       //update o backend kho qua thi dung get
       runInAction(() => {
         const newUser: IListMatch = {
@@ -293,6 +332,20 @@ export class ProfileStore {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  getOtherProfile = async (userId: {user: string}) => {
+    try {
+      const {data} = await getOtherProfileAPI(userId);
+      console.log('dataa', data.data?.user);
+
+      return data?.data;
+    } catch (error) {
+      return {};
+    }
+  };
+  setListMatch = (data: IListMatch[]) => {
+    this.listMatch = data;
   };
   deleteDataWhenLogout = () => {
     this.description = '';

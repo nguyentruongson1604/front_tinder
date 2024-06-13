@@ -33,9 +33,29 @@ import {ChannelListScreen} from '../screens/ListMatchScreen';
 import {ChatScreen} from '../screens/ChatScreen';
 import Geolocation from '@react-native-community/geolocation';
 import {IListMatch} from '../store/domain/ProfileStore';
-
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
+import {
+  useNavigation,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
+import cloneDeep from 'lodash/cloneDeep';
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
+  const socket = useSocket();
+  useEffect(() => {
+    socket.on('getNotifyForEdit', res => {
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Message',
+        textBody: 'Bạn có tin nhắn mới',
+        autoClose: 3000,
+      });
+    });
+
+    return () => {
+      socket.off('getNotifyForEdit');
+    };
+  }, [socket]);
   return (
     <SafeAreaView style={{flex: 1}}>
       <EditProfileHeader />
@@ -57,6 +77,10 @@ export const EditProfileNavigator = observer(() => {
 
 export const MessageNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
+  const profileStore = useProfileStore();
+  useEffect(() => {
+    profileStore.getListMatchWArrange();
+  }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
       <Stack.Navigator initialRouteName="MessageChannel">
@@ -88,7 +112,27 @@ export const HomeNavigator = observer(() => {
       socket.off('getNewMatch');
     };
   }, [profileStore, socket]);
-  console.log('profileStore.listMatch navigate', profileStore.listMatch);
+
+  useEffect(() => {
+    socket.on('getNotify', res => {
+      // console.log('right hereeeee');
+
+      const index = profileStore.listMatch.findIndex(
+        match => match.user === res.sender,
+      );
+      if (index !== -1) {
+        const [removed] = profileStore.listMatch.splice(index, 1);
+        profileStore.listMatch.unshift(removed);
+        console.log('right hereeeee11');
+        console.log('right hereeeee11', profileStore.listMatch);
+        profileStore.setListMatch(profileStore.listMatch.map(item => item));
+      }
+    });
+
+    return () => {
+      socket.off('getNotify');
+    };
+  }, [profileStore, profileStore.listMatch, socket]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -220,15 +264,17 @@ export const MainNavigator = observer(() => {
 
   const init = async () => {
     /* ***LOCATION IN HERE***  */
-    // Geolocation.getCurrentPosition(
-    //   async position => {
-    //     const {longitude, latitude} = position.coords;
-    //     await profileStore.updateLocation({longitude, latitude});
-    //     console.log('{latitude, longitude}', {longitude, latitude});
-    //   },
-    //   error => console.log(error),
-    //   {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-    // );
+    Geolocation.getCurrentPosition(
+      async position => {
+        const {longitude, latitude} = position.coords;
+        await profileStore.updateLocation({longitude, latitude});
+        console.log('{latitude, longitude}', {longitude, latitude});
+      },
+      error => {
+        console.error({error});
+      },
+      {enableHighAccuracy: false, timeout: 20000},
+    );
     await profileStore.getMyProfile();
     await profileStore.getListMatch();
     await hobbiesStore.getHobbiesType();
@@ -237,14 +283,8 @@ export const MainNavigator = observer(() => {
   };
   useEffect(() => {
     init();
-    socket.on('getNotify', res => {
-      console.log('socket in hereeeeee');
-    });
-
-    return () => {
-      socket.off('getNotify');
-    };
   }, []);
+
   if (userStore.userAccess?._id) {
     socket.emit('addNewUsers', userStore.userAccess?._id);
   }
@@ -274,38 +314,50 @@ export const AppNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const userStore = useUserStore();
   const profileStore = useProfileStore();
-  console.log('userStore.accessToken', userStore.accessToken);
+  // console.log('userStore.accessToken', userStore.accessToken);
   // userStore.logout();
-  useEffect(() => {
-    profileStore.checkExistPofile();
-  }, []);
+  // useEffect(() => {
+  //   profileStore.checkExistPofile();
+  // }, []);
   // console.log('profileStore.existProfile', profileStore.existProfile);
 
-  // if (userStore.loading || profileStore.loading) {
-  //   return (
-  //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-  //       <ActivityIndicator size="large" color={'red'} />
-  //     </View>
-  //   );
-  // }
+  if (userStore.loading || profileStore.loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color={'red'} />
+      </View>
+    );
+  }
+  console.log('profileStore.isCreateProfile', profileStore.isCreateProfile);
+
   return (
     <Stack.Navigator>
       {userStore.accessToken ? (
-        profileStore.existProfile ? (
-          <>
+        <>
+          {profileStore.isCreateProfile ? (
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="CreateProfile"
+              component={CreateProfileTabs}
+            />
+          ) : (
             <Stack.Screen
               options={{headerShown: false}}
               name="Main"
               component={MainNavigator}
             />
-          </>
-        ) : (
+          )}
+          {/* <Stack.Screen
+            options={{headerShown: false}}
+            name="Main"
+            component={MainNavigator}
+          />
           <Stack.Screen
             options={{headerShown: false}}
             name="CreateProfile"
             component={CreateProfileTabs}
-          />
-        )
+          /> */}
+        </>
       ) : (
         <>
           <Stack.Screen
@@ -323,6 +375,11 @@ export const AppNavigator = observer(() => {
             name="Register"
             component={RegisterScreen}
           />
+          {/* <Stack.Screen
+            options={{headerShown: false}}
+            name="CreateProfile"
+            component={CreateProfileTabs}
+          /> */}
         </>
       )}
     </Stack.Navigator>

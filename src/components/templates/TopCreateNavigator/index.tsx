@@ -4,8 +4,10 @@
 import {observer} from 'mobx-react-lite';
 import {StyleSheet} from 'react-native';
 import {Pressable, Text, View} from 'react-native';
+import {useUserStore} from '../../../store';
 
 export const TopCreateNavigator = observer(() => {
+  const userStore = useUserStore();
   return (
     <View>
       <View style={styles.fixedHeader}>
@@ -17,10 +19,10 @@ export const TopCreateNavigator = observer(() => {
           }}>
           <View
             style={{
-              width: '20%',
+              width: '5%',
             }}
           />
-          <View style={{width: '60%', alignItems: 'center'}}>
+          <View style={{width: '90%', alignItems: 'center'}}>
             <Text
               style={{
                 fontSize: 22,
@@ -32,11 +34,13 @@ export const TopCreateNavigator = observer(() => {
 
           <Pressable
             style={{
-              width: '20%',
+              width: '5%',
               alignItems: 'flex-end',
               justifyContent: 'center',
             }}
-            onPress={() => {}}>
+            onPress={() => {
+              userStore.logout();
+            }}>
             {/* <Text style={{fontWeight: '600'}}>Xong</Text> */}
           </Pressable>
         </View>

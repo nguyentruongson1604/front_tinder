@@ -1,6 +1,6 @@
 import {axiosInstanceOptions, createAxiosInstance} from '../instance/instances';
 import {IUpdatePreferences} from '../store/domain/PreferencesStore';
-import { ipAdressAdroid } from './activity.api';
+import {ipAdressAdroid} from './activity.api';
 
 export const createPreferencesAPI = async () => {
   const option: axiosInstanceOptions = {

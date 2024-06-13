@@ -26,7 +26,7 @@ export class UserStore {
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
   }
-  setLoading(loading) {
+  setLoading(loading: boolean) {
     this.loading = loading;
   }
   setUser = (user: IUserAccess) => {
@@ -71,8 +71,8 @@ export class UserStore {
   isAuthenticated = async () => {
     try {
       this.setLoading(true);
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      this.accessToken = accessToken;
+      const token = await AsyncStorage.getItem('accessToken');
+      this.accessToken = token;
       console.log('ac token in init', this.accessToken);
 
       this.setLoading(false);
@@ -110,6 +110,7 @@ export class UserStore {
     await AsyncStorage.removeItem('accessToken');
     await AsyncStorage.removeItem('refreshToken');
     this.rootStore.profileStore.deleteDataWhenLogout();
+    this.rootStore.profileStore.isCreateProfile = false;
     this.accessToken = null;
     this.refreshToken = null;
   };

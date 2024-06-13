@@ -45,8 +45,8 @@ export interface IActionSheetTitle {
 export const convertGender = {
   Male: 'Nam',
   Female: 'Nữ',
-  Other: 'Khác'
-}
+  Other: 'Khác',
+};
 const mainHobby = {
   zodiac: {
     icon: <Ionicons name="moon" style={{fontSize: 22, color: '#948d8d'}} />,
@@ -228,9 +228,9 @@ const EditHobbyScreen = observer(() => {
   const hobbiesStore = useHobbiesStore();
   const profileStore = useProfileStore();
   const [description, setDescription] = useState<string>(
-    profileStore.description || '',
+    profileStore.description || ' ',
   );
-  const [title, setTitle] = useState<string>(profileStore.title || '');
+  const [title, setTitle] = useState<string>(profileStore.title || ' ');
   const {
     isOpen: isOpenHobby,
     onOpen: onOpenHobby,

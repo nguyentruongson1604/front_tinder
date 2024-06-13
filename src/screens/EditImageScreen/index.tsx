@@ -127,31 +127,40 @@ export const EditImageScreen: React.FC<IEditImg> = observer(
         style={{
           flex: 1,
           backgroundColor: '#aaaae13b',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          paddingTop: isCreate ? 20 : 0,
+          // flexDirection: 'row',
+          // flexWrap: 'wrap',
+          // justifyContent: 'space-between',
+          // paddingTop: isCreate ? 20 : 0,
           // alignContent: 'center',
         }}>
         {/* <ScrollView style={{flex: 1, backgroundColor: '#aaaae13b'}}> */}
-
-        {Array.from({length: 9}, (_, index) => {
-          return (
-            <SelectImage
-              key={index}
-              openActionSheet={openActionSheet}
-              indexKey={index}
-              imageSelect={arrImage[index]}
-              deleteSelectPicture={deleteSelectPicture}
-            />
-          );
-        })}
+        <View
+          style={{
+            height: '85%',
+            // backgroundColor: 'red',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            paddingTop: isCreate ? 20 : 0,
+          }}>
+          {Array.from({length: 9}, (_, index) => {
+            return (
+              <SelectImage
+                key={index}
+                openActionSheet={openActionSheet}
+                indexKey={index}
+                imageSelect={arrImage[index]}
+                deleteSelectPicture={deleteSelectPicture}
+              />
+            );
+          })}
+        </View>
         {!isCreate ? (
           <View
             style={{
               width: '100%',
               alignItems: 'center',
-              marginTop: 25,
+              marginTop: 20,
             }}>
             <Pressable onPress={handleUpload}>
               <LinearGradient

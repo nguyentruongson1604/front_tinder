@@ -38,10 +38,11 @@ const RegisterScreen = () => {
 
   const onSubmit = async (data: any) => {
     const res = await userStore.userRegister({...data});
+    console.log('res.data.status', res.data.status);
 
     if (res.data.status == 'success') {
-      profileStore.existProfile = false;
-      navigation.navigate('Main');
+      await profileStore.createProfile(profileStore.dataUpdate);
+      profileStore.isCreateProfile = true;
     } else {
       // navigation.navigate('CreateProfile');
       setValue('firstName', '');
