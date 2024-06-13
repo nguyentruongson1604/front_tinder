@@ -311,7 +311,7 @@ export class ProfileStore {
             imageProfileUrl: otherUser?.photos?.imageProfileUrl || '',
           },
         };
-        this.listMatch = [newUser, ...this.listMatch];
+        this.listMatch = [newUser, ...this.listMatch].map(item => item);
       });
       return {
         otherUser: otherUser.user._id,
