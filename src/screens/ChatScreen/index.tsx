@@ -36,7 +36,7 @@ export const ChatScreen = observer(() => {
   const profileStore = useProfileStore();
   const userStore = useUserStore();
   const scrollViewRef = useRef<ScrollView>(null);
-  console.log('item in herer', item);
+  console.log('item in herer', userStore.userAccess);
 
   useEffect(() => {
     messageStore.recipient = item.user;
@@ -54,6 +54,9 @@ export const ChatScreen = observer(() => {
       recipientId: item.user,
       sender: res.sender,
       createdAt: res.createdAt,
+      name: userStore?.userAccess
+        ? `${userStore?.userAccess.lastName} ${userStore?.userAccess.firstName}`
+        : '',
     });
     setInputText('');
     scrollToBottom();

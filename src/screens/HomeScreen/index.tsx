@@ -12,6 +12,7 @@ import MatchScreen from '../MatchScreen';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-deck-swiper';
 import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
+import {RunOutPeople} from '../RunOutPeople';
 
 const HomeScreen = observer(() => {
   const [openMatchScreen, setOpenMatchScreen] = useState<boolean>(false);
@@ -22,6 +23,7 @@ const HomeScreen = observer(() => {
   const socket = useSocket();
   const swiperRef = useRef<Swiper<any>>(null);
   const [swiping, setSwiping] = React.useState<boolean>(false);
+  const [overprofile, setOverprofile] = React.useState<boolean>(false);
 
   const swipeRight = async user => {
     const res = await activityStore.updateActivity(user, 'Like');
@@ -156,8 +158,10 @@ const HomeScreen = observer(() => {
         style={{
           flex: 1,
         }}>
-        {activityStore.listProfile.length == 0 || !activityStore.listProfile ? (
-          <></>
+        {activityStore.listProfile.length == 0 ||
+        !activityStore.listProfile ||
+        overprofile ? (
+          <RunOutPeople />
         ) : (
           <Swiper
             ref={swiperRef}
@@ -166,7 +170,7 @@ const HomeScreen = observer(() => {
               return <CardProfile user={card} />;
             }}
             onSwipedAll={() => {
-              console.log('het');
+              setOverprofile(true);
             }}
             onSwiped={() => setSwiping(false)}
             onSwipedLeft={cardIndex => {
