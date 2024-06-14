@@ -42,13 +42,17 @@ import cloneDeep from 'lodash/cloneDeep';
 export const EditProfileNavigator = observer(() => {
   const Stack = createNativeStackNavigator();
   const socket = useSocket();
+  const nav = useNavigation();
   useEffect(() => {
     socket.on('getNotifyForEdit', res => {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: 'Message',
-        textBody: 'Bạn có tin nhắn mới',
+        textBody: `Bạn có tin nhắn mới từ ${res.name}`,
         autoClose: 3000,
+        onPress: () => {
+          nav.navigate('Message');
+        },
       });
     });
 

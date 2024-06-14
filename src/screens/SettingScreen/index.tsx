@@ -148,7 +148,7 @@ export const SettingScreen = observer(() => {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: 'Message',
-        textBody: 'Bạn có tin nhắn mới',
+        textBody: `Bạn có tin nhắn mới từ ${res.name}`,
         autoClose: 3000,
       });
     });
